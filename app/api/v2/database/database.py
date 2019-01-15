@@ -29,7 +29,7 @@ class Database:
         query_db('DROP_TABLES')
 
 
-def query_db(statement, values, rowcount=False,
+def query_db(statement, values=None, rowcount=False,
              return_value=False, one=False, many=False):
     result = None
 
