@@ -7,7 +7,6 @@ import datetime
 from flask import current_app as app
 
 from .abstract_model import AbstractModel
-from .tokens import Token
 
 
 class UserModel(AbstractModel):
@@ -52,10 +51,9 @@ class UserModel(AbstractModel):
 
     @classmethod
     def get_by_name(cls, username):
-        found_user = [user for user in users
-                      if getattr(user, 'username') == username]
+        found_user = super().get_by_name(GET_USER_BY_NAME, username)
 
-        return found_user[0] if found_user else None
+        return found_user if found_user else None
 
     @classmethod
     def get_by_email(cls, given_email):
