@@ -64,10 +64,9 @@ class UserModel(AbstractModel):
 
     @classmethod
     def get_by_id(cls, usr_id):
-        usr = [user for user in users
-               if getattr(user, 'id') == usr_id]
+        user = super().get_by_id(GET_USER_BY_ID, usr_id)
 
-        return usr[0] if usr else None
+        return UserModel(*usr) if usr else None
 
     @classmethod
     def get_all_users(cls):

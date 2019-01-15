@@ -31,3 +31,7 @@ class AbstractModel:
     @classmethod
     def get_by_email(cls, statement, value):
         return query_db(statement, value, one=True)
+
+    @classmethod
+    def get_by_id(cls, statement, value):
+        return query_db(statement, value, one=True)
