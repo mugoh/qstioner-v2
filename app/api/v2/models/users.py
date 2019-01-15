@@ -57,9 +57,9 @@ class UserModel(AbstractModel):
 
     @classmethod
     def get_by_email(cls, given_email):
-        user = [user for user in users
-                if getattr(user, 'email') == given_email]
-        return user[0] if user else None
+        user = super().get_by_name(GET_BY_EMAIL, given_email)
+
+        return user if user else None
 
     @classmethod
     def get_by_id(cls, usr_id):
