@@ -38,7 +38,14 @@ class UserModel(AbstractModel):
         return check_password_hash(self._password, pass_value)
 
     def save(self):
-        users.append(self)
+        return super().save(CREATE_USER,
+                            (self.firstname,
+                             self.lastname,
+                             self.email,
+                             self.password,
+                             self.username,
+                             self.isAdmin,
+                             self.phonenumber))
 
     #
     # Search behaviours
