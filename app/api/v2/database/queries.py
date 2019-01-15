@@ -53,3 +53,11 @@ CREATE_TABLE_TOKENS = """
     TOKEN VARCHAR(256)
     );
 """
+
+CREATE_USER = """
+    INSERT INTO users (firstname, lastname, othername, email,
+    username, isadmin, phonenumber)
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    RETURNING id, firstname, lastname, othername, email,
+    username, isadmin, phonenumber;
+"""
