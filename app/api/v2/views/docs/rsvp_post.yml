@@ -1,0 +1,42 @@
+Respond to a Meetup's RSVP 
+This endpoint allows the posting of a RSVP to a meetup.
+Only a signed in user can create a RSVP.
+The rsvp is either a 'yes' 'no', or 'maybe'
+---
+tags:
+- Meetup RSVPs
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the meetup to rsvp
+
+- in: path
+  name: rsvp   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: string
+    minimum: 1
+    maximum: 1
+    description: The response of the rsvp - yes, no or maybe
+  
+responses:
+  201:
+    description: Success, RSVP Created to Meetup
+  400:
+    description: Bad Request. Invalid parameter in path or illegal Authorization header.
+  404:
+    description: Meetup id does not exist
+  401:
+    description: Unauthorized. Unsigned in user attempting to post a RSVP

@@ -1,0 +1,29 @@
+Get a Single meetup
+Returns a meetup posted to a meetup with the specified id.
+---
+tags:
+- Meetups
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the meetup records to retrieve
+responses:
+  200:
+    description: Success. meetup with specified id is
+      returned successfully
+  404:
+    description: Not Fouund, no meetup id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token

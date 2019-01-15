@@ -1,0 +1,41 @@
+Create a Question 
+This endpoint allows the posting of a Question to a meetup.
+Only a signed in user can create a Question.
+---
+tags:
+- Meetup Questions
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: body
+  name: Question Record Details
+  description: The Question to be Created
+  schema:
+    type: object
+    required:
+    - title
+    - body
+    - meetup
+    properties:
+      title:
+        type: string
+        example: Will there be cookies?
+      body:
+        type: string
+        example: This is the question body
+      meetup:
+        type: integer
+        example: 1
+responses:
+  201:
+    description: Success, Question Created to Meetup
+  400:
+    description: Bad Request, validation check failed.
+  401:
+    description: Unauthorized. Unsigned in user attempting to post a question

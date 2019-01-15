@@ -1,0 +1,54 @@
+Get RSVPs Created by a Single User 
+This endpoint allows a user to get all Meetups they have RSVP-ed to.
+---
+paths:
+  /meetups/{username}
+tags:
+- Meetup RSVPs
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: username
+  name: username   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: string
+    minimum: 1
+    description: The username of this user
+
+paths:
+  /meetups/{id}
+tags:
+- Meetup RSVPs
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: id
+  name: user_id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: string
+    minimum: 1
+    description: The id of this user
+  
+responses:
+  201:
+    description: Success, RSVP Created to Meetup
+  400:
+    description: Bad Request. Invalid parameter in path or illegal Authorization header.
+  404:
+    description: User id or username does not exist
+  401:
+    description: Unauthorized. Unsigned in user attempting to get users' RSVPs, or attempt to get an rsvp of another user

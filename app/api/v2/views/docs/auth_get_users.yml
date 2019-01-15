@@ -1,0 +1,22 @@
+Get Registered Users
+
+This endpoint allows a registered Admin user to see all registered users.
+
+---
+tags:
+- Authorization
+parameters:
+- in: header
+  name: Authorization
+  description: The authorization token generated during user
+    login (Bearer + token)
+  type: string
+  required: true
+
+responses:
+  200:
+    description: Success
+  400:
+    description: Bad Request, validation check failed.
+  403:
+    description: Anauthorized request. The user does not have the priviledges to perform that request

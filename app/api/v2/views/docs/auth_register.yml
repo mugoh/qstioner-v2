@@ -1,0 +1,48 @@
+Register User
+This endpoint allows a user to register.
+example Registration role is non-admin.
+---
+tags:
+- Authorization
+consumes:
+- application/json
+parameters:
+- in: body
+  name: Registration Details
+  description: The details of the user to be registered
+  schema:
+    type: object
+    required:
+    - username
+    - email
+    - password
+
+    properties:
+      username:
+        type: string
+        example: DomesticCow
+      email:
+        type: string
+        example: domestic@mammals.milk
+      password:
+        type: string
+        example: pa55word
+      firstname:
+        type: string
+        example: Domestic
+      lastname:
+        type: string
+        example: Cow
+      isAdmin:
+        type: boolean
+        example: true
+      phonenumber:
+        type: integer
+        example: 01234567
+responses:
+  201:
+    description: Success, the user has been created
+  400:
+    description: Bad Request, validation check failed.
+  409:
+    description: User exists

@@ -1,0 +1,37 @@
+Upvote or Downvote a Question
+Vote a question on a specific meetup by the question id
+Increases or Decreases the votes on the question
+---
+tags:
+- Meetup Questions
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the question to vote
+- in: path
+  name: vote   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: string
+    minimum: 1
+    description: The vote to the question. Upvote or Downvote
+responses:
+  200:
+    description: Success. Question with specified id is
+      returned successfully
+  404:
+    description: Not Fouund, no question id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token or invalid paramter in path

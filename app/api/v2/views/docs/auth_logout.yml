@@ -1,0 +1,24 @@
+Log out User
+
+This endpoint allows a logged in user to log out of the application.
+Both the Administrator and a non-admin user can use this endpoint.
+This endpoint adds the access token of the user to the blacklist so that it cannot be used
+to access protected endpoints.
+---
+tags:
+- Authorization
+parameters:
+- in: header
+  name: Authorization
+  description: The authorization token generated during user
+    login (Bearer + token)
+  type: string
+  required: true
+responses:
+  200:
+    description: Success, logout successful, token has been revoked
+  400:
+    description: Bad Request, validation check failed.
+
+  403:
+    description: Anauthorized. Logout attempt for a missing session

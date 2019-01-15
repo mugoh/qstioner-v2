@@ -1,0 +1,19 @@
+Get all Question to a meetup
+Returns all the created question records
+---
+tags:
+- Meetup Questions
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user
+    login i.e (Bearer token...)
+  type: string
+  required: true
+responses:
+  200:
+    description: Success. Question records returned successfully
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header

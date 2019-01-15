@@ -1,0 +1,18 @@
+Retrieve All Meetups
+Returns all the Meetups created by the Administrator
+---
+tags:
+- Meetups
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user
+    login i.e (Bearer token)
+  type: string
+  required: true
+responses:
+  200:
+    description: Success, Meetups retrieved.
+  
+  403:
+    description: Authorization Access. User not signed in.
