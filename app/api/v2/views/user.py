@@ -52,14 +52,14 @@ class UsersRegistration(Resource):
         return {
             "Status": 201,
             "Data": user.dictify()
-        }
+        }, 201
 
     @swag_from('docs/auth_get_users.yml')
     def get(self):
         return {
             "Status": 200,
             "Data": UserModel.get_all("GET_ALL_USERS")
-        }
+        }, 200
 
 
 class UserLogin(Resource):
