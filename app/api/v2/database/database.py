@@ -1,6 +1,7 @@
 import psycopg2
 
 from .config import config_db
+from .queries import *
 
 
 class Database:
