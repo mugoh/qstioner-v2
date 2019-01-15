@@ -61,3 +61,8 @@ CREATE_USER = """
     RETURNING id, firstname, lastname, othername, email,
     username, isadmin, phonenumber;
 """
+
+DROP_TABLES = """
+    DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS
+    TOKENS;
+"""
