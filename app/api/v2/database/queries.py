@@ -66,3 +66,11 @@ DROP_TABLES = """
     DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS
     TOKENS;
 """
+
+GET_USER_BY_NAME = """
+        SELECT * FROM USERS WHERE name = %s
+"""
+
+GET_BY_EMAIL = """
+        SELECT * FROM USERS WHERE email = %s
+"""
