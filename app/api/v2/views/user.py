@@ -58,7 +58,7 @@ class UsersRegistration(Resource):
     def get(self):
         return {
             "Status": 200,
-            "Data": UserModel.get_all_users()
+            "Data": UserModel.get_all(GET_ALL_USERS)
         }
 
 
