@@ -6,7 +6,7 @@
 from functools import wraps
 from flask import request
 
-from ...v1.models.users import UserModel
+from ...v2.models.users import UserModel
 from ..models.tokens import Token
 
 current_user = None
