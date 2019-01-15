@@ -78,3 +78,7 @@ GET_BY_EMAIL = """
 GET_USER_BY_ID = """
     SELECT * FROM USERS WHERE  id = %s
 """
+
+GET_ALL_USERS = """
+    SELECT * FROM USERS ORDER BY id
+"""
