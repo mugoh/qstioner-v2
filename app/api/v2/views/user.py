@@ -46,7 +46,7 @@ class UsersRegistration(Resource):
                 args.get('username') + str(random.randint(0, 40))
             }, 409
 
-        user = UserModel(**args)
+        user = UserModel(*args.values())
         user.save()
 
         return {
@@ -58,7 +58,7 @@ class UsersRegistration(Resource):
     def get(self):
         return {
             "Status": 200,
-            "Data": UserModel.get_all(GET_ALL_USERS)
+            "Data": UserModel.get_all("GET_ALL_USERS")
         }
 
 

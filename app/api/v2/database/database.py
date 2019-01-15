@@ -20,10 +20,11 @@ class Database:
             CREATE_TABLE_QUESTIONS,
             CREATE_TABLE_TOKENS]
 
-        print("Created Tables")
+        print("Creating Tables")
 
         for statement in statements:
             query_db(statement)
+        print("Created Tables")
 
     @classmethod
     def drop_tables(cls):
@@ -43,8 +44,12 @@ def query_db(statement, values=None, rowcount=False,
         if one:
             cursor.execute(statement, values)
             result = cursor.fetchone()
+        elif many:
+            cursor.execute(statement)
+            result = cursor.fetchall()
 
-        cursor.execute(statement)
+        else:
+            cursor.execute(statement)
 
         connection.commit()
         cursor.close()
