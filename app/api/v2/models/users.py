@@ -58,13 +58,13 @@ class UserModel(AbstractModel):
 
     @classmethod
     def get_by_email(cls, given_email):
-        user = super().get_by_email(GET_BY_EMAIL, given_email)
+        user = super().get_by_name(GET_BY_EMAIL, given_email)
 
         return UserModel(*user) if user else None
 
     @classmethod
     def get_by_id(cls, usr_id):
-        user = super().get_by_id(GET_USER_BY_ID, usr_id)
+        usr = super().get_by_id(GET_USER_BY_ID, usr_id)
 
         return UserModel(*usr) if usr else None
 
