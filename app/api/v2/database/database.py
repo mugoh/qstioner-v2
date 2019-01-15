@@ -29,7 +29,7 @@ class Database:
         query_db('DROP_TABLES')
 
 
-def query_db(statement, rowcount=False,
+def query_db(statement, values, rowcount=False,
              return_value=False, one=False, many=False):
     result = None
 
@@ -38,6 +38,10 @@ def query_db(statement, rowcount=False,
 
         connection = db_instance.init_db()
         cursor = connection.cursor()
+
+        if one:
+            cursor.execute(statement, values)
+            result = cursor.fetchone()
 
         cursor.execute(statement)
 
