@@ -2,8 +2,6 @@ import psycopg2
 
 from .config import config_db
 
-connection = None
-
 
 class Database:
 
@@ -26,8 +24,14 @@ class Database:
         for statement in statements:
             query_db(statement)
 
+    @classmethod
+    def drop_tables(cls):
+        query_db('DROP_TABLES')
 
-def query_db(statement, rowcount=False, return_value=False, one=False, many=False):
+
+def query_db(statement, rowcount=False,
+             return_value=False, one=False, many=False):
+    result = None
 
     try:
         global connection
@@ -35,16 +39,18 @@ def query_db(statement, rowcount=False, return_value=False, one=False, many=Fals
         connection = db_instance.init_db()
         cursor = connection.cursor()
 
+        cursor.execute(statement)
+
         connection.commit()
         cursor.close()
 
-    except (Exception, psycopyg2.DatabaseError) as er:
+    except (Exception, psycopg2.DatabaseError) as er:
         print(er)
     finally:
         if connection:
             connection.close()
 
-    return
+    return result
 
 
 db_instance = Database()
