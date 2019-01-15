@@ -1,0 +1,27 @@
+Delete a Meetup
+Allows the removal of a produt from the inventory
+This endpoint is only accessible to the Admin
+---
+tags:
+- Meetups
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    example (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id
+  type: integer
+  required: true
+  description: The id of the Meetup to delete.
+responses:
+  200:
+    description: Success, Meetup Deleted
+  400:
+    description: Bad Request. Validation failed
+  403:
+    description: Unauthorized, response when anauthorized user tries to delete a Meetup
+  404:
+    description: Returned when Meetup with id specified does not exist.

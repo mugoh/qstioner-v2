@@ -1,0 +1,54 @@
+Add New Meetup
+This endpoint allows the addition of a new Meetup to the inventory.
+Only Administrator can add a Meetup.
+---
+tags:
+- Meetups
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user
+    login example (Bearer token)
+  type: string
+  required: true
+- in: body
+  name: Meetup Details
+  description: The Details of the Meetup to be added to Inventory
+  schema:
+    type: object
+    required:
+    - topic
+    - location
+    properties:
+      topic:
+        type: string
+        example: The ways of making Mammals happy
+      location:
+        type: string
+        example: pkoroco Ranch, Nyeri, Kenya
+      happeningOn:
+        type: string
+        example: '2019-08-04T12:00:00'
+        format: date
+      images:
+        type: array
+        items:
+          type: string
+        example: [file_path, file_path]
+      tags:
+        type: array
+        items:
+          type: string
+        example: [milking, domestic, mammals]
+      
+responses:
+  201:
+    description: Success, the Meetup has been added successfully
+  403:
+    description: Unauthorized. A non-admin user trying to create a meetup
+  400:
+    description: Bad Request, handles failed validation.
+  409:
+    description: Attempt to recreate exisring meetup

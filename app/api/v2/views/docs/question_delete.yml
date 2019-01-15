@@ -1,0 +1,29 @@
+Delete a Question
+Returns a question posted to a meetup with the specified id.
+---
+tags:
+- Meetup Questions
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the question records to retrieve
+responses:
+  200:
+    description: Success. Question with specified id is
+      deleted successfully
+  404:
+    description: Not Found, no question id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token
