@@ -11,18 +11,18 @@ from .abstract_model import AbstractModel
 
 class UserModel(AbstractModel):
 
-    def __init__(self, **kwargs):
+    def __init__(self, *kwargs):
 
-        super().__init__(users)
-        self.firstname = kwargs['firstname']
-        self.lastname = kwargs['lastname']
-        self.othername = kwargs['othername']
-        self.email = kwargs['email']
-        self.phonenumber = kwargs['phonenumber']
-        self.username = kwargs['username']
-        self.isAdmin = kwargs.get('isAdmin', False)
+        super().__init__()
+        self.firstname = kwargs[0]
+        self.lastname = kwargs[1]
+        self.othername = kwargs[2]
+        self.email = kwargs[3]
+        self.phonenumber = kwargs[4]
+        self.username = kwargs[5]
+        self.isAdmin = kwargs[6]
 
-        self.password = kwargs['password']
+        self.password = kwargs[7]
 
     @property
     def password(self):
@@ -40,6 +40,7 @@ class UserModel(AbstractModel):
         return super().save(CREATE_USER,
                             (self.firstname,
                              self.lastname,
+                             self.othername,
                              self.email,
                              self.password,
                              self.username,
@@ -53,13 +54,13 @@ class UserModel(AbstractModel):
     def get_by_name(cls, username):
         found_user = super().get_by_name(GET_USER_BY_NAME, username)
 
-        return found_user if found_user else None
+        return UserModel(*found_user) if found_user else None
 
     @classmethod
     def get_by_email(cls, given_email):
-        user = super().get_by_name(GET_BY_EMAIL, given_email)
+        user = super().get_by_email(GET_BY_EMAIL, given_email)
 
-        return user if user else None
+        return UserModel(*user) if user else None
 
     @classmethod
     def get_by_id(cls, usr_id):
@@ -128,6 +129,3 @@ class UserModel(AbstractModel):
 
     def __repr__(self):
         return '{Email} {Username}'.format(**self.dictify())
-
-
-users = []  # Persist user objects
