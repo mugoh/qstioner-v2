@@ -11,9 +11,9 @@ from ..database.database import query_db
 
 class AbstractModel:
 
-    def __init__(self, object_data):
+    def __init__(self):
         self.created_at = self.get_utc_local()
-        self.id = int
+        self.id = None
 
     def get_utc_local(self):
         local_t_zone = pytz.timezone('Africa/Nairobi')
@@ -34,4 +34,4 @@ class AbstractModel:
 
     @classmethod
     def get_all(cls, statement):
-        return query_db(statement)
+        return query_db(statement, many=True)
