@@ -17,7 +17,7 @@ def create_app(config_setting):
 
     CORS(app)
 
-    db_instance.init_db()
+    db_instance.create_tables()
 
     description = "Questioner is an API application allowing a user to\
                     register, login, ask questions to meetups and\
