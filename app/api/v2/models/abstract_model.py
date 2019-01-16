@@ -22,7 +22,7 @@ class AbstractModel:
             datetime.datetime.now(), is_dst=None).isoformat()
 
     def save(self, statement, values):
-        return query_db(statement, values, one=True)
+        return query_db(statement, tuple(values), one=True)
 
     @classmethod
     def get_by_name(cls, statement, value):
