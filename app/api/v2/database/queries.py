@@ -107,3 +107,11 @@ GET_ALL_MEETUPS = """
 GET_MEETUP_BY_ID = """
     SELECT * FROM meetups WHERE id = %s
 """
+
+VERIFY_MEETUP = """
+    SELECT * FROM meetups WHERE topic, tags, location = %s, %s, %s
+"""
+
+DELETE_MEETUP = """
+    DELETE FROM meetups WHERE id = %s
+"""
