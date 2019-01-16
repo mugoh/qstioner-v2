@@ -17,6 +17,7 @@ def create_app(config_setting):
 
     CORS(app)
 
+    db_instance.drop_tables()
     db_instance.create_tables()
 
     description = "Questioner is an API application allowing a user to\
