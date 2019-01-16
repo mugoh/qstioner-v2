@@ -83,3 +83,12 @@ GET_USER_BY_ID = """
 
 GET_ALL_USERS = """
     SELECT * FROM USERS ORDER BY id"""
+
+CREATE_TOKEN = """
+    INSERT INTO tokens (token) VALUES (%s)
+    RETURNING token;
+"""
+
+GET_TOKEN = """
+    SELECT token FROM tokens WHERE token = %s
+"""
