@@ -10,6 +10,7 @@ from ..models.users import UserModel
 from ..models.tokens import Token
 from ..utils.helpers import verify_pass, verify_name
 from ..utils.auth import auth_required, get_raw_auth, get_auth_identity
+from ..database.queries import GET_ALL_USERS
 
 
 class UsersRegistration(Resource):
@@ -58,7 +59,7 @@ class UsersRegistration(Resource):
     def get(self):
         return {
             "Status": 200,
-            "Data": UserModel.get_all("GET_ALL_USERS")
+            "Data": UserModel.get_all(GET_ALL_USERS)
         }, 200
 
 
