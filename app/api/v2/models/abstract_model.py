@@ -24,6 +24,9 @@ class AbstractModel:
     def save(self, statement, values):
         return query_db(statement, tuple(values), one=True)
 
+    def delete(self, statement, values):
+        return query_db(statement, (values,), rowcount=True)
+
     @classmethod
     def get_by_name(cls, statement, value):
         return query_db(statement, value, one=True)
