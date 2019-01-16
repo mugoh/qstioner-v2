@@ -10,6 +10,7 @@ CREATE_TABLE_USERS = """
     OTHERNAME VARCHAR(50),
     USERNAME VARCHAR(30) NOT NULL,
     EMAIL VARCHAR(40) NOT NULL,
+    PASSWORD VARCHAR(50) NOT NULL,
     ISADMIN BOOLEAN DEFAULT FALSE,
     PHONENUMBER INTEGER NOT NULL
     );
@@ -41,8 +42,8 @@ CREATE_TABLE_QUESTIONS = """
 CREATE_TABLE_RSVPS = """
     CREATE TABLE IF NOT EXISTS RSVPS (
     MEETUP INTEGER NOT NULL,
-    USER INTEGER NOT NULL,
-    PRIMARY KEY(USER, MEETUP)
+    USER_ID INTEGER NOT NULL,
+    PRIMARY KEY(USER_ID, MEETUP)
     );
 """
 
@@ -58,7 +59,7 @@ CREATE_USER = """
     username, isadmin, phonenumber)
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     RETURNING id, firstname, lastname, othername, email,
-    username, isadmin, phonenumber;
+    password, username, isadmin, phonenumber;
 """
 
 DROP_TABLES = """
@@ -67,7 +68,7 @@ DROP_TABLES = """
 """
 
 GET_USER_BY_NAME = """
-        SELECT * FROM USERS WHERE name = %s"""
+        SELECT * FROM USERS WHERE username = %s"""
 
 GET_BY_EMAIL = """
         SELECT * FROM USERS WHERE email = %s"""
