@@ -14,12 +14,8 @@ class Token:
         self.save()
 
     def save(self):
-        # blacklisted_tokens.add(self)
         query_db(CREATE_TOKEN, (self.signature,), one=True)
 
     @classmethod
     def check_if_blacklisted(cls, given_token):
         return query_db(GET_TOKEN, (given_token,), one=True)
-
-
-blacklisted_tokens = set()
