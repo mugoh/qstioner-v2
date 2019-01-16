@@ -61,7 +61,7 @@ class UsersRegistration(Resource):
         data = UserModel.get_all(GET_ALL_USERS)
         print(data)
         values = ["id", "firstname", "lastname", "othername", "email",
-                  "phonenumber", "username", "isadmin", "password"]
+                  "phonenumber", "username", "isadmin"]
         if data:
             data = [dict(zip(values, item)) for item in data]
         return {
