@@ -2,8 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 from flasgger import Swagger
 
-from app.api.v1 import auth_blueprint, app_blueprint
+from app.api.v2 import auth_blueprint, app_blueprint
 from instance.config import APP_CONFIG
+from app.api.v2.database.database import db_instance
 
 
 def create_app(config_setting):
@@ -16,6 +17,9 @@ def create_app(config_setting):
 
     CORS(app)
 
+    db_instance.drop_tables()
+    db_instance.create_tables()
+
     description = "Questioner is an API application allowing a user to\
                     register, login, ask questions to meetups and\
                     vote on questions posted to present meetups."
@@ -25,7 +29,7 @@ def create_app(config_setting):
         "info": {
             "title": "Questioner API",
             "description": description,
-            "version": "1.0"
+            "version": "2.0"
         }
     }
 

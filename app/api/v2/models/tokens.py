@@ -3,6 +3,9 @@
     and checks for token validity
 """
 
+from ..database.queries import CREATE_TOKEN, GET_TOKEN
+from ..database.database import query_db
+
 
 class Token:
 
@@ -11,12 +14,8 @@ class Token:
         self.save()
 
     def save(self):
-        blacklisted_tokens.add(self)
+        query_db(CREATE_TOKEN, (self.signature,), one=True)
 
     @classmethod
     def check_if_blacklisted(cls, given_token):
-        return [token for token in blacklisted_tokens if
-                getattr(token, 'signature') == given_token]
-
-
-blacklisted_tokens = set()
+        return query_db(GET_TOKEN, (given_token,), one=True)

@@ -10,6 +10,7 @@ from ..models.users import UserModel
 from ..models.tokens import Token
 from ..utils.helpers import verify_pass, verify_name
 from ..utils.auth import auth_required, get_raw_auth, get_auth_identity
+from ..database.queries import GET_ALL_USERS
 
 
 class UsersRegistration(Resource):
@@ -46,20 +47,27 @@ class UsersRegistration(Resource):
                 args.get('username') + str(random.randint(0, 40))
             }, 409
 
-        user = UserModel(**args)
+        user = UserModel(*args.values())
         user.save()
 
         return {
             "Status": 201,
             "Data": user.dictify()
-        }
+        }, 201
 
     @swag_from('docs/auth_get_users.yml')
     def get(self):
+
+        data = UserModel.get_all(GET_ALL_USERS)
+        print(data)
+        values = ["id", "firstname", "lastname", "othername", "email",
+                  "phonenumber", "username", "isadmin"]
+        if data:
+            data = [dict(zip(values, item)) for item in data]
         return {
             "Status": 200,
-            "Data": UserModel.get_all_users()
-        }
+            "Data": data
+        }, 200
 
 
 class UserLogin(Resource):

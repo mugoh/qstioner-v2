@@ -7,65 +7,70 @@ import datetime
 from flask import current_app as app
 
 from .abstract_model import AbstractModel
-from .tokens import Token
+from ..database.queries import *
 
 
 class UserModel(AbstractModel):
 
-    def __init__(self, **kwargs):
+    def __init__(self, *kwargs):
 
-        super().__init__(users)
-        self.firstname = kwargs['firstname']
-        self.lastname = kwargs['lastname']
-        self.othername = kwargs['othername']
-        self.email = kwargs['email']
-        self.phonenumber = kwargs['phonenumber']
-        self.username = kwargs['username']
-        self.isAdmin = kwargs.get('isAdmin', False)
+        super().__init__()
+        self.firstname = kwargs[0]
+        self.lastname = kwargs[1]
+        self.othername = kwargs[2]
+        self.email = kwargs[3]
+        self.phonenumber = kwargs[4]
+        self.username = kwargs[5]
+        self.isAdmin = kwargs[6]
+        self.veirified_pass = kwargs[7]
 
-        self.password = kwargs['password']
+        self.password = kwargs[7]
 
     @property
     def password(self):
-        return '****'
+        return self._password
 
     @password.setter
     def password(self, pswd):
         self._password = generate_password_hash(pswd)
 
     def check_password(self, pass_value):
-
-        return check_password_hash(self._password, pass_value)
+        # pass_db = self.verify_pass(GET_USER_PASS)
+        return check_password_hash(self.veirified_pass, pass_value)
 
     def save(self):
-        users.append(self)
+        return super().save(CREATE_USER,
+                            (self.firstname,
+                             self.lastname,
+                             self.othername,
+                             self.email,
+                             self.phonenumber,
+                             self.username,
+                             self.isAdmin,
+                             self.password))
+
+    # def verify_pass(self, statement):
+    #    return super.get_by_name(statement)
 
     #
     # Search behaviours
 
     @classmethod
     def get_by_name(cls, username):
-        found_user = [user for user in users
-                      if getattr(user, 'username') == username]
+        found_user = super().get_by_name(GET_USER_BY_NAME, (username,))
 
-        return found_user[0] if found_user else None
+        return UserModel(*found_user) if found_user else None
 
     @classmethod
     def get_by_email(cls, given_email):
-        user = [user for user in users
-                if getattr(user, 'email') == given_email]
-        return user[0] if user else None
+        user = super().get_by_name(GET_BY_EMAIL, (given_email,))
+        return UserModel(*user) if user else None
 
     @classmethod
     def get_by_id(cls, usr_id):
-        usr = [user for user in users
-               if getattr(user, 'id') == usr_id]
+        usr = super().get_by_id(GET_USER_BY_ID, (usr_id,))
 
-        return usr[0] if usr else None
-
-    @classmethod
-    def get_all_users(cls):
-        return [user.dictify() for user in users]
+        return UserModel(*usr) if usr else None
 
     def encode_auth_token(self, user_name):
         """
@@ -114,15 +119,10 @@ class UserModel(AbstractModel):
             "Phonenumber": self.phonenumber,
             "Username": self.username,
             "isAdmin": self.isAdmin,
-            "password": self.password,
             "registered": self.created_at,
-            "id": self.id
         }
 
         # return self.__dict__
 
     def __repr__(self):
         return '{Email} {Username}'.format(**self.dictify())
-
-
-users = []  # Persist user objects

@@ -1,10 +1,10 @@
 from flask_restful import Api
 from flask import Blueprint
 
-from ...api.v1.views.user import UsersRegistration, UserLogin, UserLogout
-from ...api.v1.views.meetups import Meetups, MeetUp, MeetUpItem
-from ...api.v1.views.questions import Question, Questions, QuestionVote
-from ...api.v1.views.rsvp import Rsvps, Rsvp
+from ...api.v2.views.user import UsersRegistration, UserLogin, UserLogout
+from ...api.v2.views.meetups import Meetups, MeetUp, MeetUpItem
+from ...api.v2.views.questions import Question, Questions, QuestionVote
+from ...api.v2.views.rsvp import Rsvps, Rsvp
 
 auth_blueprint = Blueprint("auth", __name__, url_prefix='/api/v1/auth/')
 app_blueprint = Blueprint("app", __name__, url_prefix='/api/v1/')
