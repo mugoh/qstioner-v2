@@ -28,7 +28,7 @@ class Database:
 
     @classmethod
     def drop_tables(cls):
-        query_db('DROP_TABLES')
+        query_db(DROP_TABLES)
 
 
 def query_db(statement, values=None, rowcount=False,
