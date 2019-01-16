@@ -5,6 +5,7 @@ import datetime
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required, current_user_only
 from ..utils.helpers import validate_date
+from ..database.queries import GET_ALL_MEETUPS
 
 
 class Meetups(Resource):
@@ -55,7 +56,7 @@ class MeetUp(Resource):
 
         return {
             "Status": 200,
-            "Data": [MeetUpModel.get_all_meetups()]
+            "Data": MeetUpModel.get_all(GET_ALL_MEETUPS)
         }, 200
 
 
