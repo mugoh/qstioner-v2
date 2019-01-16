@@ -52,6 +52,7 @@ class MeetUpModel(AbstractModel):
             with an 'id' attribute matching the given id.
         """
         that_meetup = super().get_by_id(GET_MEETUP_BY_ID, (given_id,))
+        self.zipToDict(that_meetup)
 
         if not obj:
             that_meetup = [meetup.dictify() for meetup in meetups
@@ -67,6 +68,11 @@ class MeetUpModel(AbstractModel):
             Permanently removes a meetup from the records.
         """
         meetups.remove([x for x in meetups if x == self][0])
+
+    def zipToDict(self, iterable):
+        keys = ["topic", "images", "location", "happening_on",
+                "tags"]
+        return dict(zip(keys, iterable))
 
     @classmethod
     def verify_unique(cls, meetup_object):
