@@ -22,20 +22,21 @@ class UserModel(AbstractModel):
         self.phonenumber = kwargs[4]
         self.username = kwargs[5]
         self.isAdmin = kwargs[6]
+        self.veirified_pass = kwargs[7]
 
         self.password = kwargs[7]
 
     @property
     def password(self):
-        return '****'
+        return self._password
 
     @password.setter
     def password(self, pswd):
         self._password = generate_password_hash(pswd)
 
     def check_password(self, pass_value):
-
-        return check_password_hash(self._password, pass_value)
+        # pass_db = self.verify_pass(GET_USER_PASS)
+        return check_password_hash(self.veirified_pass, pass_value)
 
     def save(self):
         return super().save(CREATE_USER,
@@ -47,6 +48,9 @@ class UserModel(AbstractModel):
                              self.username,
                              self.isAdmin,
                              self.password))
+
+    # def verify_pass(self, statement):
+    #    return super.get_by_name(statement)
 
     #
     # Search behaviours
@@ -60,7 +64,6 @@ class UserModel(AbstractModel):
     @classmethod
     def get_by_email(cls, given_email):
         user = super().get_by_name(GET_BY_EMAIL, (given_email,))
-
         return UserModel(*user) if user else None
 
     @classmethod
@@ -116,9 +119,7 @@ class UserModel(AbstractModel):
             "Phonenumber": self.phonenumber,
             "Username": self.username,
             "isAdmin": self.isAdmin,
-            "password": self.password,
             "registered": self.created_at,
-            "id": self.id
         }
 
         # return self.__dict__
