@@ -5,7 +5,7 @@ import datetime
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required, current_user_only
 from ..utils.helpers import validate_date
-from ..database.queries import GET_ALL_MEETUPS
+from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
 
 
 class Meetups(Resource):
@@ -89,7 +89,7 @@ class MeetUpItem(Resource):
                 "Error": "Meetup non-existent"
             }, 404
         else:
-            meetup.delete()
+            MeetUpModel.delete(DELETE_MEETUP, id)
         return {
             "Status": 200,
             "Message": "MeetUp deleted"
