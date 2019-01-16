@@ -57,9 +57,16 @@ class UsersRegistration(Resource):
 
     @swag_from('docs/auth_get_users.yml')
     def get(self):
+
+        data = UserModel.get_all(GET_ALL_USERS)
+        print(data)
+        values = ["id", "firstname", "lastname", "othername", "email",
+                  "phonenumber", "username", "isadmin", "password"]
+        if data:
+            data = dict(zip(values, data[0]))
         return {
             "Status": 200,
-            "Data": UserModel.get_all(GET_ALL_USERS)
+            "Data": data
         }, 200
 
 
