@@ -63,7 +63,7 @@ class UsersRegistration(Resource):
         values = ["id", "firstname", "lastname", "othername", "email",
                   "phonenumber", "username", "isadmin", "password"]
         if data:
-            data = dict(zip(values, data[0]))
+            data = [dict(zip(values, item)) for item in data]
         return {
             "Status": 200,
             "Data": data
