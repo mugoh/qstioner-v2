@@ -43,10 +43,10 @@ class UserModel(AbstractModel):
                              self.lastname,
                              self.othername,
                              self.email,
-                             self.password,
+                             self.phonenumber,
                              self.username,
                              self.isAdmin,
-                             self.phonenumber))
+                             self.password))
 
     #
     # Search behaviours
