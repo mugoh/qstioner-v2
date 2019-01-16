@@ -22,9 +22,9 @@ class MeetUpModel(AbstractModel):
             Saves meetup instance to present records
         """
         super().save(CREATE MEETUP,
-                     self.location,
-                     self.images,
                      self.topic,
+                     self.images,
+                     self.location,
                      self.tags,
                      self.happeningOn)
 
@@ -46,19 +46,13 @@ class MeetUpModel(AbstractModel):
         # Searches
 
     @classmethod
-    def get_all_meetups(cls):
-        """
-            Converts all present meetup objects to a
-            dictionary and sends them in a list envelope
-        """
-        return [meetup.dictify() for meetup in meetups]
-
-    @classmethod
     def get_by_id(cls, given_id, obj=False):
         """
             Searches and returns a meetup instance
             with an 'id' attribute matching the given id.
         """
+        that_meetup = super().get_by_id(GET_MEETUP_BY_ID, (given_id,))
+
         if not obj:
             that_meetup = [meetup.dictify() for meetup in meetups
                            if getattr(meetup, 'id') == given_id]
@@ -80,8 +74,8 @@ class MeetUpModel(AbstractModel):
             Ensures a meetup isn't re-created with the
             same data
         """
-        return any([meetup for meetup in meetups
-                    if repr(meetup) == repr(meetup_object)])
+        return any(super().get_by_name(VERIFY_MEETUP,
+                                       meetup_object.__dict__.values()))
 
     def __repr__(self):
         return '{topic} {tags} {location}'.format(**self.dictify())
