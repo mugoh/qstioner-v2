@@ -92,3 +92,18 @@ CREATE_TOKEN = """
 GET_TOKEN = """
     SELECT token FROM tokens WHERE token = %s
 """
+
+CREATE_MEETUP = """
+    INSERT INTO meetups (topic, images, location, happening_on,
+    tags) VALUES (%s, ARRAY %s, %s, %s, ARRAY %s) RETURNING
+    topic, images, location, happening_on,
+    tags;
+"""
+
+GET_ALL_MEETUPS = """
+    SELECT * FROM meetups ORDER BY id
+"""
+
+GET_MEETUP_BY_ID = """
+    SELECT * FROM meetups WHERE id = %s
+"""
