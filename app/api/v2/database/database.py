@@ -34,10 +34,9 @@ class Database:
 def query_db(statement, values=None, rowcount=False,
              return_value=False, one=False, many=False):
     result = None
+    global connection
 
     try:
-        global connection
-
         connection = db_instance.init_db()
         cursor = connection.cursor()
 
@@ -57,7 +56,7 @@ def query_db(statement, values=None, rowcount=False,
     except (Exception, psycopg2.DatabaseError) as er:
         print(er)
     finally:
-        if connection:
+        if (connection):
             connection.close()
 
     return result
