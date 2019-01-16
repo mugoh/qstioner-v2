@@ -21,12 +21,12 @@ class MeetUpModel(AbstractModel):
         """
             Saves meetup instance to present records
         """
-        super().save(CREATE MEETUP,
-                     self.topic,
-                     self.images,
-                     self.location,
-                     self.tags,
-                     self.happeningOn)
+        super().save(CREATE_MEETUP,
+                     (self.topic,
+                      self.images,
+                      self.location,
+                      self.tags,
+                      self.happeningOn))
 
     def dictify(self):
         """
@@ -77,6 +77,3 @@ class MeetUpModel(AbstractModel):
 
     def __repr__(self):
         return '{topic} {tags} {location}'.format(**self.dictify())
-
-
-meetups = []  # Holds all meetups records
