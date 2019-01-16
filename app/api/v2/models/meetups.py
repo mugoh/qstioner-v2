@@ -3,6 +3,7 @@
 """
 
 from ..models.abstract_model import AbstractModel
+from ..database.queries import *
 
 
 class MeetUpModel(AbstractModel):
@@ -20,7 +21,12 @@ class MeetUpModel(AbstractModel):
         """
             Saves meetup instance to present records
         """
-        meetups.append(self)
+        super().save(CREATE MEETUP,
+                     self.location,
+                     self.images,
+                     self.topic,
+                     self.tags,
+                     self.happeningOn)
 
     def dictify(self):
         """
