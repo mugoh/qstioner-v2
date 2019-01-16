@@ -8,11 +8,12 @@ CREATE_TABLE_USERS = """
     FIRSTNAME VARCHAR(60) NOT NULL,
     LASTNAME VARCHAR(60) NOT NULL,
     OTHERNAME VARCHAR(50),
-    USERNAME VARCHAR(30) NOT NULL,
     EMAIL VARCHAR(40) NOT NULL,
-    PASSWORD VARCHAR(50) NOT NULL,
+    PHONENUMBER INTEGER NOT NULL,
+    USERNAME VARCHAR(30) NOT NULL,
     ISADMIN BOOLEAN DEFAULT FALSE,
-    PHONENUMBER INTEGER NOT NULL
+    PASSWORD VARCHAR(100) NOT NULL
+
     );
 """
 
@@ -41,6 +42,7 @@ CREATE_TABLE_QUESTIONS = """
 
 CREATE_TABLE_RSVPS = """
     CREATE TABLE IF NOT EXISTS RSVPS (
+    ID SERIAL NOT NULL,
     MEETUP INTEGER NOT NULL,
     USER_ID INTEGER NOT NULL,
     PRIMARY KEY(USER_ID, MEETUP)
@@ -56,25 +58,28 @@ CREATE_TABLE_TOKENS = """
 
 CREATE_USER = """
     INSERT INTO users (firstname, lastname, othername, email,
-    username, isadmin, phonenumber)
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
-    RETURNING id, firstname, lastname, othername, email,
-    password, username, isadmin, phonenumber;
+    phonenumber, username, isadmin, password)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    RETURNING firstname, lastname, othername, email,
+    phonenumber, username, isadmin, password;
 """
 
 DROP_TABLES = """
-    DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS
+    DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS,
     TOKENS;
 """
 
 GET_USER_BY_NAME = """
-        SELECT * FROM USERS WHERE username = %s"""
+        SELECT firstname, lastname, othername, email,
+    phonenumber, username, isadmin, password FROM USERS WHERE username = %s"""
 
 GET_BY_EMAIL = """
-        SELECT * FROM USERS WHERE email = %s"""
+        SELECT firstname, lastname, othername, email,
+    phonenumber, username, isadmin, password FROM USERS WHERE email = %s"""
 
 GET_USER_BY_ID = """
-    SELECT * FROM USERS WHERE  id = %s"""
+    SELECT firstname, lastname, othername, email,
+    phonenumber, username, isadmin, password FROM USERS WHERE  id = %s"""
 
 GET_ALL_USERS = """
     SELECT * FROM USERS ORDER BY id"""
