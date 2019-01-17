@@ -93,7 +93,7 @@ class Question(Resource):
 
         return {
             "Status": 200,
-            "Data": [QuestionModel.get_by_id(id)]
+            "Data": QuestionModel.get_by_id(id)
         }, 200
 
     @swag_from('docs/question_delete.yml')
