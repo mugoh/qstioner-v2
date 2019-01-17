@@ -37,7 +37,8 @@ class QuestionModel(AbstractModel):
                                               self.body,
                                               self.meetup,
                                               self.user,
-                                              self._votes
+                                              self._votes,
+                                              self.created_at
                                               ))
 
     def dictify(self):
@@ -48,7 +49,7 @@ class QuestionModel(AbstractModel):
         return {
             "title": self.title,
             "body": self.body,
-            "question": self.question,
+            "meetup": self.meetup,
             "user": self.user,
             "votes": self.votes
         }
@@ -90,11 +91,11 @@ class QuestionModel(AbstractModel):
             Ensures that for each question, a question
             isn't re-created with the same data
         """
-        return (super().get_by_name(VERIFY_QUESTION,
-                                    (question_object.title,
-                                        question_object.body,
-                                        question_object.meetup,
-                                        question_object.user)))
+        return super().get_by_name(VERIFY_QUESTION,
+                                   (question_object.title,
+                                    question_object.body,
+                                    question_object.meetup
+                                    ))
 
     def __repr__(self):
         return '{title} {body} {meetup} {user}'.format(**self.dictify())
