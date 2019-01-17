@@ -75,14 +75,17 @@ class QuestionModel(AbstractModel):
 
         # Send an instance or a dict item
 
-        if obj:
-            that_question = [question for question in questions
-                             if getattr(question, 'id') == given_id]
-        elif not obj:
-            that_question = [question.dictify() for question in questions
-                             if getattr(question, 'id') == given_id]
+        _question = super().get_by_id(GET_QUESTION_BY_ID, (given_id,))
 
-        return that_question[0] if that_question else None
+        if _question and not obj:
+            # A request for a dictionary
+            return cls.zipToDict(keys, _question, single=True)
+
+        elif _question and obj:
+            # Give an instance of that meetup
+            return MeetUpModel(**cls.zipToDict(keys, that_meetup,
+                                               single=True))
+        return None
 
     @classmethod
     def verify_existence(cls, question_object):
@@ -99,3 +102,7 @@ class QuestionModel(AbstractModel):
 
     def __repr__(self):
         return '{title} {body} {meetup} {user}'.format(**self.dictify())
+
+
+keys = ["id", "title", "body",
+        "meetup", "user", "votes", "created_at"]
