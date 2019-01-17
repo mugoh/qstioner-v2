@@ -48,21 +48,23 @@ class UsersRegistration(Resource):
             }, 409
 
         user = UserModel(*args.values())
-        user.save()
+        _usr = user.save()
+        print("saveing", _usr)
 
         return {
             "Status": 201,
-            "Data": user.dictify()
+            "Data": UserModel.zipToDict(keys, _usr, single=True)
         }, 201
 
     @swag_from('docs/auth_get_users.yml')
     def get(self):
+        """
+            Retrieves existing registered users
+        """
 
         data = UserModel.get_all(GET_ALL_USERS)
-        values = ["id", "firstname", "lastname", "othername", "email",
-                  "phonenumber", "username", "isadmin"]
         if data:
-            data = [dict(zip(values, item)) for item in data]
+            data = UserModel.zipToDict(keys, data)
         return {
             "Status": 200,
             "Data": data
@@ -118,6 +120,9 @@ class UserLogout(Resource):
             "Message": f"Logout {get_auth_identity()}"
         }, 200
 
+
+keys = ["id", "firstname", "lastname", "othername", "email",
+        "phonenumber", "username", "isadmin"]
 
 USER_SCHEMA = {
     'type': 'object',
