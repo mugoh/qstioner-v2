@@ -58,6 +58,7 @@ class UserModel(AbstractModel):
     @classmethod
     def get_by_name(cls, username, key_values=False):
         found_user = super().get_by_name(GET_USER_BY_NAME, (username,))
+        print(found_user)
 
         if key_values and found_user:
             return cls.zipToDict(keys, found_user, single=True)
@@ -71,13 +72,16 @@ class UserModel(AbstractModel):
     @classmethod
     def get_by_email(cls, given_email):
         user = super().get_by_name(GET_BY_EMAIL, (given_email,))
-        return UserModel(*cls.zipToDict(keys, user)) if user else None
+        if user:
+            return UserModel(**cls.zipToDict(keys, user, single=True))
+        return None
 
     @classmethod
     def get_by_id(cls, usr_id):
         usr = super().get_by_id(GET_USER_BY_ID, (usr_id,))
 
-        return UserModel(**cls.zipToDict(usr)) if usr else None
+        return UserModel(**cls.zipToDict(
+            keys, usr, single=True)) if usr else None
 
     def encode_auth_token(self, user_name):
         """
@@ -133,3 +137,7 @@ class UserModel(AbstractModel):
 
     def __repr__(self):
         return '{Email} {Username}'.format(**self.dictify())
+
+
+keys = ["id", "firstname", "lastname", "othername", "email",
+        "phonenumber", "username", "isadmin", "password"]
