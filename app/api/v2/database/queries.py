@@ -130,3 +130,7 @@ CREATE_QUESTION = """
 GET_ALL_QUESTIONS = """
         SELECT * FROM questions ORDER BY id
 """
+
+GET_QUESTION_BY_ID = """
+        SELECT * FROM questions WHERE id = %s
+"""
