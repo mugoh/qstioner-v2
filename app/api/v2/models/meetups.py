@@ -68,7 +68,6 @@ class MeetUpModel(AbstractModel):
     def zipToDict(cls, iterable):
         keys = ["id", "topic", "images", "location", "happeningOn",
                 "tags"]
-        print(dict(zip(keys, iterable)))
         return dict(zip(keys, iterable))
 
     @classmethod
