@@ -70,15 +70,13 @@ DROP_TABLES = """
 """
 
 GET_USER_BY_NAME = """
-        SELECT id, firstname, lastname, othername, email,
-    phonenumber, username, isadmin, password FROM USERS WHERE username = %s"""
+        SELECT * FROM USERS WHERE username = %s"""
 
 GET_BY_EMAIL = """
-        SELECT firstname, lastname, othername, email,
-    phonenumber, username, isadmin, password FROM USERS WHERE email = %s"""
+        SELECT * FROM USERS WHERE email = %s"""
 
 GET_USER_BY_ID = """
-    SELECT firstname, lastname, othername, email,
+    SELECT id, firstname, lastname, othername, email,
     phonenumber, username, isadmin, password FROM USERS WHERE  id = %s"""
 
 GET_ALL_USERS = """
