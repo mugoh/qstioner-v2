@@ -46,7 +46,9 @@ def query_db(statement, values=None, rowcount=False,
         elif many:
             cursor.execute(statement)
             result = cursor.fetchall()
-
+        elif rowcount:
+            cursor.execute(statement, values)
+            result = cursor.rowcount
         else:
             cursor.execute(statement)
 
