@@ -8,9 +8,9 @@ CREATE_TABLE_USERS = """
     FIRSTNAME VARCHAR(60) NOT NULL,
     LASTNAME VARCHAR(60) NOT NULL,
     OTHERNAME VARCHAR(50),
-    EMAIL VARCHAR(40) NOT NULL,
+    EMAIL VARCHAR(40) UNIQUE NOT NULL,
     PHONENUMBER INTEGER NOT NULL,
-    USERNAME VARCHAR(30) NOT NULL,
+    USERNAME VARCHAR(30) UNIQUE NOT NULL,
     ISADMIN BOOLEAN DEFAULT FALSE,
     PASSWORD VARCHAR NOT NULL
 
@@ -34,7 +34,7 @@ CREATE_TABLE_QUESTIONS = """
     TITLE VARCHAR(40) NOT NULL,
     BODY VARCHAR(40) NOT NULL,
     MEETUP INTEGER REFERENCES MEETUPS(ID),
-    USER_ID INTEGER REFERENCES USERS (ID),
+    USER_NAME VARCHAR(30) REFERENCES USERS (USERNAME),
     VOTES INTEGER NOT NULL,
     CREATED_AT TEXT  NOT NULL
     );
@@ -122,7 +122,7 @@ VERIFY_QUESTION = """
 """
 
 CREATE_QUESTION = """
-    INSERT INTO questions (title, body, meetup, user_id, votes, created_at)
+    INSERT INTO questions (title, body, meetup, user_name, votes, created_at)
     VALUES (%s, %s, %s, %s, %s, %s)
-    RETURNING id, title, body, meetup, user_id, votes, created_at;
+    RETURNING id, title, body, meetup, user_name, votes, created_at;
 """
