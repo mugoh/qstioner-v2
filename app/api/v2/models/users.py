@@ -58,7 +58,6 @@ class UserModel(AbstractModel):
     @classmethod
     def get_by_name(cls, username, key_values=False):
         found_user = super().get_by_name(GET_USER_BY_NAME, (username,))
-        print(found_user)
 
         if key_values and found_user:
             return cls.zipToDict(keys, found_user, single=True)
