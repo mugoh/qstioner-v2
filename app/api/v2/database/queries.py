@@ -135,3 +135,13 @@ GET_QUESTION_BY_ID = """
 DELETE_QUESTION = """
     DELETE FROM questions where id = %s
 """
+
+GET_QUESTION_VOTES = """
+    SELECT votes FROM questions where id =%s
+"""
+
+UPDATE_QUESTION_VOTES = """
+    UPDATE questions
+    SET votes = %s WHERE id = %s
+    RETURNING *;
+"""
