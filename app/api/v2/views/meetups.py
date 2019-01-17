@@ -5,6 +5,7 @@ import datetime
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required, current_user_only
 from ..utils.helpers import validate_date
+from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
 
 
 class Meetups(Resource):
@@ -53,9 +54,15 @@ class MeetUp(Resource):
     @swag_from('docs/meetups_get.yml')
     def get(this_user, self):
 
+        data = MeetUpModel.get_all(GET_ALL_MEETUPS)
+        keys = ["id", "topic", "images", "location", "happening_on",
+                "tags"]
+
+        if data:
+            data = [dict(zip(keys, item)) for item in data]
         return {
             "Status": 200,
-            "Data": [MeetUpModel.get_all_meetups()]
+            "Data": data
         }, 200
 
 
@@ -88,7 +95,7 @@ class MeetUpItem(Resource):
                 "Error": "Meetup non-existent"
             }, 404
         else:
-            meetup.delete()
+            meetup.delete(DELETE_MEETUP, (id,))
         return {
             "Status": 200,
             "Message": "MeetUp deleted"

@@ -3,49 +3,51 @@
 """
 
 from ..models.abstract_model import AbstractModel
+from ..database.queries import *
 
 
 class MeetUpModel(AbstractModel):
 
     def __init__(self, **kargs):
 
-        super().__init__(meetups)
+        super().__init__()
         self.location = kargs.get('location')
         self.images = kargs.get('images')
         self.topic = kargs.get('topic')
         self.happeningOn = kargs.get('happeningOn')
         self.tags = kargs.get('tags')
+        self.id = kargs.get('id')
 
     def save(self):
         """
-            Saves meetup instance to present records
+            Saves meetup to present records
         """
-        meetups.append(self)
+        super().save(CREATE_MEETUP,
+                     (self.topic,
+                      self.images,
+                      self.location,
+                      self.happeningOn,
+                      self.tags))
 
     def dictify(self):
         """
             Returns a dictionary of the meetup instance
         """
 
-        """return {
+        data = {
             "topic": self.topic,
             "location": self.location,
             "happeningOn": self.happeningOn,
             "tags": self.tags,
         }
-        """
-        return self.__dict__
+
+        if self.id:
+            data.update({"id": self.id})
+
+        return data
 
         #
         # Searches
-
-    @classmethod
-    def get_all_meetups(cls):
-        """
-            Converts all present meetup objects to a
-            dictionary and sends them in a list envelope
-        """
-        return [meetup.dictify() for meetup in meetups]
 
     @classmethod
     def get_by_id(cls, given_id, obj=False):
@@ -53,20 +55,28 @@ class MeetUpModel(AbstractModel):
             Searches and returns a meetup instance
             with an 'id' attribute matching the given id.
         """
-        if not obj:
-            that_meetup = [meetup.dictify() for meetup in meetups
-                           if getattr(meetup, 'id') == given_id]
-        else:
-            that_meetup = [meetup for meetup in meetups
-                           if getattr(meetup, 'id') == given_id]
+        that_meetup = super().get_by_id(GET_MEETUP_BY_ID, (given_id,))
 
-        return that_meetup[0] if that_meetup else None
+        if that_meetup and not obj:
+            # A request for a dictionary
+            return MeetUpModel(**cls.zipToDict(that_meetup)).dictify()
 
-    def delete(self):
+        elif that_meetup and obj:
+            # Give an instance of that meetup
+            return MeetUpModel(**cls.zipToDict(that_meetup))
+
+        return None
+
+    @classmethod
+    def zipToDict(cls, iterable):
         """
-            Permanently removes a meetup from the records.
+            Performs a (key, value) pair between meetup detail
+            names and meetup values fetched from the database.
         """
-        meetups.remove([x for x in meetups if x == self][0])
+
+        keys = ["id", "topic", "images", "location", "happeningOn",
+                "tags"]
+        return dict(zip(keys, iterable))
 
     @classmethod
     def verify_unique(cls, meetup_object):
@@ -74,11 +84,10 @@ class MeetUpModel(AbstractModel):
             Ensures a meetup isn't re-created with the
             same data
         """
-        return any([meetup for meetup in meetups
-                    if repr(meetup) == repr(meetup_object)])
+        return (super().get_by_name(VERIFY_MEETUP,
+                                    (meetup_object.topic,
+                                        meetup_object.tags,
+                                        meetup_object.location)))
 
     def __repr__(self):
         return '{topic} {tags} {location}'.format(**self.dictify())
-
-
-meetups = []  # Holds all meetups records

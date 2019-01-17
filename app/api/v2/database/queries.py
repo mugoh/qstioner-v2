@@ -23,7 +23,7 @@ CREATE_TABLE_MEETUPS = """
     TOPIC VARCHAR(112) NOT NULL,
     IMAGES VARCHAR(1024)[],
     LOCATION VARCHAR(50) NOT NULL,
-    HAPPENING_ON DATE NOT NULL DEFAULT CURRENT_DATE,
+    HAPPENING_ON TEXT NOT NULL,
     TAGS TEXT []
     );
 """
@@ -91,4 +91,27 @@ CREATE_TOKEN = """
 
 GET_TOKEN = """
     SELECT token FROM tokens WHERE token = %s
+"""
+
+CREATE_MEETUP = """
+    INSERT INTO meetups (topic, images, location, happening_on,
+    tags) VALUES (%s, %s, %s, %s, %s) RETURNING
+    topic, images, location, happening_on,
+    tags;
+"""
+
+GET_ALL_MEETUPS = """
+    SELECT * FROM meetups ORDER BY id
+"""
+
+GET_MEETUP_BY_ID = """
+    SELECT * FROM meetups WHERE id = %s
+"""
+
+VERIFY_MEETUP = """
+    SELECT * FROM meetups WHERE (topic, tags, location) = (%s, %s, %s)
+"""
+
+DELETE_MEETUP = """
+    DELETE FROM meetups WHERE id = %s
 """

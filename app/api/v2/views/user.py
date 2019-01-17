@@ -59,7 +59,6 @@ class UsersRegistration(Resource):
     def get(self):
 
         data = UserModel.get_all(GET_ALL_USERS)
-        print(data)
         values = ["id", "firstname", "lastname", "othername", "email",
                   "phonenumber", "username", "isadmin"]
         if data:
