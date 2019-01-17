@@ -25,7 +25,7 @@ class AbstractModel:
         return query_db(statement, tuple(values), one=True)
 
     def delete(self, statement, values):
-        return query_db(statement, (values,), rowcount=True)
+        return query_db(statement, values, rowcount=True)
 
     @classmethod
     def get_by_name(cls, statement, value):
