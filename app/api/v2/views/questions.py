@@ -132,9 +132,9 @@ class QuestionVote(Resource):
             question = QuestionModel.get_by_id(id, obj=True)
 
         if vote == 'upvote':
-            question.update_votes()
+            voted_question = question.update_votes(id)
         elif vote == 'downvote':
-            question.update_votes(add=False)
+            voted_question = question.update_votes(id, add=False)
 
         # Handle unknown url str parameter
         else:
@@ -145,7 +145,7 @@ class QuestionVote(Resource):
 
         return {
             "Status": 200,
-            "Data": [question.dictify()]
+            "Data": [voted_question]
         }, 200
 
 
