@@ -20,7 +20,7 @@ class MeetUpModel(AbstractModel):
 
     def save(self):
         """
-            Saves meetup instance to present records
+            Saves meetup to present records
         """
         super().save(CREATE_MEETUP,
                      (self.topic,
@@ -58,14 +58,22 @@ class MeetUpModel(AbstractModel):
         that_meetup = super().get_by_id(GET_MEETUP_BY_ID, (given_id,))
 
         if that_meetup and not obj:
+            # A request for a dictionary
             return MeetUpModel(**cls.zipToDict(that_meetup)).dictify()
+
         elif that_meetup and obj:
+            # Give an instance of that meetup
             return MeetUpModel(**cls.zipToDict(that_meetup))
 
         return None
 
     @classmethod
     def zipToDict(cls, iterable):
+        """
+            Performs a (key, value) pair between meetup detail
+            names and meetup values fetched from the database.
+        """
+
         keys = ["id", "topic", "images", "location", "happeningOn",
                 "tags"]
         return dict(zip(keys, iterable))
