@@ -32,7 +32,7 @@ class Questions(Resource):
         user = UserModel.get_by_name(get_auth_identity())
         if user:
             args.update({
-                "user": user.id
+                "user": user.username
             })
 
         # Verify meetup to be added to question record
@@ -46,7 +46,9 @@ class Questions(Resource):
         new_questn = QuestionModel(**args)
 
         if not QuestionModel.verify_existence(new_questn):
-            new_questn.save()
+            values = new_questn.save()
+            keys = ["id", "title", "body",
+                    "meetup", "user_id", "votes", "created_at"]
 
         else:
             return {
@@ -56,7 +58,7 @@ class Questions(Resource):
 
         return {
             "Status": 201,
-            "Data": [new_questn.dictify()]
+            "Data": [dict(zip(keys, values))]
         }, 201
 
     @swag_from('docs/questions_get.yml')
@@ -67,7 +69,7 @@ class Questions(Resource):
 
         return {
             "Status": 200,
-            "Data": [QuestionModel.get_all_questions()]
+            "Data": [QuestionModel.get_all(GET_ALL_QUESTIONS)]
         }, 200
 
 
