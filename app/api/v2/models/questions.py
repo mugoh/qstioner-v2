@@ -6,7 +6,7 @@ class QuestionModel(AbstractModel):
 
     def __init__(self, **kwargs):
 
-        super().__init__(questions)
+        super().__init__()
         self.title = kwargs['title']
         self.body = kwargs['body']
         self.meetup = kwargs['meetup']
