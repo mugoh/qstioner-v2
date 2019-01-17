@@ -38,3 +38,15 @@ class AbstractModel:
     @classmethod
     def get_all(cls, statement):
         return query_db(statement, many=True)
+
+    @classmethod
+    def zipToDict(cls, keys, iters, single=False):
+        """
+            Returns key, value pairs for response ouputs in
+            successful requests for record names and record data
+            fetched from the database
+        """
+        if single:
+            return dict(zip(keys, iters))
+
+        return [dict(zip(keys, item)) for item in iters]
