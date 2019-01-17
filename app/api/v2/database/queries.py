@@ -126,3 +126,7 @@ CREATE_QUESTION = """
     VALUES (%s, %s, %s, %s, %s, %s)
     RETURNING id, title, body, meetup, user_name, votes, created_at;
 """
+
+GET_ALL_QUESTIONS = """
+        SELECT * FROM questions ORDER BY id
+"""
