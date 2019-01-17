@@ -60,7 +60,7 @@ CREATE_USER = """
     INSERT INTO users (firstname, lastname, othername, email,
     phonenumber, username, isadmin, password)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    RETURNING firstname, lastname, othername, email,
+    RETURNING id, firstname, lastname, othername, email,
     phonenumber, username, isadmin, password;
 """
 
