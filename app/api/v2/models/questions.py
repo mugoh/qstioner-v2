@@ -42,7 +42,7 @@ class QuestionModel(AbstractModel):
         _upvoted = super().get_by_name(GET_VOTED_QUESTION, (
             user_id, q_id, 'upvoted'))
 
-        # Delete predent vote record
+        # Delete present vote record
         if _upvoted or _downvoted:
 
             if add and _upvoted:
@@ -52,12 +52,16 @@ class QuestionModel(AbstractModel):
                 super().delete(DELETE_VOTED_QUSER, _downvoted)
                 add = True
 
+        # Get current vote count
         stored_votes = super().get_by_id(GET_QUESTION_VOTES, (q_id,))[0]
 
+        # Downvote and save user plus Question id
         if not add:
             super().save(CREATE_QUESTION_VOTE,
                          (user_id, q_id, 'downvoted'))
             self._votes = stored_votes - 1
+
+        # Upvote and save user and Question id
         else:
             self._votes = stored_votes + 1
             super().save(CREATE_QUESTION_VOTE,
