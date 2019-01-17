@@ -8,6 +8,7 @@ from ..models.questions import QuestionModel
 from ..models.users import UserModel
 from ..models.meetups import MeetUpModel
 from ..utils.auth import auth_required, get_auth_identity
+from ..database.queries import GET_ALL_QUESTIONS
 
 
 class Questions(Resource):
@@ -47,9 +48,6 @@ class Questions(Resource):
 
         if not QuestionModel.verify_existence(new_questn):
             values = new_questn.save()
-            keys = ["id", "title", "body",
-                    "meetup", "user_id", "votes", "created_at"]
-
         else:
             return {
                 "Status": 409,
@@ -58,7 +56,7 @@ class Questions(Resource):
 
         return {
             "Status": 201,
-            "Data": [dict(zip(keys, values))]
+            "Data": QuestionModel.zipToDict(keys, values, single=True)
         }, 201
 
     @swag_from('docs/questions_get.yml')
@@ -66,10 +64,13 @@ class Questions(Resource):
         """
             Returns all exsisting questions
         """
+        data = QuestionModel.get_all(GET_ALL_QUESTIONS)
 
+        if data:
+            data = QuestionModel.zipToDict(keys, data)
         return {
             "Status": 200,
-            "Data": [QuestionModel.get_all(GET_ALL_QUESTIONS)]
+            "Data": data
         }, 200
 
 
@@ -133,3 +134,7 @@ class QuestionVote(Resource):
             "Status": 200,
             "Data": [question.dictify()]
         }, 200
+
+
+keys = ["id", "title", "body",
+        "meetup", "user", "votes", "created_at"]
