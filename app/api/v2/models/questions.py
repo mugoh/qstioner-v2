@@ -84,8 +84,8 @@ class QuestionModel(AbstractModel):
 
         elif _question and obj:
             # Give an instance of that question
-            return MeetUpModel(**cls.zipToDict(keys, that_meetup,
-                                               single=True))
+            return QuestionModel(**cls.zipToDict(keys, _question,
+                                                 single=True))
         return None
 
     @classmethod
