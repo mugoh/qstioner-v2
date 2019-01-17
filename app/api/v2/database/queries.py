@@ -34,7 +34,7 @@ CREATE_TABLE_QUESTIONS = """
     TITLE VARCHAR(40) NOT NULL,
     BODY VARCHAR(40) NOT NULL,
     MEETUP INTEGER REFERENCES MEETUPS(ID),
-    USER INTEGER REFERENCES USERS (ID),
+    USER_ID INTEGER REFERENCES USERS (ID),
     VOTES INTEGER NOT NULL,
     CREATED_AT DATE DEFAULT CURRENT_DATE
     );
@@ -122,7 +122,7 @@ VERIFY_QUESTION = """
 """
 
 CREATE_QUESTION = """
-    INSERT INTO questions (title, body, meetup, user, votes)
+    INSERT INTO questions (title, body, meetup, user_id, votes)
     VALUES (%s %s %s %s %s)
-    RETURNING title, body, meetup, user, votes, created_at;
+    RETURNING title, body, meetup, user_id, votes, created_at;
 """
