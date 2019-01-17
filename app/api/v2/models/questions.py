@@ -11,6 +11,7 @@ class QuestionModel(AbstractModel):
         self.body = kwargs['body']
         self.meetup = kwargs['meetup']
         self.user = kwargs.get('user')
+        self.id = kwargs.get('id')
 
         self._votes = 0
 
@@ -22,11 +23,19 @@ class QuestionModel(AbstractModel):
     def votes(self, value):
         raise AttributeError("Oops! You are not allowed to do that")
 
-    def update_votes(self, add=True):
+    def update_votes(self, q_id, add=True):
+        """
+            Changes the vote count of a question.
+        """
+        stored_votes = super().get_by_id(GET_QUESTION_VOTES, (q_id,))[0]
         if not add:
-            self._votes -= 1
+            self.votes = stored_votes - 1
         else:
-            self._votes += 1
+            self._votes = stored_votes + 1
+        data = super().update(
+            UPDATE_QUESTION_VOTES, (self.votes, q_id))
+        self._votes = data
+        return self.dictify()
 
     def save(self):
         """
@@ -47,23 +56,17 @@ class QuestionModel(AbstractModel):
         """
 
         return {
+            "id": self.id,
             "title": self.title,
             "body": self.body,
             "meetup": self.meetup,
             "user": self.user,
-            "votes": self.votes
+            "votes": self.votes,
+            "created_at": self.created_at
         }
 
         #
         # Searches
-
-    @classmethod
-    def get_all_questions(cls):
-        """
-            Converts all present question objects to a
-            dictionary and sends them in a list envelope
-        """
-        return [question.dictify() for question in questions]
 
     @classmethod
     def get_by_id(cls, given_id, obj=False):
