@@ -16,6 +16,7 @@ class MeetUpModel(AbstractModel):
         self.topic = kargs.get('topic')
         self.happeningOn = kargs.get('happeningOn')
         self.tags = kargs.get('tags')
+        self.id = kargs.get('id')
 
     def save(self):
         """
@@ -33,14 +34,17 @@ class MeetUpModel(AbstractModel):
             Returns a dictionary of the meetup instance
         """
 
-        """return {
+        data = {
             "topic": self.topic,
             "location": self.location,
             "happeningOn": self.happeningOn,
             "tags": self.tags,
         }
-        """
-        return self.__dict__
+
+        if self.id:
+            data.update({"id": self.id})
+
+        return data
 
         #
         # Searches
@@ -52,18 +56,19 @@ class MeetUpModel(AbstractModel):
             with an 'id' attribute matching the given id.
         """
         that_meetup = super().get_by_id(GET_MEETUP_BY_ID, (given_id,))
-        MeetupModel(**self.zipToDict(that_meetup))
 
         if that_meetup and not obj:
-            return MeetupModel(**self.zipToDict(that_meetup)).dictify()
+            return MeetUpModel(**cls.zipToDict(that_meetup)).dictify()
         elif that_meetup and obj:
-            return MeetupModel(**self.zipToDict(that_meetup))
+            return MeetUpModel(**cls.zipToDict(that_meetup))
 
         return None
 
-    def zipToDict(self, iterable):
-        keys = ["topic", "images", "location", "happening_on",
+    @classmethod
+    def zipToDict(cls, iterable):
+        keys = ["id", "topic", "images", "location", "happeningOn",
                 "tags"]
+        print(dict(zip(keys, iterable)))
         return dict(zip(keys, iterable))
 
     @classmethod
