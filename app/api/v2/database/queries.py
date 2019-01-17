@@ -134,3 +134,6 @@ GET_ALL_QUESTIONS = """
 GET_QUESTION_BY_ID = """
         SELECT * FROM questions WHERE id = %s
 """
+DELETE_QUESTION = """
+    DELETE FROM questions where id = %s
+"""
