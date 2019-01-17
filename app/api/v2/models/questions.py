@@ -9,7 +9,7 @@ class QuestionModel(AbstractModel):
         super().__init__(questions)
         self.title = kwargs['title']
         self.body = kwargs['body']
-        self.question = kwargs['question']
+        self.meetup = kwargs['meetup']
         self.created_by = kwargs.get('user', "Anonymous")
         self.user = kwargs.get('user')
 
@@ -89,7 +89,8 @@ class QuestionModel(AbstractModel):
         return (super().get_by_name(VERIFY_QUESTION,
                                     (question_object.title,
                                         question_object.body,
+                                        question_object.meetup,
                                         question_object.user)))
 
     def __repr__(self):
-        return '{title} {body} {question} {user}'.format(**self.dictify())
+        return '{title} {body} {meetup} {user}'.format(**self.dictify())

@@ -115,3 +115,8 @@ VERIFY_MEETUP = """
 DELETE_MEETUP = """
     DELETE FROM meetups WHERE id = %s
 """
+
+VERIFY_QUESTION = """
+        SELECT * FROM questions where
+        (title, body, meetup, user) = (%s %s %s %s)
+"""
