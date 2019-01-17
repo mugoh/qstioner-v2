@@ -1,4 +1,5 @@
 from .abstract_model import AbstractModel
+from ..database.queries import *
 
 
 class QuestionModel(AbstractModel):
@@ -8,7 +9,7 @@ class QuestionModel(AbstractModel):
         super().__init__(questions)
         self.title = kwargs['title']
         self.body = kwargs['body']
-        self.meetup = kwargs['meetup']
+        self.question = kwargs['question']
         self.created_by = kwargs.get('user', "Anonymous")
         self.user = kwargs.get('user')
 
@@ -43,7 +44,7 @@ class QuestionModel(AbstractModel):
         return {
             "title": self.title,
             "body": self.body,
-            "meetup": self.meetup,
+            "question": self.question,
             "user": self.user,
             "votes": self.votes
         }
@@ -82,14 +83,13 @@ class QuestionModel(AbstractModel):
     def verify_existence(cls, question_object):
         """
             Helps minimize on  questions duplicity.
-            Ensures that for each meetup, a question
+            Ensures that for each question, a question
             isn't re-created with the same data
         """
-        return any([question for question in questions
-                    if repr(question) == repr(question_object)])
+        return (super().get_by_name(VERIFY_QUESTION,
+                                    (question_object.title,
+                                        question_object.body,
+                                        question_object.user)))
 
     def __repr__(self):
-        return '{title} {body} {meetup} {user}'.format(**self.dictify())
-
-
-questions = []
+        return '{title} {body} {question} {user}'.format(**self.dictify())
