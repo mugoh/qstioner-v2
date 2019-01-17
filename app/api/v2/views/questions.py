@@ -130,11 +130,13 @@ class QuestionVote(Resource):
             }, 404
         else:
             question = QuestionModel.get_by_id(id, obj=True)
+        _user_id = UserModel.get_by_name(
+            this_user, key_values=True).get('id')
 
         if vote == 'upvote':
-            voted_question = question.update_votes(id)
+            voted_question = question.update_votes(id, _user_id)
         elif vote == 'downvote':
-            voted_question = question.update_votes(id, add=False)
+            voted_question = question.update_votes(id, _user_id, add=False)
 
         # Handle unknown url str parameter
         else:
