@@ -30,8 +30,8 @@ class QuestionModel(AbstractModel):
 
     def save(self):
         """
-            Saves question to the present record
-            holding all questions
+            Saves a question to a new row in
+            the QUESTIONS table
         """
         return super().save(CREATE_QUESTION, (self.title,
                                               self.body,
@@ -68,8 +68,9 @@ class QuestionModel(AbstractModel):
     @classmethod
     def get_by_id(cls, given_id, obj=False):
         """
-            Searches and returns a question instance with
-            an 'id' attribute matching the given id.
+            Searches and returns a question instance
+            or dict object an 'id' attribute matching
+            the given id.
             Default return value is None.
         """
 
@@ -82,7 +83,7 @@ class QuestionModel(AbstractModel):
             return cls.zipToDict(keys, _question, single=True)
 
         elif _question and obj:
-            # Give an instance of that meetup
+            # Give an instance of that question
             return MeetUpModel(**cls.zipToDict(keys, that_meetup,
                                                single=True))
         return None
@@ -90,9 +91,9 @@ class QuestionModel(AbstractModel):
     @classmethod
     def verify_existence(cls, question_object):
         """
-            Helps minimize on  questions duplicity.
+            Helps minimize on questions records duplicity.
             Ensures that for each question, a question
-            isn't re-created with the same data
+            isn't re-created with the same data.
         """
         return super().get_by_name(VERIFY_QUESTION,
                                    (question_object.title,
