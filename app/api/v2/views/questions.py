@@ -8,7 +8,8 @@ from ..models.questions import QuestionModel
 from ..models.users import UserModel
 from ..models.meetups import MeetUpModel
 from ..utils.auth import auth_required, get_auth_identity
-from ..database.queries import GET_ALL_QUESTIONS
+
+from ..database.queries import GET_ALL_QUESTIONS, DELETE_QUESTION
 
 
 class Questions(Resource):
@@ -97,8 +98,20 @@ class Question(Resource):
         }, 200
 
     @swag_from('docs/question_delete.yml')
-    def delete(this_user, id):
-        pass
+    def delete(this_user, self, id):
+        question = QuestionModel.get_by_id(id, obj=True)
+        if not question:
+            return {
+                "Status": 404,
+                "Error": "Question not existent"
+            }, 404
+        else:
+            question.delete(DELETE_QUESTION, (id,))
+
+            return {
+                "Status": 200,
+                "Message": f'Question of ID {id} deleted'
+            }, 200
 
 
 class QuestionVote(Resource):
