@@ -5,6 +5,9 @@
 from ..models.abstract_model import AbstractModel
 from ..database.queries import *
 
+keys = ["id", "topic", "images", "location", "happeningOn",
+        "tags"]
+
 
 class MeetUpModel(AbstractModel):
 
@@ -59,24 +62,15 @@ class MeetUpModel(AbstractModel):
 
         if that_meetup and not obj:
             # A request for a dictionary
-            return MeetUpModel(**cls.zipToDict(that_meetup)).dictify()
+            return MeetUpModel(**cls.zipToDict(keys, that_meetup, single=True)
+                               ).dictify()
 
         elif that_meetup and obj:
             # Give an instance of that meetup
-            return MeetUpModel(**cls.zipToDict(that_meetup))
+            return MeetUpModel(**cls.zipToDict(keys, that_meetup,
+                                               single=True))
 
         return None
-
-    @classmethod
-    def zipToDict(cls, iterable):
-        """
-            Performs a (key, value) pair between meetup detail
-            names and meetup values fetched from the database.
-        """
-
-        keys = ["id", "topic", "images", "location", "happeningOn",
-                "tags"]
-        return dict(zip(keys, iterable))
 
     @classmethod
     def verify_unique(cls, meetup_object):
