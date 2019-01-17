@@ -27,6 +27,9 @@ class AbstractModel:
     def delete(self, statement, values):
         return query_db(statement, values, rowcount=True)
 
+    def update(self, statement, values):
+        return query_db(statement, values, rowcount=True)
+
     @classmethod
     def get_by_name(cls, statement, value):
         return query_db(statement, value, one=True)
@@ -38,3 +41,15 @@ class AbstractModel:
     @classmethod
     def get_all(cls, statement):
         return query_db(statement, many=True)
+
+    @classmethod
+    def zipToDict(cls, keys, iters, single=False):
+        """
+            Returns key, value pairs for response ouputs in
+            successful requests for record names and record data
+            fetched from the database
+        """
+        if single:
+            return dict(zip(keys, iters))
+
+        return [dict(zip(keys, item)) for item in iters]

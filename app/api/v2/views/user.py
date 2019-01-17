@@ -29,7 +29,7 @@ class UsersRegistration(Resource):
             help="Oopsy! Email format not invented yet")
         parser.add_argument('phonenumber', type=int)
         parser.add_argument('username', type=verify_name)
-        parser.add_argument('isAdmin', type=bool, default=False)
+        parser.add_argument('isadmin', type=bool, default=False)
         parser.add_argument('password', required=True, type=verify_pass)
 
         args = parser.parse_args(strict=True)
@@ -47,22 +47,23 @@ class UsersRegistration(Resource):
                 args.get('username') + str(random.randint(0, 40))
             }, 409
 
-        user = UserModel(*args.values())
-        user.save()
+        user = UserModel(**args)
+        _usr = user.save()
 
         return {
             "Status": 201,
-            "Data": user.dictify()
+            "Data": UserModel.zipToDict(keys, _usr, single=True)
         }, 201
 
     @swag_from('docs/auth_get_users.yml')
     def get(self):
+        """
+            Retrieves existing registered users
+        """
 
         data = UserModel.get_all(GET_ALL_USERS)
-        values = ["id", "firstname", "lastname", "othername", "email",
-                  "phonenumber", "username", "isadmin"]
         if data:
-            data = [dict(zip(values, item)) for item in data]
+            data = UserModel.zipToDict(keys, data)
         return {
             "Status": 200,
             "Data": data
@@ -101,7 +102,8 @@ class UserLogin(Resource):
         return {
             "Status": 200,
             "Data": [{"Message": f"Logged in as {user.username}",
-                      "token": str(user.encode_auth_token(user.username)),
+                      "token": user.encode_auth_token(
+                          user.username).decode('utf-8'),
                       "user": repr(user)}]
         }, 200
 
@@ -118,6 +120,9 @@ class UserLogout(Resource):
             "Message": f"Logout {get_auth_identity()}"
         }, 200
 
+
+keys = ["id", "firstname", "lastname", "othername", "email",
+        "phonenumber", "username", "isadmin"]
 
 USER_SCHEMA = {
     'type': 'object',

@@ -12,19 +12,19 @@ from ..database.queries import *
 
 class UserModel(AbstractModel):
 
-    def __init__(self, *kwargs):
+    def __init__(self, **kwargs):
 
         super().__init__()
-        self.firstname = kwargs[0]
-        self.lastname = kwargs[1]
-        self.othername = kwargs[2]
-        self.email = kwargs[3]
-        self.phonenumber = kwargs[4]
-        self.username = kwargs[5]
-        self.isAdmin = kwargs[6]
-        self.veirified_pass = kwargs[7]
+        self.firstname = kwargs.get('firstname')
+        self.lastname = kwargs.get('lastname')
+        self.othername = kwargs.get('lastname')
+        self.email = kwargs.get('email')
+        self.phonenumber = kwargs.get('phonenumber')
+        self.username = kwargs.get('username')
+        self.isAdmin = kwargs.get('isadmin')
+        self.veirified_pass = kwargs.get('password')
 
-        self.password = kwargs[7]
+        self.password = kwargs.get('password')
 
     @property
     def password(self):
@@ -56,21 +56,31 @@ class UserModel(AbstractModel):
     # Search behaviours
 
     @classmethod
-    def get_by_name(cls, username):
+    def get_by_name(cls, username, key_values=False):
         found_user = super().get_by_name(GET_USER_BY_NAME, (username,))
 
-        return UserModel(*found_user) if found_user else None
+        if key_values and found_user:
+            return cls.zipToDict(keys, found_user, single=True)
+
+        elif found_user:
+            return UserModel(
+                **cls.zipToDict(
+                    keys, found_user, single=True))
+        return None
 
     @classmethod
     def get_by_email(cls, given_email):
         user = super().get_by_name(GET_BY_EMAIL, (given_email,))
-        return UserModel(*user) if user else None
+        if user:
+            return UserModel(**cls.zipToDict(keys, user, single=True))
+        return None
 
     @classmethod
     def get_by_id(cls, usr_id):
         usr = super().get_by_id(GET_USER_BY_ID, (usr_id,))
 
-        return UserModel(*usr) if usr else None
+        return UserModel(**cls.zipToDict(
+            keys, usr, single=True)) if usr else None
 
     def encode_auth_token(self, user_name):
         """
@@ -126,3 +136,7 @@ class UserModel(AbstractModel):
 
     def __repr__(self):
         return '{Email} {Username}'.format(**self.dictify())
+
+
+keys = ["id", "firstname", "lastname", "othername", "email",
+        "phonenumber", "username", "isadmin", "password"]

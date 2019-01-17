@@ -55,11 +55,9 @@ class MeetUp(Resource):
     def get(this_user, self):
 
         data = MeetUpModel.get_all(GET_ALL_MEETUPS)
-        keys = ["id", "topic", "images", "location", "happening_on",
-                "tags"]
 
         if data:
-            data = [dict(zip(keys, item)) for item in data]
+            data = MeetUpModel.zipToDict(keys, data)
         return {
             "Status": 200,
             "Data": data
@@ -100,3 +98,7 @@ class MeetUpItem(Resource):
             "Status": 200,
             "Message": "MeetUp deleted"
         }, 200
+
+
+keys = ["id", "topic", "images", "location", "happening_on",
+        "tags"]

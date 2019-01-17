@@ -9,6 +9,8 @@ from ..models.users import UserModel
 from ..models.meetups import MeetUpModel
 from ..utils.auth import auth_required, get_auth_identity
 
+from ..database.queries import GET_ALL_QUESTIONS, DELETE_QUESTION
+
 
 class Questions(Resource):
     """
@@ -32,7 +34,7 @@ class Questions(Resource):
         user = UserModel.get_by_name(get_auth_identity())
         if user:
             args.update({
-                "user": user.id
+                "user": user.username
             })
 
         # Verify meetup to be added to question record
@@ -46,8 +48,7 @@ class Questions(Resource):
         new_questn = QuestionModel(**args)
 
         if not QuestionModel.verify_existence(new_questn):
-            new_questn.save()
-
+            values = new_questn.save()
         else:
             return {
                 "Status": 409,
@@ -56,7 +57,7 @@ class Questions(Resource):
 
         return {
             "Status": 201,
-            "Data": [new_questn.dictify()]
+            "Data": QuestionModel.zipToDict(keys, values, single=True)
         }, 201
 
     @swag_from('docs/questions_get.yml')
@@ -64,10 +65,13 @@ class Questions(Resource):
         """
             Returns all exsisting questions
         """
+        data = QuestionModel.get_all(GET_ALL_QUESTIONS)
 
+        if data:
+            data = QuestionModel.zipToDict(keys, data)
         return {
             "Status": 200,
-            "Data": [QuestionModel.get_all_questions()]
+            "Data": data
         }, 200
 
 
@@ -90,12 +94,24 @@ class Question(Resource):
 
         return {
             "Status": 200,
-            "Data": [QuestionModel.get_by_id(id)]
+            "Data": QuestionModel.get_by_id(id)
         }, 200
 
     @swag_from('docs/question_delete.yml')
-    def delete(this_user, id):
-        pass
+    def delete(this_user, self, id):
+        question = QuestionModel.get_by_id(id, obj=True)
+        if not question:
+            return {
+                "Status": 404,
+                "Error": "Question not existent"
+            }, 404
+        else:
+            question.delete(DELETE_QUESTION, (id,))
+
+            return {
+                "Status": 200,
+                "Message": f'Question of ID {id} deleted'
+            }, 200
 
 
 class QuestionVote(Resource):
@@ -114,11 +130,13 @@ class QuestionVote(Resource):
             }, 404
         else:
             question = QuestionModel.get_by_id(id, obj=True)
+        _user_id = UserModel.get_by_name(
+            this_user, key_values=True).get('id')
 
         if vote == 'upvote':
-            question.update_votes()
+            voted_question = question.update_votes(id, _user_id)
         elif vote == 'downvote':
-            question.update_votes(add=False)
+            voted_question = question.update_votes(id, _user_id, add=False)
 
         # Handle unknown url str parameter
         else:
@@ -129,5 +147,9 @@ class QuestionVote(Resource):
 
         return {
             "Status": 200,
-            "Data": [question.dictify()]
+            "Data": [voted_question]
         }, 200
+
+
+keys = ["id", "title", "body",
+        "meetup", "user", "votes", "created_at"]

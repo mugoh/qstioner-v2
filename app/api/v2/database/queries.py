@@ -8,9 +8,9 @@ CREATE_TABLE_USERS = """
     FIRSTNAME VARCHAR(60) NOT NULL,
     LASTNAME VARCHAR(60) NOT NULL,
     OTHERNAME VARCHAR(50),
-    EMAIL VARCHAR(40) NOT NULL,
+    EMAIL VARCHAR(40) UNIQUE NOT NULL,
     PHONENUMBER INTEGER NOT NULL,
-    USERNAME VARCHAR(30) NOT NULL,
+    USERNAME VARCHAR(30) UNIQUE NOT NULL,
     ISADMIN BOOLEAN DEFAULT FALSE,
     PASSWORD VARCHAR NOT NULL
 
@@ -33,10 +33,10 @@ CREATE_TABLE_QUESTIONS = """
     ID SERIAL PRIMARY KEY NOT NULL,
     TITLE VARCHAR(40) NOT NULL,
     BODY VARCHAR(40) NOT NULL,
-    CREATED_BY INTEGER REFERENCES USERS (ID),
     MEETUP INTEGER REFERENCES MEETUPS(ID),
+    USER_NAME VARCHAR(30) REFERENCES USERS (USERNAME),
     VOTES INTEGER NOT NULL,
-    CREATED_AT DATE DEFAULT CURRENT_DATE
+    CREATED_AT TEXT  NOT NULL
     );
 """
 
@@ -56,29 +56,36 @@ CREATE_TABLE_TOKENS = """
     );
 """
 
+CREATE_TABLE_QVOTES = """
+    CREATE TABLE IF NOT EXISTS QVOTES (
+    ID SERIAL NOT NULL,
+    USERID INTEGER NOT NULL REFERENCES USERS (ID),
+    QUESTIONID INTEGER NOT NULL REFERENCES QUESTIONS (ID),
+    VOTE VARCHAR(50) NOT NULL
+    );
+"""
+
 CREATE_USER = """
     INSERT INTO users (firstname, lastname, othername, email,
     phonenumber, username, isadmin, password)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    RETURNING firstname, lastname, othername, email,
+    RETURNING id, firstname, lastname, othername, email,
     phonenumber, username, isadmin, password;
 """
 
 DROP_TABLES = """
     DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS,
-    TOKENS;
+    TOKENS, QVOTES;
 """
 
 GET_USER_BY_NAME = """
-        SELECT firstname, lastname, othername, email,
-    phonenumber, username, isadmin, password FROM USERS WHERE username = %s"""
+        SELECT * FROM USERS WHERE username = %s"""
 
 GET_BY_EMAIL = """
-        SELECT firstname, lastname, othername, email,
-    phonenumber, username, isadmin, password FROM USERS WHERE email = %s"""
+        SELECT * FROM USERS WHERE email = %s"""
 
 GET_USER_BY_ID = """
-    SELECT firstname, lastname, othername, email,
+    SELECT id, firstname, lastname, othername, email,
     phonenumber, username, isadmin, password FROM USERS WHERE  id = %s"""
 
 GET_ALL_USERS = """
@@ -114,4 +121,51 @@ VERIFY_MEETUP = """
 
 DELETE_MEETUP = """
     DELETE FROM meetups WHERE id = %s
+"""
+
+VERIFY_QUESTION = """
+        SELECT * FROM questions where
+        (title, body, meetup) = (%s, %s, %s)
+"""
+
+CREATE_QUESTION = """
+    INSERT INTO questions (title, body, meetup, user_name, votes, created_at)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    RETURNING id, title, body, meetup, user_name, votes, created_at;
+"""
+
+GET_ALL_QUESTIONS = """
+        SELECT * FROM questions ORDER BY id
+"""
+
+GET_QUESTION_BY_ID = """
+        SELECT * FROM questions WHERE id = %s
+"""
+DELETE_QUESTION = """
+    DELETE FROM questions where id = %s
+"""
+
+GET_QUESTION_VOTES = """
+    SELECT votes FROM questions where id = %s
+"""
+
+UPDATE_QUESTION_VOTES = """
+    UPDATE questions
+    SET votes = %s WHERE id = %s
+    RETURNING *;
+"""
+CREATE_QUESTION_VOTE = """
+    INSERT INTO qvotes (userid, questionid, vote)
+    VALUES (%s, %s, %s)
+    RETURNING userid, questionid, vote;
+"""
+
+GET_VOTED_QUESTION = """
+    SELECT * FROM qvotes WHERE
+    (userid, questionid, vote) = (%s, %s, %s)
+"""
+
+DELETE_VOTED_QUSER = """
+    DELETE FROM qvotes WHERE (id, userid, questionid, vote)
+    = (%s, %s, %s, %s)
 """

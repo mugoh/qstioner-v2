@@ -18,7 +18,8 @@ class Database:
             CREATE_TABLE_MEETUPS,
             CREATE_TABLE_RSVPS,
             CREATE_TABLE_QUESTIONS,
-            CREATE_TABLE_TOKENS]
+            CREATE_TABLE_TOKENS,
+            CREATE_TABLE_QVOTES]
 
         print("Creating Tables")
 
