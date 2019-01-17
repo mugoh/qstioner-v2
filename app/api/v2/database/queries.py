@@ -34,7 +34,7 @@ CREATE_TABLE_QUESTIONS = """
     TITLE VARCHAR(40) NOT NULL,
     BODY VARCHAR(40) NOT NULL,
     MEETUP INTEGER REFERENCES MEETUPS(ID),
-    CREATED_BY INTEGER REFERENCES USERS (ID),
+    USER INTEGER REFERENCES USERS (ID),
     VOTES INTEGER NOT NULL,
     CREATED_AT DATE DEFAULT CURRENT_DATE
     );
@@ -119,4 +119,10 @@ DELETE_MEETUP = """
 VERIFY_QUESTION = """
         SELECT * FROM questions where
         (title, body, meetup, user) = (%s %s %s %s)
+"""
+
+CREATE_QUESTION = """
+    INSERT INTO questions (title, body, meetup, user, votes)
+    VALUES (%s %s %s %s %s)
+    RETURNING title, body, meetup, user, votes, created_at;
 """
