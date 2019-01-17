@@ -10,7 +10,7 @@ class MeetUpModel(AbstractModel):
 
     def __init__(self, **kargs):
 
-        super().__init__(meetups)
+        super().__init__()
         self.location = kargs.get('location')
         self.images = kargs.get('images')
         self.topic = kargs.get('topic')
@@ -25,8 +25,8 @@ class MeetUpModel(AbstractModel):
                      (self.topic,
                       self.images,
                       self.location,
-                      self.tags,
-                      self.happeningOn))
+                      self.happeningOn,
+                      self.tags))
 
     def dictify(self):
         """
@@ -72,8 +72,10 @@ class MeetUpModel(AbstractModel):
             Ensures a meetup isn't re-created with the
             same data
         """
-        return any(super().get_by_name(VERIFY_MEETUP,
-                                       meetup_object.__dict__.values()))
+        return (super().get_by_name(VERIFY_MEETUP,
+                                    (meetup_object.topic,
+                                        meetup_object.tags,
+                                        meetup_object.location)))
 
     def __repr__(self):
         return '{topic} {tags} {location}'.format(**self.dictify())
