@@ -29,7 +29,7 @@ class UsersRegistration(Resource):
             help="Oopsy! Email format not invented yet")
         parser.add_argument('phonenumber', type=int)
         parser.add_argument('username', type=verify_name)
-        parser.add_argument('isAdmin', type=bool, default=False)
+        parser.add_argument('isadmin', type=bool, default=False)
         parser.add_argument('password', required=True, type=verify_pass)
 
         args = parser.parse_args(strict=True)
@@ -47,9 +47,8 @@ class UsersRegistration(Resource):
                 args.get('username') + str(random.randint(0, 40))
             }, 409
 
-        user = UserModel(*args.values())
+        user = UserModel(**args)
         _usr = user.save()
-        print("saveing", _usr)
 
         return {
             "Status": 201,
@@ -103,7 +102,8 @@ class UserLogin(Resource):
         return {
             "Status": 200,
             "Data": [{"Message": f"Logged in as {user.username}",
-                      "token": str(user.encode_auth_token(user.username)),
+                      "token": user.encode_auth_token(
+                          user.username).decode('utf-8'),
                       "user": repr(user)}]
         }, 200
 
