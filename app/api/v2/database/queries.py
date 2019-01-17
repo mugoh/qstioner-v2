@@ -56,6 +56,15 @@ CREATE_TABLE_TOKENS = """
     );
 """
 
+CREATE_TABLE_QVOTES = """
+    CREATE TABLE IF NOT EXISTS QVOTES (
+    ID SERIAL NOT NULL,
+    USERID INTEGER NOT NULL REFERENCES USERS (ID),
+    QUESTIONID INTEGER NOT NULL REFERENCES QUESTIONS (ID),
+    VOTE VARCHAR(50) NOT NULL
+    );
+"""
+
 CREATE_USER = """
     INSERT INTO users (firstname, lastname, othername, email,
     phonenumber, username, isadmin, password)
@@ -66,7 +75,7 @@ CREATE_USER = """
 
 DROP_TABLES = """
     DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS,
-    TOKENS;
+    TOKENS, QVOTES;
 """
 
 GET_USER_BY_NAME = """
@@ -137,11 +146,26 @@ DELETE_QUESTION = """
 """
 
 GET_QUESTION_VOTES = """
-    SELECT votes FROM questions where id =%s
+    SELECT votes FROM questions where id = %s
 """
 
 UPDATE_QUESTION_VOTES = """
     UPDATE questions
     SET votes = %s WHERE id = %s
     RETURNING *;
+"""
+CREATE_QUESTION_VOTE = """
+    INSERT INTO qvotes (userid, questionid, vote)
+    VALUES (%s, %s, %s)
+    RETURNING userid, questionid, vote;
+"""
+
+GET_VOTED_QUESTION = """
+    SELECT * FROM qvotes WHERE
+    (userid, questionid, vote) = (%s, %s, %s)
+"""
+
+DELETE_VOTED_QUSER = """
+    DELETE FROM qvotes WHERE (id, userid, questionid, vote)
+    = (%s, %s, %s, %s)
 """
