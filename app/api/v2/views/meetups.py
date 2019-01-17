@@ -95,7 +95,7 @@ class MeetUpItem(Resource):
                 "Error": "Meetup non-existent"
             }, 404
         else:
-            MeetUpModel.delete(DELETE_MEETUP, id)
+            meetup.delete(DELETE_MEETUP, (id,))
         return {
             "Status": 200,
             "Message": "MeetUp deleted"
