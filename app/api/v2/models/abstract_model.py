@@ -27,6 +27,9 @@ class AbstractModel:
     def delete(self, statement, values):
         return query_db(statement, values, rowcount=True)
 
+    def update(self, statement, values):
+        return query_db(statement, values, rowcount=True)
+
     @classmethod
     def get_by_name(cls, statement, value):
         return query_db(statement, value, one=True)
