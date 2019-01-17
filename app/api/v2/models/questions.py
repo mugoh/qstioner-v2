@@ -23,19 +23,50 @@ class QuestionModel(AbstractModel):
     def votes(self, value):
         raise AttributeError("Oops! You are not allowed to do that")
 
-    def update_votes(self, q_id, add=True):
+    def update_votes(self, q_id, user_id, add=True):
         """
             Changes the vote count of a question.
+            This method checks if the given user id has placed a simliar
+            vote to that question id.
+            On a second identical vote, the state for thisuser id becomes
+            'not voted'
+
         """
+
+        # Keep id of voted users and question in table
+
+        # Check if user has upvoted or downvoted before
+
+        _downvoted = super().get_by_name(
+            GET_VOTED_QUESTION, (user_id, q_id, 'downvoted'))
+        _upvoted = super().get_by_name(GET_VOTED_QUESTION, (
+            user_id, q_id, 'upvoted'))
+
+        # Delete predent vote record
+        if _upvoted or _downvoted:
+
+            if add and _upvoted:
+                super().delete(DELETE_VOTED_QUSER, _upvoted)
+                add = False
+            elif not add and _downvoted:
+                super().delete(DELETE_VOTED_QUSER, _downvoted)
+                add = True
+
         stored_votes = super().get_by_id(GET_QUESTION_VOTES, (q_id,))[0]
+
         if not add:
-            self.votes = stored_votes - 1
+            super().save(CREATE_QUESTION_VOTE,
+                         (user_id, q_id, 'downvoted'))
+            self._votes = stored_votes - 1
         else:
             self._votes = stored_votes + 1
-        data = super().update(
+            super().save(CREATE_QUESTION_VOTE,
+                         (user_id, q_id, 'upvoted'))
+        super().update(
             UPDATE_QUESTION_VOTES, (self.votes, q_id))
-        self._votes = data
-        return self.dictify()
+        voted = super().get_by_id(GET_QUESTION_BY_ID, (q_id,))
+
+        return super().zipToDict(keys, voted, single=True)
 
     def save(self):
         """
