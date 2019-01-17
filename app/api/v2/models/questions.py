@@ -33,12 +33,12 @@ class QuestionModel(AbstractModel):
             Saves question to the present record
             holding all questions
         """
-        super().save(CREATE_QUESTION, (self.title,
-                                       self.body,
-                                       self.meetup,
-                                       self.user,
-                                       self._votes
-                                       ))
+        return super().save(CREATE_QUESTION, (self.title,
+                                              self.body,
+                                              self.meetup,
+                                              self.user,
+                                              self._votes
+                                              ))
 
     def dictify(self):
         """
