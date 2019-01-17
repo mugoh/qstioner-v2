@@ -10,7 +10,6 @@ class QuestionModel(AbstractModel):
         self.title = kwargs['title']
         self.body = kwargs['body']
         self.meetup = kwargs['meetup']
-        self.created_by = kwargs.get('user', "Anonymous")
         self.user = kwargs.get('user')
 
         self._votes = 0
@@ -31,10 +30,15 @@ class QuestionModel(AbstractModel):
 
     def save(self):
         """
-            Saves question instance to the present record
+            Saves question to the present record
             holding all questions
         """
-        questions.append(self)
+        super().save(CREATE_QUESTION, (self.title,
+                                       self.body,
+                                       self.meetup,
+                                       self.user,
+                                       self._votes
+                                       ))
 
     def dictify(self):
         """
