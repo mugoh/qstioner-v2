@@ -14,8 +14,7 @@ class BaseTestCase(unittest.TestCase):
         self.client = self.app.test_client()
 
         with self.app.app_context():
-            db_instance.drop_tables()
-            db_instance.create_tables()
+            db_instance.init_db()
 
         # create new user
         self.user_data = json.dumps(dict(
@@ -28,21 +27,19 @@ class BaseTestCase(unittest.TestCase):
             password="pa55word"))
 
         response = self.client.post('/api/v1/auth/register',
-                                    data=json.dumps(dict(
-                                        username="DomesticableCow",
-                                        email="cow@mammals.milkable",
-                                        password="pa55word"
-                                    )),
+                                    data=self.user_data,
                                     content_type='application/json')
         self.new_user = json.loads(response.data.decode())
 
         login_response = self.client.post('/api/v1/auth/login',
-                                          data=self.user_data,
+                                          data=json.dumps(dict(
+                                              username="DomesticableCow",
+                                              email="cow@mammals.milkable",
+                                              password="pa55word"
+                                          )),
                                           content_type='application/json')
-        print(login_response.get_json())
-        user = json.loads(login_response.data.decode()
-                          ).get("Data")[0].get('token')
-        self.auth_header = {"Authorization": "Bearer " + user.split("'")[1]}
+        user = login_response.get_json().get('Data')[0].get('token')
+        self.auth_header = {"Authorization": "Bearer " + user}
 
         # Register admin user
         user_data = json.dumps(dict(
@@ -53,7 +50,8 @@ class BaseTestCase(unittest.TestCase):
             lastname="last",
             phonenumber=788488,
             othername="other",
-            isAdmin=True))
+            isadmin=True))
+
         self.client.post('api/v1/auth/register',
                          data=user_data,
                          content_type='application/json')
@@ -68,7 +66,6 @@ class BaseTestCase(unittest.TestCase):
                                     )),
                                     content_type='application/json')
         # Get Authorization token
-        print(user_res.get_json())
 
         userH = user_res.get_json().get('Data')[0].get('token')
         self.admin_auth = {"Authorization": "Bearer " + userH}
