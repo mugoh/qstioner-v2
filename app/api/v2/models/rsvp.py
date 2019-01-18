@@ -1,4 +1,5 @@
 from .abstract_model import AbstractModel
+from ..database.queries import *
 
 
 class RsvpModel(AbstractModel):
@@ -49,8 +50,10 @@ class RsvpModel(AbstractModel):
             Helps in ensuring a user does not rsvp for
             the meetup twice with the same rsvp data.
         """
-        return any([rsvp for rsvp in rsvps
-                    if repr(rsvp) == repr(rsvp_object)])
+        return cls.get_by_name(VERIFY_RSVP,
+                               (rsvp_object.user,
+                                rsvp_object.meetup,
+                                rsvp_object.response))
 
     def __repr__(self):
         return '{meetup} {user}'.format(**self.dictify())
