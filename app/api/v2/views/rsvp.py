@@ -45,6 +45,7 @@ class Rsvps(Resource):
                 "Message": "That meetup does not exist"
             }, 404
 
+        # Retrieve this user details in key, value pairs
         user = UserModel.get_by_name(get_auth_identity(), key_values=True)
 
         user_id = user.get('id')
@@ -84,16 +85,19 @@ class Rsvp(Resource):
             meetups s/he has responded to an rsvp for
         """
 
-        # Find none 'None' ulr
+        # Find none 'None' ulr. Remember a user passes either an
+        # ID or a USERNAME. Use either that's not NONE.
 
         query_parameter = next((item for item in [id, username]
                                 if item is not None), None)
 
-        # Get user id
-        # Rsvp stores user by id
+        # If we got a USERNAME, Get this user's id
+        # Why? Rsvp stores user by ID
+
         if username and UserModel.get_by_name(username):
             query_parameter = UserModel.get_by_name(username).id
 
+        # Hold meetup ID's retrieved by query
         meetup_ids = RsvpModel.get_for_user(query_parameter)
 
         # Find all these rsvp-ed meetups
