@@ -104,8 +104,7 @@ class AuthTestCases(BaseTestCase):
         response = self.client.post('/api/v1/auth/register',
                                     data=self.user_data,
                                     )
-        res = json.loads(response.data.decode())
-        print(res)
+        json.loads(response.data.decode())
 
         # self.assertEqual(res, res_msg,
         #                 msg="Fails to validate json headers")
@@ -114,7 +113,10 @@ class AuthTestCases(BaseTestCase):
 
     def test_login_registered_user(self):
         response = self.client.post('/api/v1/auth/login',
-                                    data=self.user_data,
+                                    data=json.dumps(dict(
+                                        username="DomesticableCow",
+                                        email="cow@mammals.milkable",
+                                        password="pa55word")),
                                     content_type='application/json')
 
         self.assertEqual(response.status_code, 200,
