@@ -14,7 +14,7 @@ class RsvpModel(AbstractModel):
     def save(self):
         """
             Saves rsvp details to the present table
-            holding all rsvps
+            holding all rsvps.
         """
         return super().save(CREATE_RSVP,
                             (self.meetup,
@@ -33,22 +33,11 @@ class RsvpModel(AbstractModel):
             "user": self.user,
         }
 
-        #
-        # Searches
-
-    @classmethod
-    def get_all_rsvps(cls, obj=False):
-        """
-            Converts all present rsvp objects to a
-            dictionary and sends them in a list envelope
-        """
-        if obj:
-            return [rsvp for rsvp in rsvps]
-
-        return [rsvp.dictify() for rsvp in rsvps]
-
     @classmethod
     def get_for_user(cls, usr):
+        """
+            Retrieves all rsvps that match the current user's ID.
+        """
         return cls.get_all(GET_USER_RSVPS, (usr,))
 
     @classmethod
