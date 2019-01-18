@@ -95,21 +95,6 @@ class QuestionModel(AbstractModel):
                                               self.created_at
                                               ))
 
-    def dictify(self):
-        """
-            Returns a dictionary of the question instance
-        """
-
-        return {
-            "id": self.id,
-            "title": self.title,
-            "body": self.body,
-            "meetup": self.meetup,
-            "user": self.user,
-            "votes": self.votes,
-            "created_at": self.created_at
-        }
-
     def save_vote(self, query, vote):
         """
             Saves a vote record to the votes table
@@ -160,9 +145,6 @@ class QuestionModel(AbstractModel):
                                     question_object.body,
                                     question_object.meetup
                                     ))
-
-    def __repr__(self):
-        return '{title} {body} {meetup} {user}'.format(**self.dictify())
 
 
 keys = ["id", "title", "body",
