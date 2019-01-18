@@ -94,7 +94,7 @@ class Rsvp(Resource):
         if username and UserModel.get_by_name(username):
             query_parameter = UserModel.get_by_name(username).id
 
-        rsvps = RsvpModel.get_all_rsvps(obj=True)
+        meetup_ids = RsvpModel.get_for_user()
 
         users_rsvps = [rsvp for rsvp in rsvps
                        if getattr(rsvp, 'user') == query_parameter]

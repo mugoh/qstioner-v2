@@ -48,6 +48,10 @@ class RsvpModel(AbstractModel):
         return [rsvp.dictify() for rsvp in rsvps]
 
     @classmethod
+    def get_for_user(cls, usr):
+        return cls.get_all(GET_USER_RSVPS, (usr,))
+
+    @classmethod
     def verify_unique(cls, rsvp_object):
         """
             Helps in ensuring a user does not rsvp for
