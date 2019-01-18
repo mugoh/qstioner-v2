@@ -60,24 +60,24 @@ class QuestionModel(AbstractModel):
         # Downvote and save user plus Question id
         if not reupvote and not redownvote:
             if not add:
-                super().save(CREATE_QUESTION_VOTE,
-                             (user_id, q_id, 'downvoted'))
-                self._votes = stored_votes - 1
+                self.save_vote(CREATE_QUESTION_VOTE,
+                               (user_id, q_id, 'downvoted'))
+                self.alter_votes(stored_votes - 1)
 
             # Upvote and save user and Question id
             else:
-                self._votes = stored_votes + 1
-                super().save(CREATE_QUESTION_VOTE,
-                             (user_id, q_id, 'upvoted'))
+                self.alter_votes(stored_votes + 1)
+                self.save_vote(CREATE_QUESTION_VOTE,
+                               (user_id, q_id, 'upvoted'))
         elif reupvote:
-            self._votes = stored_votes - 1
+            self.alter_votes(stored_votes - 1)
         elif redownvote:
-            self._votes = stored_votes + 1
+            self.alter_votes(stored_votes + 1)
+
         super().update(
             UPDATE_QUESTION_VOTES, (self.votes, q_id))
-        voted = super().get_by_id(GET_QUESTION_BY_ID, (q_id,))
 
-        return super().zipToDict(keys, voted, single=True)
+        return QuestionModel.get_by_id(q_id)
 
     def save(self):
         """
@@ -106,6 +106,12 @@ class QuestionModel(AbstractModel):
             "votes": self.votes,
             "created_at": self.created_at
         }
+
+    def save_vote(self, query, vote):
+        return super().save(query, vote)
+
+    def alter_votes(self, stored_votes):
+        self._votes = stored_votes
 
         #
         # Searches
