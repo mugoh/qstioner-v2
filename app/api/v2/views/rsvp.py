@@ -59,7 +59,7 @@ class Rsvps(Resource):
 
         rsvp = RsvpModel(**args)
         if not RsvpModel.verify_unique(rsvp):
-            rsvp.save()
+            data = rsvp.save()
 
         else:
             return {
@@ -69,7 +69,7 @@ class Rsvps(Resource):
 
         return {
             "Status": 201,
-            "Data": rsvp.dictify()
+            "Data": [RsvpModel.zipToDict(keys, data, single=True)]
         }, 201
 
 
@@ -106,3 +106,7 @@ class Rsvp(Resource):
         return {"Status": 200,
                 "Data": [(id + 1, data) for id, data
                          in enumerate(meetups_data)]}, 200
+
+
+keys = ["id", "meetup", "user_id",
+        "response"]
