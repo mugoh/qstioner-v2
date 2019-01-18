@@ -38,11 +38,11 @@ class Meetups(Resource):
                 "Message": "Relax, Meetup already created"
             }, 409
 
-        new_meetup.save()
+        data = new_meetup.save()
 
         return {
             "Status": 201,
-            "Data": [new_meetup.dictify()]
+            "Data": [MeetUpModel.zipToDict(keys, data, single=True)]
         }, 201
 
 
