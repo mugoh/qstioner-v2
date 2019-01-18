@@ -94,14 +94,11 @@ class Rsvp(Resource):
         if username and UserModel.get_by_name(username):
             query_parameter = UserModel.get_by_name(username).id
 
-        meetup_ids = RsvpModel.get_for_user()
-
-        users_rsvps = [rsvp for rsvp in rsvps
-                       if getattr(rsvp, 'user') == query_parameter]
+        meetup_ids = RsvpModel.get_for_user(query_parameter)
 
         # Find all these rsvp-ed meetups
-        meetups = [item.id for item in users_rsvps]
-        meetups_data = list(map(lambda x: MeetUpModel.get_by_id(x), meetups))
+        meetups_data = list(
+            map(lambda x: MeetUpModel.get_by_id(x), meetup_ids))
 
         return {"Status": 200,
                 "Data": [(id + 1, data) for id, data
