@@ -52,7 +52,7 @@ class MeetUpTests(BaseTestCase):
         # Get Authorization token
 
         userH = user_res.get_json().get('Data')[0].get('token')
-        self.admin_auth = {"Authorization": "Bearer " + userH.split("'")[1]}
+        self.admin_auth = {"Authorization": "Bearer " + userH}
 
         # Having happeningOn paramenter here gets cocky.
         res = self.client.post('api/v1/meetups',
