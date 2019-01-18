@@ -75,6 +75,8 @@ class TestQuestions(BaseTestCase):
         response = self.client.get('api/v1/questions',
                                    content_type='application/json',
                                    headers=self.auth_header)
+        print(response.get_json())
+
         self.assertEqual(response.status_code, 200,
                          msg="Fails to get all questions")
 
@@ -83,6 +85,7 @@ class TestQuestions(BaseTestCase):
         response = self.client.get('api/v1/questions/1',
                                    content_type='application/json',
                                    headers=self.auth_header)
+        print(response.get_json())
         self.assertEqual(response.status_code, 200,
                          msg="Fails to fetch individual question")
 
@@ -109,10 +112,9 @@ class TestQuestions(BaseTestCase):
         res = self.client.patch('api/v1/questions/1/upvote',
                                 content_type='application/json',
                                 headers=self.auth_header)
-
         expected_votes = res.get_json().get('Data')[0].get('votes')
 
-        self.assertEqual(expected_votes, 0,
+        self.assertEqual(expected_votes, 1,
                          msg="Fails to upvote a question")
 
     def test_vote_non_existent_question(self):
@@ -131,6 +133,26 @@ class TestQuestions(BaseTestCase):
         self.assertEqual(res.status_code, 400,
                          msg="Fails to validate vote request")
 
+    def test_re_vote_question(self):
+        self.client.patch('api/v1/questions/1/downvote',
+                          content_type='application/json',
+                          headers=self.auth_header)
+
+        res = self.client.patch('api/v1/questions/1/downvote',
+                                content_type='application/json',
+                                headers=self.auth_header)
+        self.client.patch('api/v1/questions/1/upvote',
+                          content_type='application/json',
+                          headers=self.auth_header)
+        self.client.patch('api/v1/questions/1/upvote',
+                          content_type='application/json',
+                          headers=self.auth_header)
+
+        expected_votes = res.get_json().get('Data')[0].get('votes')
+
+        self.assertEqual(expected_votes, 0,
+                         msg="Fails to downvote a question")
+
     def test_change_vote_on_question_instance_directly(self):
         new_question = dict(
             title="One Question Again",
@@ -144,3 +166,27 @@ class TestQuestions(BaseTestCase):
             res.votes = 300
         self.assertTrue('Oops! You are not allowed to do that' in
                         str(ctx.exception))
+
+    def test_delete_question(self):
+        res = self.client.delete('api/v1/questions/1',
+                                 content_type='application/json',
+                                 headers=self.admin_auth)
+        self.assertTrue('Question of ID 1 deleted' in
+                        res.get_json().get('Message'),
+                        msg="Fails to delete a question")
+
+    def test_delete_missing_question(self):
+        res = self.client.delete('api/v1/questions/4',
+                                 content_type='application/json',
+                                 headers=self.admin_auth)
+        self.assertTrue("Question not existent" in
+                        res.get_json().get('Error'),
+                        msg="Fails. Deletes missing question")
+
+    def test_delete_question_with_missing_auth_header(self):
+        res = self.client.delete('api/v1/questions/1',
+                                 content_type='application/json')
+        self.assertEqual('Please provide a valid Authorization Header',
+                         res.get_json().get('Message'),
+                         "Fails to ask for Authorization header for a\
+                         protected endpoint")

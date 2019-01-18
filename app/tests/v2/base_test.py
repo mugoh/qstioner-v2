@@ -80,6 +80,18 @@ class BaseTestCase(unittest.TestCase):
                          )),
                          headers=self.admin_auth)
 
+        # Create Question
+
+        new_question = json.dumps(dict(
+            title="One Other Question",
+            body="This looks lik a body",
+            meetup=1))
+
+        response = self.client.post('api/v1/questions',
+                                    data=new_question,
+                                    content_type='application/json',
+                                    headers=self.auth_header)
+
     def post(self, path, data=None, headers=None):
 
         if not headers:

@@ -28,7 +28,11 @@ class MeetUpTests(BaseTestCase):
             username="DomesticableAdmin",
             email="admin@mammals.milkable",
             password="pa55word",
-            isAdmin=True))
+            ifirstname="firstname",
+            lastname="last",
+            phonenumber=788488,
+            othername="other",
+            isadmin=True))
 
         # Register admin user
 
@@ -48,7 +52,7 @@ class MeetUpTests(BaseTestCase):
         # Get Authorization token
 
         userH = user_res.get_json().get('Data')[0].get('token')
-        self.admin_auth = {"Authorization": "Bearer " + userH.split("'")[1]}
+        self.admin_auth = {"Authorization": "Bearer " + userH}
 
         # Having happeningOn paramenter here gets cocky.
         res = self.client.post('api/v1/meetups',
@@ -101,7 +105,7 @@ class MeetUpTests(BaseTestCase):
                                  headers={"Authorization": "Bearer "})
         self.assertEqual(res.status_code, 400)
 
-    def test_delete_missing_meetup__bad_auth_header(self):
+    def test_delete_missing_meetup_invalid_auth_token_string(self):
         res = self.client.delete('api/v1/meetups/6',
                                  content_type='application/json',
                                  headers={"Authorization": "Bearer"})
