@@ -37,35 +37,42 @@ class QuestionModel(AbstractModel):
 
         # Check if user has upvoted or downvoted before
 
+        reupvote = None
+        redownvote = None
+
         _downvoted = super().get_by_name(
             GET_VOTED_QUESTION, (user_id, q_id, 'downvoted'))
         _upvoted = super().get_by_name(GET_VOTED_QUESTION, (
             user_id, q_id, 'upvoted'))
 
         # Delete present vote record
-        if _upvoted or _downvoted:
 
-            if add and _upvoted:
-                super().delete(DELETE_VOTED_QUSER, _upvoted)
-                add = False
-            elif not add and _downvoted:
-                super().delete(DELETE_VOTED_QUSER, _downvoted)
-                add = True
+        if add and _upvoted:
+            super().delete(DELETE_VOTED_QUSER, _upvoted)
+            reupvote = True
+        elif not add and _downvoted:
+            super().delete(DELETE_VOTED_QUSER, _downvoted)
+            redownvote = True
 
         # Get current vote count
         stored_votes = super().get_by_id(GET_QUESTION_VOTES, (q_id,))[0]
 
         # Downvote and save user plus Question id
-        if not add:
-            super().save(CREATE_QUESTION_VOTE,
-                         (user_id, q_id, 'downvoted'))
-            self._votes = stored_votes - 1
+        if not reupvote and not redownvote:
+            if not add:
+                super().save(CREATE_QUESTION_VOTE,
+                             (user_id, q_id, 'downvoted'))
+                self._votes = stored_votes - 1
 
-        # Upvote and save user and Question id
-        else:
+            # Upvote and save user and Question id
+            else:
+                self._votes = stored_votes + 1
+                super().save(CREATE_QUESTION_VOTE,
+                             (user_id, q_id, 'upvoted'))
+        elif reupvote:
+            self._votes = stored_votes - 1
+        elif redownvote:
             self._votes = stored_votes + 1
-            super().save(CREATE_QUESTION_VOTE,
-                         (user_id, q_id, 'upvoted'))
         super().update(
             UPDATE_QUESTION_VOTES, (self.votes, q_id))
         voted = super().get_by_id(GET_QUESTION_BY_ID, (q_id,))
