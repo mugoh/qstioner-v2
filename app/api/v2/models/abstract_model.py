@@ -39,7 +39,10 @@ class AbstractModel:
         return query_db(statement, value, one=True)
 
     @classmethod
-    def get_all(cls, statement):
+    def get_all(cls, statement, values=None):
+        if values:
+            return query_db(statement, values, many=True)
+
         return query_db(statement, many=True)
 
     @classmethod

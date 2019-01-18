@@ -1,18 +1,29 @@
 import unittest
-from app import create_app
+from app import create_app, db_instance
 import json
+from flask import current_app
 
 
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
+
         self.app = create_app('testing')
+        self.app.app_context().push()
+
         self.client = self.app.test_client()
+
+        with self.app.app_context():
+            db_instance.init_db()
 
         # create new user
         self.user_data = json.dumps(dict(
             username="DomesticableCow",
             email="cow@mammals.milkable",
+            firstname="firstname",
+            lastname="last",
+            phonenumber=788488,
+            othername="other",
             password="pa55word"))
 
         response = self.client.post('/api/v1/auth/register',
@@ -21,18 +32,26 @@ class BaseTestCase(unittest.TestCase):
         self.new_user = json.loads(response.data.decode())
 
         login_response = self.client.post('/api/v1/auth/login',
-                                          data=self.user_data,
+                                          data=json.dumps(dict(
+                                              username="DomesticableCow",
+                                              email="cow@mammals.milkable",
+                                              password="pa55word"
+                                          )),
                                           content_type='application/json')
-        user = json.loads(login_response.data.decode()
-                          ).get("Data")[0].get('token')
-        self.auth_header = {"Authorization": "Bearer " + user.split("'")[1]}
+        user = login_response.get_json().get('Data')[0].get('token')
+        self.auth_header = {"Authorization": "Bearer " + user}
 
         # Register admin user
         user_data = json.dumps(dict(
             username="DomesticableAdmin",
             email="admin@mammals.milkable",
             password="pa55word",
-            isAdmin=True))
+            firstname="firstname",
+            lastname="last",
+            phonenumber=788488,
+            othername="other",
+            isadmin=True))
+
         self.client.post('api/v1/auth/register',
                          data=user_data,
                          content_type='application/json')
@@ -49,7 +68,7 @@ class BaseTestCase(unittest.TestCase):
         # Get Authorization token
 
         userH = user_res.get_json().get('Data')[0].get('token')
-        self.admin_auth = {"Authorization": "Bearer " + userH.split("'")[1]}
+        self.admin_auth = {"Authorization": "Bearer " + userH}
 
         self.client.post('api/v1/meetups',
                          content_type='application/json',
@@ -78,3 +97,6 @@ class BaseTestCase(unittest.TestCase):
                               content_type='application/json',
                               headers=headers)
         return res
+
+    def teardown(self):
+        db_instance.drop_tables()

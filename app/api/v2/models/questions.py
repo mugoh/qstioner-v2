@@ -28,14 +28,15 @@ class QuestionModel(AbstractModel):
             Changes the vote count of a question.
             This method checks if the given user id has placed a simliar
             vote to that question id.
-            On a second identical vote, the state for thisuser id becomes
+            On a second identical vote, the state for this user id becomes
             'not voted'
 
         """
 
-        # Keep id of voted users and question in table
-
         # Check if user has upvoted or downvoted before
+
+        reupvote = None
+        redownvote = None
 
         _downvoted = super().get_by_name(
             GET_VOTED_QUESTION, (user_id, q_id, 'downvoted'))
@@ -43,34 +44,43 @@ class QuestionModel(AbstractModel):
             user_id, q_id, 'upvoted'))
 
         # Delete present vote record
-        if _upvoted or _downvoted:
 
-            if add and _upvoted:
-                super().delete(DELETE_VOTED_QUSER, _upvoted)
-                add = False
-            elif not add and _downvoted:
-                super().delete(DELETE_VOTED_QUSER, _downvoted)
-                add = True
+        if add and _upvoted:
+            super().delete(DELETE_VOTED_QUSER, _upvoted)
+            reupvote = True
+        elif not add and _downvoted:
+            super().delete(DELETE_VOTED_QUSER, _downvoted)
+            redownvote = True
 
         # Get current vote count
         stored_votes = super().get_by_id(GET_QUESTION_VOTES, (q_id,))[0]
 
-        # Downvote and save user plus Question id
-        if not add:
-            super().save(CREATE_QUESTION_VOTE,
-                         (user_id, q_id, 'downvoted'))
-            self._votes = stored_votes - 1
+        # If not a re-vote, update vote, and store the user
+        # and question IDs
 
-        # Upvote and save user and Question id
-        else:
-            self._votes = stored_votes + 1
-            super().save(CREATE_QUESTION_VOTE,
-                         (user_id, q_id, 'upvoted'))
+        if not reupvote and not redownvote:
+            if not add:
+                self.save_vote(CREATE_QUESTION_VOTE,
+                               (user_id, q_id, 'downvoted'))
+                self.alter_votes(stored_votes - 1)
+
+            # Upvote and save user and Question id
+            else:
+                self.alter_votes(stored_votes + 1)
+                self.save_vote(CREATE_QUESTION_VOTE,
+                               (user_id, q_id, 'upvoted'))
+
+        # For revotes, just clear the present vote
+
+        elif reupvote:
+            self.alter_votes(stored_votes - 1)
+        elif redownvote:
+            self.alter_votes(stored_votes + 1)
+
         super().update(
             UPDATE_QUESTION_VOTES, (self.votes, q_id))
-        voted = super().get_by_id(GET_QUESTION_BY_ID, (q_id,))
 
-        return super().zipToDict(keys, voted, single=True)
+        return QuestionModel.get_by_id(q_id)
 
     def save(self):
         """
@@ -99,6 +109,18 @@ class QuestionModel(AbstractModel):
             "votes": self.votes,
             "created_at": self.created_at
         }
+
+    def save_vote(self, query, vote):
+        """
+            Saves a vote record to the votes table
+        """
+        return super().save(query, vote)
+
+    def alter_votes(self, stored_votes):
+        """
+            Updates the instance vote attribute to match the passed argument
+        """
+        self._votes = stored_votes
 
         #
         # Searches

@@ -3,6 +3,8 @@ import psycopg2
 from .config import config_db
 from .queries import *
 
+connection = None
+
 
 class Database:
 
@@ -45,7 +47,10 @@ def query_db(statement, values=None, rowcount=False,
             cursor.execute(statement, values)
             result = cursor.fetchone()
         elif many:
-            cursor.execute(statement)
+            if values:
+                cursor.execute(statement, values)
+            else:
+                cursor.execute(statement)
             result = cursor.fetchall()
         elif rowcount:
             cursor.execute(statement, values)

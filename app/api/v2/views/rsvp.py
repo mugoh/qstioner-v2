@@ -6,6 +6,8 @@
 from flask_restful import Resource
 from flasgger import swag_from
 
+from itertools import zip_longest
+
 from ..models.rsvp import RsvpModel
 from ..models.meetups import MeetUpModel
 from ..models.users import UserModel
@@ -45,9 +47,10 @@ class Rsvps(Resource):
                 "Message": "That meetup does not exist"
             }, 404
 
-        user = UserModel.get_by_name(get_auth_identity())
+        # Retrieve this user details in key, value pairs
+        user = UserModel.get_by_name(get_auth_identity(), key_values=True)
 
-        user_id = getattr(user, 'id')
+        user_id = user.get('id')
 
         args.update({
             "user": user_id,
@@ -59,7 +62,7 @@ class Rsvps(Resource):
 
         rsvp = RsvpModel(**args)
         if not RsvpModel.verify_unique(rsvp):
-            rsvp.save()
+            data = rsvp.save()
 
         else:
             return {
@@ -69,7 +72,7 @@ class Rsvps(Resource):
 
         return {
             "Status": 201,
-            "Data": rsvp.dictify()
+            "Data": [RsvpModel.zipToDict(keys, data, single=True)]
         }, 201
 
 
@@ -84,25 +87,33 @@ class Rsvp(Resource):
             meetups s/he has responded to an rsvp for
         """
 
-        # Find none 'None' ulr
+        # Find none 'None' ulr. Remember a user passes either an
+        # ID or a USERNAME. Use either that's not NONE.
 
         query_parameter = next((item for item in [id, username]
                                 if item is not None), None)
 
-        # Get user id
-        # Rsvp stores user by id
+        # If we got a USERNAME, Get this user's id
+        # Why? Rsvp stores user by ID
+
         if username and UserModel.get_by_name(username):
             query_parameter = UserModel.get_by_name(username).id
 
-        rsvps = RsvpModel.get_all_rsvps(obj=True)
+        # Hold meetup ID's retrieved by query
+        meetup_and_responses = RsvpModel.get_for_user(query_parameter)
 
-        users_rsvps = [rsvp for rsvp in rsvps
-                       if getattr(rsvp, 'user') == query_parameter]
+        meetup_ids = [_id for _id, res in meetup_and_responses]
+        responses = [res for _id, res in meetup_and_responses]
 
         # Find all these rsvp-ed meetups
-        meetups = [item.id for item in users_rsvps]
-        meetups_data = list(map(lambda x: MeetUpModel.get_by_id(x), meetups))
+        meetups_data = list(
+            map(lambda x: MeetUpModel.get_by_id(x), meetup_ids))
 
         return {"Status": 200,
-                "Data": [(id + 1, data) for id, data
-                         in enumerate(meetups_data)]}, 200
+                "Data": [(response, meetup) for response, meetup
+                         in zip_longest(
+                             responses, meetups_data)]}, 200
+
+
+keys = ["id", "meetup", "user_id",
+        "response"]

@@ -45,6 +45,7 @@ CREATE_TABLE_RSVPS = """
     ID SERIAL NOT NULL,
     MEETUP INTEGER NOT NULL,
     USER_ID INTEGER NOT NULL,
+    RESPONSE TEXT NOT NULL,
     PRIMARY KEY(USER_ID, MEETUP)
     );
 """
@@ -103,7 +104,7 @@ GET_TOKEN = """
 CREATE_MEETUP = """
     INSERT INTO meetups (topic, images, location, happening_on,
     tags) VALUES (%s, %s, %s, %s, %s) RETURNING
-    topic, images, location, happening_on,
+    id, topic, images, location, happening_on,
     tags;
 """
 
@@ -168,4 +169,21 @@ GET_VOTED_QUESTION = """
 DELETE_VOTED_QUSER = """
     DELETE FROM qvotes WHERE (id, userid, questionid, vote)
     = (%s, %s, %s, %s)
+"""
+
+VERIFY_RSVP = """
+    SELECT * FROM rsvps WHERE
+    (meetup, user_id, response) = (%s, %s, %s)
+
+"""
+
+CREATE_RSVP = """
+    INSERT INTO rsvps (meetup, user_id, response)
+    VALUES (%s, %s, %s) RETURNING id, meetup, user_id,
+    response;
+"""
+
+GET_USER_RSVPS = """
+    SELECT DISTINCT meetup, response FROM rsvps WHERE
+    user_id = %s
 """
