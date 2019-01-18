@@ -28,7 +28,11 @@ class MeetUpTests(BaseTestCase):
             username="DomesticableAdmin",
             email="admin@mammals.milkable",
             password="pa55word",
-            isAdmin=True))
+            ifirstname="firstname",
+            lastname="last",
+            phonenumber=788488,
+            othername="other",
+            isadmin=True))
 
         # Register admin user
 
