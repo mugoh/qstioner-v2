@@ -182,3 +182,8 @@ CREATE_RSVP = """
     VALUES (%s, %s, %s) RETURNING id, meetup, user_id,
     response;
 """
+
+GET_USER_RSVPS = """
+    SELECT meetup FROM rsvps WHERE
+    user = %s ORDER BY id
+"""
