@@ -6,6 +6,8 @@
 from flask_restful import Resource
 from flasgger import swag_from
 
+from itertools import zip_longest
+
 from ..models.rsvp import RsvpModel
 from ..models.meetups import MeetUpModel
 from ..models.users import UserModel
@@ -98,15 +100,19 @@ class Rsvp(Resource):
             query_parameter = UserModel.get_by_name(username).id
 
         # Hold meetup ID's retrieved by query
-        meetup_ids = RsvpModel.get_for_user(query_parameter)
+        meetup_and_responses = RsvpModel.get_for_user(query_parameter)
+
+        meetup_ids = [_id for _id, res in meetup_and_responses]
+        responses = [res for _id, res in meetup_and_responses]
 
         # Find all these rsvp-ed meetups
         meetups_data = list(
             map(lambda x: MeetUpModel.get_by_id(x), meetup_ids))
 
         return {"Status": 200,
-                "Data": [(id + 1, data) for id, data
-                         in enumerate(meetups_data)]}, 200
+                "Data": [(response, meetup) for response, meetup
+                         in zip_longest(
+                             responses, meetups_data)]}, 200
 
 
 keys = ["id", "meetup", "user_id",
