@@ -13,10 +13,13 @@ class RsvpModel(AbstractModel):
 
     def save(self):
         """
-            Saves rsvp instance to the present record
+            Saves rsvp details to the present table
             holding all rsvps
         """
-        rsvps.append(self)
+        return super().save(CREATE_RSVP,
+                            (self.meetup,
+                             self.user,
+                             self.response))
 
     def dictify(self):
         """
