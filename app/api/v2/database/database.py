@@ -3,6 +3,8 @@ import psycopg2
 from .config import config_db
 from .queries import *
 
+connection = None
+
 
 class Database:
 
