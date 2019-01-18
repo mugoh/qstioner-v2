@@ -104,7 +104,7 @@ GET_TOKEN = """
 CREATE_MEETUP = """
     INSERT INTO meetups (topic, images, location, happening_on,
     tags) VALUES (%s, %s, %s, %s, %s) RETURNING
-    topic, images, location, happening_on,
+    id, topic, images, location, happening_on,
     tags;
 """
 
@@ -184,6 +184,6 @@ CREATE_RSVP = """
 """
 
 GET_USER_RSVPS = """
-    SELECT DISTINCT meetup FROM rsvps WHERE
+    SELECT DISTINCT meetup, response FROM rsvps WHERE
     user_id = %s
 """
