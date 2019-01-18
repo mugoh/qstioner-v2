@@ -1,5 +1,5 @@
 from .base_test import BaseTestCase
-from app.api.v1.models.questions import QuestionModel
+from app.api.v2.models.questions import QuestionModel
 import json
 
 
