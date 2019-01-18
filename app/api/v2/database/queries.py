@@ -184,6 +184,6 @@ CREATE_RSVP = """
 """
 
 GET_USER_RSVPS = """
-    SELECT DISTINCT (meetup) FROM rsvps WHERE
-    user_id = %s ORDER BY id
+    SELECT DISTINCT meetup FROM rsvps WHERE
+    user_id = %s
 """
