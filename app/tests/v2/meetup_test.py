@@ -105,7 +105,7 @@ class MeetUpTests(BaseTestCase):
                                  headers={"Authorization": "Bearer "})
         self.assertEqual(res.status_code, 400)
 
-    def test_delete_missing_meetup__bad_auth_header(self):
+    def test_delete_missing_meetup_invalid_auth_token_string(self):
         res = self.client.delete('api/v1/meetups/6',
                                  content_type='application/json',
                                  headers={"Authorization": "Bearer"})
