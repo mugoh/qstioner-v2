@@ -25,12 +25,12 @@ class MeetUpModel(AbstractModel):
         """
             Saves meetup to present records
         """
-        super().save(CREATE_MEETUP,
-                     (self.topic,
-                      self.images,
-                      self.location,
-                      self.happeningOn,
-                      self.tags))
+        return super().save(CREATE_MEETUP,
+                            (self.topic,
+                             self.images,
+                             self.location,
+                             self.happeningOn,
+                             self.tags))
 
     def dictify(self):
         """
@@ -62,8 +62,7 @@ class MeetUpModel(AbstractModel):
 
         if that_meetup and not obj:
             # A request for a dictionary
-            return MeetUpModel(**cls.zipToDict(keys, that_meetup, single=True)
-                               ).dictify()
+            return cls.zipToDict(keys, that_meetup, single=True)
 
         elif that_meetup and obj:
             # Give an instance of that meetup
