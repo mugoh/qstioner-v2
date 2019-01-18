@@ -21,18 +21,6 @@ class RsvpModel(AbstractModel):
                              self.user,
                              self.response))
 
-    def dictify(self):
-        """
-            Returns a dictionary of the rsvp instance
-            for readability of the rsvp's fields.
-        """
-
-        return {
-            "response": self.response,
-            "meetup": self.meetup,
-            "user": self.user,
-        }
-
     @classmethod
     def get_for_user(cls, usr):
         """
@@ -50,6 +38,3 @@ class RsvpModel(AbstractModel):
                                (rsvp_object.meetup,
                                 rsvp_object.user,
                                 rsvp_object.response))
-
-    def __repr__(self):
-        return '{meetup} {user}'.format(**self.dictify())
