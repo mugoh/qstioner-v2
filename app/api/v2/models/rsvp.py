@@ -6,7 +6,7 @@ class RsvpModel(AbstractModel):
 
     def __init__(self, **kwargs):
 
-        super().__init__(rsvps)
+        super().__init__()
         self.user = kwargs['user']
         self.meetup = kwargs['meetup']
         self.response = kwargs['response']
