@@ -170,19 +170,16 @@ DELETE_VOTED_QUSER = """
     DELETE FROM qvotes WHERE (id, userid, questionid, vote)
     = (%s, %s, %s, %s)
 """
-
 VERIFY_RSVP = """
     SELECT * FROM rsvps WHERE
     (meetup, user_id, response) = (%s, %s, %s)
 
 """
-
 CREATE_RSVP = """
     INSERT INTO rsvps (meetup, user_id, response)
     VALUES (%s, %s, %s) RETURNING id, meetup, user_id,
     response;
 """
-
 GET_USER_RSVPS = """
     SELECT DISTINCT meetup, response FROM rsvps WHERE
     user_id = %s
