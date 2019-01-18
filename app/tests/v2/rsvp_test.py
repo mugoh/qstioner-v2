@@ -42,7 +42,11 @@ class RSVPTest(BaseTestCase):
             username="DomesticableAdmin",
             email="admin@mammals.milkable",
             password="pa55word",
-            isAdmin=True))
+            firstname="firstname",
+            lastname="last",
+            phonenumber=788488,
+            othername="other",
+            isadmin=True))
         self.client.post('api/v1/auth/register',
                          data=user_data,
                          content_type='application/json')
@@ -59,7 +63,7 @@ class RSVPTest(BaseTestCase):
         # Get Authorization token
 
         userH = user_res.get_json().get('Data')[0].get('token')
-        admin_auth = {"Authorization": "Bearer " + userH.split("'")[1]}
+        admin_auth = {"Authorization": "Bearer " + userH}
 
         response = self.get('api/v1/meetups/1/rsvp', headers=self.auth_header)
 
