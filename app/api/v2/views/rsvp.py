@@ -45,9 +45,9 @@ class Rsvps(Resource):
                 "Message": "That meetup does not exist"
             }, 404
 
-        user = UserModel.get_by_name(get_auth_identity())
+        user = UserModel.get_by_name(get_auth_identity(), key_values=True)
 
-        user_id = getattr(user, 'id')
+        user_id = user.get('id')
 
         args.update({
             "user": user_id,
