@@ -28,12 +28,10 @@ class QuestionModel(AbstractModel):
             Changes the vote count of a question.
             This method checks if the given user id has placed a simliar
             vote to that question id.
-            On a second identical vote, the state for thisuser id becomes
+            On a second identical vote, the state for this user id becomes
             'not voted'
 
         """
-
-        # Keep id of voted users and question in table
 
         # Check if user has upvoted or downvoted before
 
@@ -57,7 +55,9 @@ class QuestionModel(AbstractModel):
         # Get current vote count
         stored_votes = super().get_by_id(GET_QUESTION_VOTES, (q_id,))[0]
 
-        # Downvote and save user plus Question id
+        # If not a re-vote, update vote, and store the user
+        # and question IDs
+
         if not reupvote and not redownvote:
             if not add:
                 self.save_vote(CREATE_QUESTION_VOTE,
@@ -69,6 +69,9 @@ class QuestionModel(AbstractModel):
                 self.alter_votes(stored_votes + 1)
                 self.save_vote(CREATE_QUESTION_VOTE,
                                (user_id, q_id, 'upvoted'))
+
+        # For revotes, just clear the present vote
+
         elif reupvote:
             self.alter_votes(stored_votes - 1)
         elif redownvote:
@@ -108,9 +111,15 @@ class QuestionModel(AbstractModel):
         }
 
     def save_vote(self, query, vote):
+        """
+            Saves a vote record to the votes table
+        """
         return super().save(query, vote)
 
     def alter_votes(self, stored_votes):
+        """
+            Updates the instance vote attribute to match the passed argument
+        """
         self._votes = stored_votes
 
         #
