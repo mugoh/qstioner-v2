@@ -78,10 +78,10 @@ class MeetUpModel(AbstractModel):
             Ensures a meetup isn't re-created with the
             same data
         """
-        return (super().get_by_name(VERIFY_MEETUP,
-                                    (meetup_object.topic,
-                                        meetup_object.tags,
-                                        meetup_object.location)))
+        return super().get_by_name(VERIFY_MEETUP,
+                                   (meetup_object.topic,
+                                    meetup_object.tags,
+                                    meetup_object.location))
 
     def __repr__(self):
         return '{topic} {tags} {location}'.format(**self.dictify())
