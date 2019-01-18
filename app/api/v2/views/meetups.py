@@ -96,7 +96,8 @@ class MeetUpItem(Resource):
             meetup.delete(DELETE_MEETUP, (id,))
         return {
             "Status": 200,
-            "Message": "MeetUp deleted"
+            "Message": "MeetUp deleted",
+            "Item": repr(meetup)
         }, 200
 
 
