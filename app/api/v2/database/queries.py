@@ -176,3 +176,9 @@ VERIFY_RSVP = """
     (meetup, user_id, response) = (%s, %s, %s)
 
 """
+
+CREATE_RSVP = """
+    INSERT INTO rsvps (meetup, user_id, response)
+    VALUES (%s, %s, %s) RETURNING id, meetup, user_id,
+    response;
+"""
