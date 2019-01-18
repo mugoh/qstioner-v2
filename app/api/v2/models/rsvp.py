@@ -51,12 +51,9 @@ class RsvpModel(AbstractModel):
             the meetup twice with the same rsvp data.
         """
         return cls.get_by_name(VERIFY_RSVP,
-                               (rsvp_object.user,
-                                rsvp_object.meetup,
+                               (rsvp_object.meetup,
+                                rsvp_object.user,
                                 rsvp_object.response))
 
     def __repr__(self):
         return '{meetup} {user}'.format(**self.dictify())
-
-
-rsvps = []

@@ -45,6 +45,7 @@ CREATE_TABLE_RSVPS = """
     ID SERIAL NOT NULL,
     MEETUP INTEGER NOT NULL,
     USER_ID INTEGER NOT NULL,
+    RESPONSE TEXT NOT NULL,
     PRIMARY KEY(USER_ID, MEETUP)
     );
 """
@@ -168,4 +169,10 @@ GET_VOTED_QUESTION = """
 DELETE_VOTED_QUSER = """
     DELETE FROM qvotes WHERE (id, userid, questionid, vote)
     = (%s, %s, %s, %s)
+"""
+
+VERIFY_RSVP = """
+    SELECT * FROM rsvps WHERE
+    (meetup, user_id, response) = (%s, %s, %s)
+
 """
