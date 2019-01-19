@@ -59,3 +59,10 @@ class CommentTest(BaseTestCase):
         self.assertEqual('Looks like You have posted this comment before',
                          res.get_json().get('Message'),
                          "Fails. Allows a user to re-post the same comment")
+
+    def test_retirieve_comments_for_user(self):
+        res = self.get('api/v1/questions/1/2/comment')
+        print(res.get_json())
+        self.assertEqual(res.get_json().get('Data'),
+                         [],
+                         msg="Fails. Initiliazes comments table with data")
