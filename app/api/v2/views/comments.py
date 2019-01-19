@@ -41,3 +41,12 @@ class Comments(Resource):
             {"user": user_id,
              "question": id}
         )
+
+        new_comment = CommentModel(**args)
+        if not CommentModel.verify_unique(new_comment):
+            new_comment.save()
+        else:
+            return {
+                "Status": 409,
+                "Message": "Looks like You have posted this comment before"
+            }, 409
