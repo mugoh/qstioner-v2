@@ -14,9 +14,9 @@ from ..database.queries import GET_ALL_QUESTIONS, DELETE_QUESTION
 
 class Questions(Resource):
     """
-        A resource that allows a suser to create a
-        new questions and perform requests on existing
-        multiple questions.
+        A resource that allows a user to create a
+        new questions and perform requests on multiple
+        existing questions.
     """
     decorators = [auth_required]
 
@@ -63,7 +63,7 @@ class Questions(Resource):
     @swag_from('docs/questions_get.yml')
     def get(this_user, self):
         """
-            Returns all exsisting questions
+            Returns all existing questions
         """
         data = QuestionModel.get_all(GET_ALL_QUESTIONS)
 
