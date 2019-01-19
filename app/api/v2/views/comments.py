@@ -9,6 +9,7 @@ from ..models.users import UserModel
 from ..models.questions import QuestionModel
 from ..models.comments import CommentModel
 from ..utils.auth import auth_required
+from ..database.queries import GET_ALL_COMMENTS
 
 
 class Comments(Resource):
@@ -57,6 +58,20 @@ class Comments(Resource):
             "Status": 201,
             "Data": [CommentModel.zipToDict(keys, data, single=True)]
         }, 201
+
+    @swag_from('docs/questions_get.yml')
+    def get(this_user, self):
+        """
+            Returns all existing questions
+        """
+        data = CommentModel.get_all(GET_ALL_COMMENTS)
+
+        if data:
+            data = CommentModel.zipToDict(keys, data)
+        return {
+            "Status": 200,
+            "Data": data
+        }, 200
 
 
 keys = ["id", "question", "user_id"
