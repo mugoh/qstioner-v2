@@ -72,7 +72,7 @@ class CommentTest(BaseTestCase):
                         msg="Fails. Allows user to fetch comments for questions\
                         not present")"""
 
-    def test_post_comment_then_fetch_for_user(self):
+    def test_post_comment_then_fetch_by_user_id(self):
 
         # Post comment
         self.post('api/v1/questions/1/comment',
@@ -86,3 +86,10 @@ class CommentTest(BaseTestCase):
         self.assertEqual(res.get_json().get('Data')[0].get('user_id'),
                          1,
                          msg="Fails to fetch comments  posted by current user")
+
+    def test_retrieve_comments_by_username(self):
+        res = self.get('api/v1/questions/1/DomesticableAdmin/comment')
+        print(res.get_json())
+        self.assertEqual(res.get_json().get('Data'),
+                         [],
+                         msg="Fails to retrieve comments for user")
