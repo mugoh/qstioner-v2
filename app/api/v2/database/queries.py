@@ -189,3 +189,6 @@ CREATE_COMMENT = """
     VALUES (%s, %s, %s) RETURNING id, question, user_id
     body;
 """
+GET_USER_COMMENNTS = """
+    SELECT * FROM comments WHERE user_id = %s
+"""
