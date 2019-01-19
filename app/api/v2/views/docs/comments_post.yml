@@ -1,0 +1,44 @@
+Post a Comment to a Question
+
+Allows registred users to create a comment for a particular
+meetup question.
+---
+tags:
+- Question Comments
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the question to comment
+- in: body
+  name: Comment Record Details
+  description: Comment to Post to the Question
+  schema:
+    type: object
+    required:
+    - body
+    properties:
+      body:
+        type: string
+        example: Do the cookies come with milk?
+responses:
+  201:
+    description: Success. A comment has been posted for
+      the question with the given ID
+  404:
+    description: Not Found, no question id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token or invalid parameter in path

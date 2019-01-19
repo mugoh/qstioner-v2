@@ -66,6 +66,15 @@ CREATE_TABLE_QVOTES = """
     );
 """
 
+CREATE_TABLE_COMMENTS = """
+    CREATE TABLE IF NOT EXISTS COMMENTS (
+    ID SERIAL NOT NULL,
+    QUESTION INTEGER REFERENCES QUESTIONS (ID),
+    USER_ID INTEGER REFERENCES USERS (ID),
+    BODY TEXT NOT NULL
+    );
+"""
+
 CREATE_USER = """
     INSERT INTO users (firstname, lastname, othername, email,
     phonenumber, username, isadmin, password)
@@ -183,4 +192,19 @@ CREATE_RSVP = """
 GET_USER_RSVPS = """
     SELECT DISTINCT meetup, response FROM rsvps WHERE
     user_id = %s
+"""
+CREATE_COMMENT = """
+    INSERT INTO comments (question, user_id, body)
+    VALUES (%s, %s, %s) RETURNING id, question, user_id,
+    body;
+"""
+GET_USER_COMMENNTS = """
+    SELECT * FROM comments WHERE user_id = %s
+"""
+VERIFY_COMMENT = """
+    SELECT * FROM comments WHERE
+    (question, user_id, body) = (%s, %s, %s)
+"""
+GET_ALL_COMMENTS = """
+    SELECT * FROM comments ORDER BY id
 """

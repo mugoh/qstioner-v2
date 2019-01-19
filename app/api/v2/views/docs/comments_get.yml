@@ -1,0 +1,33 @@
+Retrieve Comments to a Question
+
+Allows registred users to see comments posted to
+a particular meetup question.
+---
+tags:
+- Question Comments
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the question to get comments from
+
+responses:
+  200:
+    description: Success. Comments retrieved
+  404:
+    description: Not Found, no question id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token or invalid parameter in path
