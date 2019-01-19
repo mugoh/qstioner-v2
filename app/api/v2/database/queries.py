@@ -66,6 +66,15 @@ CREATE_TABLE_QVOTES = """
     );
 """
 
+CREATE_TABLE_COMMENTS = """
+    CREATE TABLE IF NOT EXISTS COMMENTS (
+    ID SERIAL NOT NULL,
+    QUESTION INTEGER REFRENCES QUESTIONS (ID),
+    USER_ID INTEGER REFERENCES USERS (ID),
+    BODY TEXT NOT NULL
+    );
+"""
+
 CREATE_USER = """
     INSERT INTO users (firstname, lastname, othername, email,
     phonenumber, username, isadmin, password)
