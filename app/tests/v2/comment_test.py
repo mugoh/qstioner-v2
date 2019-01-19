@@ -33,7 +33,7 @@ class CommentTest(BaseTestCase):
                          "I'll be there for the cookies",
                          msg="Fails to create  comment")
 
-    """def test_create_comment_for_missing_question(self):
+    def test_create_comment_for_missing_question(self):
         res = self.post('api/v1/questions/404/comment',
                         data=self.qcomment)
         self.assertTrue('non-existent' in res.get_json().get('Message'),
@@ -70,7 +70,7 @@ class CommentTest(BaseTestCase):
         res = self.get('api/v1/questions/404/2/comment')
         self.assertTrue('non-existent' in res.get_json().get('Message'),
                         msg="Fails. Allows user to fetch comments for questions\
-                        not present")"""
+                        not present")
 
     def test_post_comment_then_fetch_by_user_id(self):
 
