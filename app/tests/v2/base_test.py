@@ -91,6 +91,8 @@ class BaseTestCase(unittest.TestCase):
                                     data=new_question,
                                     content_type='application/json',
                                     headers=self.auth_header)
+        self.qcomment = json.dumps(dict(
+            body="The cookies should come with milk too"))
 
     def post(self, path, data=None, headers=None):
 
