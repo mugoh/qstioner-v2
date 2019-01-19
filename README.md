@@ -1,10 +1,10 @@
 
-[![Build Status](https://travis-ci.org/hogum/qstioner-api.png?branch=develop)](https://travis-ci.org/hogum/qstioner-api) [![Coverage Status](https://coveralls.io/repos/github/hogum/qstioner-api/badge.svg?branch=ch-ci-badges-163075084)](https://coveralls.io/github/hogum/qstioner-api?branch=ch-ci-badges-163075084)
-[![Maintainability](https://api.codeclimate.com/v1/badges/0a723df98c0d910d94bb/maintainability)](https://codeclimate.com/github/hogum/qstioner-api/maintainability)
+[![Build Status](https://travis-ci.org/hogum/qstioner-v2.svg?branch=develop)](https://travis-ci.org/hogum/qstioner-v2) [![Coverage Status](https://coveralls.io/repos/github/hogum/qstioner-v2/badge.svg?branch=ch-ci-badges-163341965)](https://coveralls.io/github/hogum/qstioner-v2?branch=ch-ci-badges-163341965)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0cbd787bf7490e88c6f8/maintainability)](https://codeclimate.com/github/hogum/qstioner-v2/maintainability)
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/4e960f4340da75ae0cff)
-# qstioner-api
-Questioner api is an api version 1 of the qstioner web application. It allows the user to send htttp requests to application and persists in data structures.
+# qstioner-v2
+Questioner api is an api version 2 of the qstioner web application. It allows the user to send htttp requests to application and persists the application records in a postgres database.
 Questioner is a platform where human beings can ask questions about meetups and vote present questions.
 
 
@@ -13,11 +13,11 @@ Questioner is a platform where human beings can ask questions about meetups and 
 - Create a new directory locally and open a terminal window from that folder
 - Clone the repository
 ```shell
-$ git clone https://github.com/hogum/qstioner-api.git
+$ git clone https://github.com/hogum/qstioner-v2.git
 ```
-- Switch to the stackS directory
+- Switch to the qstioner-v2 directory
 ```shell
-$ cd qstioner-api
+$ cd qstioner-v2
 ```
 - Depending on your os install virtualenv and open a virtual enviroment:
 ``` shell
@@ -35,16 +35,20 @@ $ pip install -r requirements.txt
 
 ### Running the application
 ``` shell
-$ export JWT_SECRET_KEY="your jwt secret key"
 $ export SECRET_KEY="your secret key"
+$ export DATABASE="database name"
+$ export DATABASE_HOST="your host address"
+$ export DATABSE_USER="existing database user"
+$ export DATABASE_PASSW="password for database user"
 ```
+If using windows, simply use `set` in place of `export`
 
 ```shell 
-$ export FLASK_APP=app
+$ export FLASK_APP=run.py
 ```
 or
 ```shell
-$ set FLASK_APP=app
+$ set FLASK_APP=run.py
 ```
 on Windows OS
 ##### Start the server
@@ -56,6 +60,9 @@ $ flask run
 - [Flask](http://flask.pocoo.org/): For creation of the Web Framework
 - [Python 3](https://www.python.org/): The programming Language
 - [Flask-RESTful](https://flask-restful.readthedocs.io/): Development of the API
+- [PyJWT](https://pyjwt.readthedocs.io/en/latest/): Authentication of Protected endpoints
+- [Psycopg2 Binary](http://initd.org/psycopg/): Postgres database adaption
+- [Flassger](https://github.com/rochacbruno/flasgger): Swagger Documentation
 - [Pytest](https://pytest.org/): Application testing
 - [Travis CI](https://travis-ci.org/): Continuous Integration and Builds
 - [Coveralls](https://coveralls.io/): Test Coverage History
@@ -71,6 +78,7 @@ Method | Endpoint | Functionality
 POST | `api/v1/auth/register` | Register new User
 POST | `api/v1/auth/login` | Login registered User
 PUT | `api/v1/auth/users/user_id` | Update user details
+DELETE | `api/v1/auth/logout` | Logout a logged in user
 DELETE | `api/v1/auth/users/user_id` | Delete a user account
 
 
@@ -84,7 +92,8 @@ POST | `/api/v1/meetups/` | Add a meetup
 GET | `/api/v1/meetups/upcoming` | Lists all meetups 
 GET | `/api/v1/meetups/meetup_id` | Retrieve a meetup 
 PUT | `/api/v1/meetups/meetup_id` | Edit a meetup of a logged in user
-DELETE | `/api/v1/meetups/question_id` | Delete a request of a logged in user
+DELETE | `/api/v1/meetups/question_id` | Delete a meetup of a logged in admin user
+
 
 ##### Questions Endpoints
 - Allows users to perform CRUD operations on questions to a meetup
@@ -95,7 +104,7 @@ POST | `/api/v1/meetups/meetup_id/questions` | Add a question
 GET | `/api/v1/meetups/meetup_id/questions` | Lists all questions 
 GET | `/api/v1/meetups/meetup_id/questions/question_id` | Retrieve a question 
 PUT | `/api/v1/meetups/meetup_id/questions/question_id` | Edit a question of a logged in user
-DELETE | `/api/v1/meetups/meetup_id/questions/question_id` | Delete a request of a logged in user
+DELETE | `/api/v1/meetups/meetup_id/questions/question_id` | Delete a question of a logged in user
 
 
 ##### Vote Endpoints
@@ -105,11 +114,13 @@ Method | Endpoint | Functionality
 PATCH | `/api/v1/question_id/upvote` | Upvote a Question
 PATCH | `/api/v1/question_id/downvote` | Downvote a Question
 
+
 ##### RSVP Endpoints
 
 Method | Endpoint | Functionality
 --- | --- | ---
-PATCH | `/api/v1/meetup_id/<rsvp>` | RSVP a meetup
+POST | `/api/v1/meetup_id/<rsvp>` | RSVP a meetup
+GET | `api/v1/{user_id/username}` | Fetch Meetups RSVP-ed by user
 
 
 ##### Comment Endpoints

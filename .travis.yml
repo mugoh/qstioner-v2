@@ -1,12 +1,16 @@
 language: python
+cache: pip
 python:
 - "3.6"
 
 install:
 - pip install -r requirements.txt
 
+before_script:
+  - psql -c 'create database qs_db;' -U postgres
+
 script:
-- coverage run --source=app/api/ -m pytest app/tests  && coverage report -m
+- coverage run --source=app/api/ -m pytest app/tests/v2  && coverage report -m
 
 after_success:
 - coveralls
