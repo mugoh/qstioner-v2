@@ -85,7 +85,7 @@ CREATE_USER = """
 
 DROP_TABLES = """
     DROP TABLE IF EXISTS USERS, MEETUPS, QUESTIONS, RSVPS,
-    TOKENS, QVOTES;
+    TOKENS, QVOTES, COMMENTS;
 """
 
 GET_USER_BY_NAME = """
@@ -198,7 +198,7 @@ CREATE_COMMENT = """
     VALUES (%s, %s, %s) RETURNING id, question, user_id,
     body;
 """
-GET_USER_COMMENNTS = """
+GET_USER_COMMENTS = """
     SELECT * FROM comments WHERE user_id = %s
 """
 VERIFY_COMMENT = """
