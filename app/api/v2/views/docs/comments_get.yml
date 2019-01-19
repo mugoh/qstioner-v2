@@ -1,7 +1,7 @@
-Post a Comment to a Question
+Retrieve Comments to a Question
 
-Allows registred users to create a comment for a particular
-meetup question.
+Allows registred users to see comments posted to
+a particular meetup question.
 ---
 tags:
 - Question Comments
