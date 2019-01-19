@@ -3,6 +3,7 @@
 """
 
 from flask_restful import Resource, reqparse, inputs
+from flasgger import swag_from
 
 from ..models.users import UserModel
 from ..models.questions import QuestionModel
@@ -18,6 +19,7 @@ class Comments(Resource):
     """
 
     @auth_required
+    @swag_from('docs/comments_post.yml')
     def post(this_user, self, id):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
