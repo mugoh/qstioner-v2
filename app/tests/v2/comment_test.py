@@ -33,7 +33,7 @@ class CommentTest(BaseTestCase):
                          "I'll be there for the cookies",
                          msg="Fails to create  comment")
 
-    def test_create_comment_for_missing_question(self):
+    """def test_create_comment_for_missing_question(self):
         res = self.post('api/v1/questions/404/comment',
                         data=self.qcomment)
         self.assertTrue('non-existent' in res.get_json().get('Message'),
@@ -64,10 +64,25 @@ class CommentTest(BaseTestCase):
         res = self.get('api/v1/questions/1/2/comment')
         self.assertEqual(res.get_json().get('Data'),
                          [],
-                         msg="Fails. Initiliazes comments table with data")
+                         msg="Fails to retrieve comments for user")
 
     def test_retirieve_user_comments_for_missing_question(self):
         res = self.get('api/v1/questions/404/2/comment')
         self.assertTrue('non-existent' in res.get_json().get('Message'),
                         msg="Fails. Allows user to fetch comments for questions\
-                        not present")
+                        not present")"""
+
+    def test_post_comment_then_fetch_for_user(self):
+
+        # Post comment
+        self.post('api/v1/questions/1/comment',
+                  data=self.qcomment,
+                  headers=self.auth_header)
+
+        # Get comments with this user's ID
+        res = self.get('api/v1/questions/1/1/comment',
+                       headers=self.auth_header)
+
+        self.assertEqual(res.get_json().get('Data')[0].get('user_id'),
+                         1,
+                         msg="Fails to fetch comments  posted by current user")
