@@ -59,7 +59,8 @@ class Comments(Resource):
             "Data": [CommentModel.zipToDict(keys, data, single=True)]
         }, 201
 
-    @swag_from('docs/questions_get.yml')
+    @auth_required
+    @swag_from('docs/comments_get.yml')
     def get(this_user, self):
         """
             Returns all existing questions
