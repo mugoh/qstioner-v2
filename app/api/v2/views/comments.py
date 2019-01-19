@@ -4,6 +4,11 @@
 
 from flask_restful import Resource, reqparse, inputs
 
+from ..models.users import UserModel
+from ..models.questions import QuestionModel
+from ..models.comments import CommentModel
+from ..utils.auth import auth_required
+
 
 class Comments(Resource):
     """
@@ -12,7 +17,8 @@ class Comments(Resource):
     existing comments.
     """
 
-    def post(self):
+    @auth_required
+    def post(this_user, self, id):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
         parser.add_argument('body', required=True,
@@ -20,3 +26,18 @@ class Comments(Resource):
                             help="Is that readable? Provide a valid comment")
 
         args = parser.parse_args(strict=True)
+
+        # Find question by given ID
+        if not QuestionModel.get_by_id(id):
+            return {
+                "Status": 404,
+                "Message": f"Question of ID {id} non-existent"
+            }, 404
+
+        # Get id of current user
+        user_id = UserModel.get_by_name(this_user, key_values=True).get('id')
+
+        args.update(
+            {"user": user_id,
+             "question": id}
+        )
