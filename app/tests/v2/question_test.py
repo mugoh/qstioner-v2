@@ -75,7 +75,6 @@ class TestQuestions(BaseTestCase):
         response = self.client.get('api/v1/questions',
                                    content_type='application/json',
                                    headers=self.auth_header)
-        print(response.get_json())
 
         self.assertEqual(response.status_code, 200,
                          msg="Fails to get all questions")
@@ -176,7 +175,7 @@ class TestQuestions(BaseTestCase):
                         msg="Fails to delete a question")
 
     def test_delete_missing_question(self):
-        res = self.client.delete('api/v1/questions/4',
+        res = self.client.delete('api/v1/questions/400',
                                  content_type='application/json',
                                  headers=self.admin_auth)
         self.assertTrue("Question not existent" in
