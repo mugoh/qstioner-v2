@@ -31,8 +31,8 @@ class CommentModel(AbstractModel):
     @classmethod
     def verify_unique(cls, comment_object):
         """
-            Helps in ensuring a user does not comment to
-            a question with the an already made comment.
+            Ensures a user does not comment to
+            a question with the an already posted comment.
         """
         return cls.get_by_name(VERIFY_COMMENT,
                                (comment_object.question,
