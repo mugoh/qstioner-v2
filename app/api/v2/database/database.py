@@ -21,7 +21,8 @@ class Database:
             CREATE_TABLE_RSVPS,
             CREATE_TABLE_QUESTIONS,
             CREATE_TABLE_TOKENS,
-            CREATE_TABLE_QVOTES]
+            CREATE_TABLE_QVOTES,
+            CREATE_TABLE_COMMENTS]
 
         print("Creating Tables")
 
