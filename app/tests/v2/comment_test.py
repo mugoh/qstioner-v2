@@ -34,3 +34,7 @@ class CommentTest(BaseTestCase):
                          msg="Fails to create  comment")
 
     def test_create_comment_for_missing_question(self):
+        res = self.post('api/v1/questions/404/comment',
+                        data=self.qcomment)
+        self.assertTrue('non-existent' in res.get_json().get('Message'),
+                        msg="Fails. Posts comment to missing question")
