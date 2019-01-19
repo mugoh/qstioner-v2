@@ -62,7 +62,12 @@ class CommentTest(BaseTestCase):
 
     def test_retirieve_comments_for_user(self):
         res = self.get('api/v1/questions/1/2/comment')
-        print(res.get_json())
         self.assertEqual(res.get_json().get('Data'),
                          [],
                          msg="Fails. Initiliazes comments table with data")
+
+    def test_retirieve_user_comments_for_missing_question(self):
+        res = self.get('api/v1/questions/404/2/comment')
+        self.assertTrue('non-existent' in res.get_json().get('Message'),
+                        msg="Fails. Allows user to fetch comments for questions\
+                        not present")
