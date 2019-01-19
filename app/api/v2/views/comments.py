@@ -44,9 +44,18 @@ class Comments(Resource):
 
         new_comment = CommentModel(**args)
         if not CommentModel.verify_unique(new_comment):
-            new_comment.save()
+            data = new_comment.save()
         else:
             return {
                 "Status": 409,
                 "Message": "Looks like You have posted this comment before"
             }, 409
+
+        return {
+            "Status": 201,
+            "Data": [CommentModel.zipToDict(keys, data, single=True)]
+        }, 201
+
+
+keys = ["id", "question", "user_id"
+        "body"]
