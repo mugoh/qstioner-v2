@@ -192,3 +192,7 @@ CREATE_COMMENT = """
 GET_USER_COMMENNTS = """
     SELECT * FROM comments WHERE user_id = %s
 """
+VERIFY_COMMENT = """
+    SELECT * FROM comments WHERE
+    (question, user_id, body) = (%s, %s, %s)
+"""
