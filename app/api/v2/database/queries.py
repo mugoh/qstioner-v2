@@ -184,3 +184,8 @@ GET_USER_RSVPS = """
     SELECT DISTINCT meetup, response FROM rsvps WHERE
     user_id = %s
 """
+CREATE_COMMENT = """
+    INSERT INTO comments (question, user_id, body)
+    VALUES (%s, %s, %s) RETURNING id, question, user_id
+    body;
+"""
