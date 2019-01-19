@@ -198,7 +198,7 @@ CREATE_COMMENT = """
     VALUES (%s, %s, %s) RETURNING id, question, user_id,
     body;
 """
-GET_USER_COMMENNTS = """
+GET_USER_COMMENTS = """
     SELECT * FROM comments WHERE user_id = %s
 """
 VERIFY_COMMENT = """
