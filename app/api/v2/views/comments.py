@@ -74,5 +74,5 @@ class Comments(Resource):
         }, 200
 
 
-keys = ["id", "question", "user_id"
+keys = ["id", "question", "user_id",
         "body"]
