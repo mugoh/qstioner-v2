@@ -33,7 +33,7 @@ parameters:
       lastname:
         type: string
         example: Cow
-      isAdmin:
+      isadmin:
         type: boolean
         example: true
       phonenumber:
