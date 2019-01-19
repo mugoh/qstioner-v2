@@ -61,9 +61,9 @@ class Comments(Resource):
 
     @auth_required
     @swag_from('docs/comments_get.yml')
-    def get(this_user, self, id, user=None):
+    def get(this_user, self, id):
         """
-            Returns all existing comments to a question
+            Returns all existing questions
         """
 
         # Find question from given ID
@@ -74,12 +74,7 @@ class Comments(Resource):
                 "Message": f"Question of ID {id} non-existent"
             }, 404
 
-        if user:
-            user_id = UserModel.get_by_name(
-                this_user, key_values=True).get('id')
-            data = CommentModel.get_for_user(user_id)
-        elif not user:
-            data = CommentModel.get_all(GET_ALL_COMMENTS)
+        data = CommentModel.get_all(GET_ALL_COMMENTS)
 
         if data:
             data = CommentModel.zipToDict(keys, data)
