@@ -195,7 +195,7 @@ GET_USER_RSVPS = """
 """
 CREATE_COMMENT = """
     INSERT INTO comments (question, user_id, body)
-    VALUES (%s, %s, %s) RETURNING id, question, user_id
+    VALUES (%s, %s, %s) RETURNING id, question, user_id,
     body;
 """
 GET_USER_COMMENNTS = """
