@@ -8,7 +8,7 @@ from flasgger import swag_from
 from ..models.users import UserModel
 from ..models.questions import QuestionModel
 from ..models.comments import CommentModel
-from ..utils.auth import auth_required
+from ..utils.auth import auth_required, current_user_only
 from ..database.queries import GET_ALL_COMMENTS
 
 
@@ -63,7 +63,7 @@ class Comments(Resource):
     @swag_from('docs/comments_get.yml')
     def get(this_user, self, id):
         """
-            Returns all existing questions
+            Returns all existing comments to a question
         """
 
         # Find question from given ID
@@ -75,6 +75,43 @@ class Comments(Resource):
             }, 404
 
         data = CommentModel.get_all(GET_ALL_COMMENTS)
+
+        if data:
+            data = CommentModel.zipToDict(keys, data)
+        return {
+            "Status": 200,
+            "Data": data
+        }, 200
+
+
+class CommentsUser(Resource):
+    """
+        Handles requests to comments of a specific user
+        on a meetup question
+    """
+    @auth_required
+    @current_user_only
+    @swag_from('docs/comments_get.yml')
+    def get(this_user, self, id, username=None, usr_id=None):
+        """
+            Returns all existing comments to a question
+        """
+
+        # Find question from given ID
+
+        if not QuestionModel.get_by_id(id):
+            return {
+                "Status": 404,
+                "Message": f"Question of ID {id} non-existent"
+            }, 404
+
+        user_id = usr_id
+
+        if username:
+            user_id = UserModel.get_by_name(
+                this_user, key_values=True).get('id')
+
+        data = CommentModel.get_for_user(user_id)
 
         if data:
             data = CommentModel.zipToDict(keys, data)
