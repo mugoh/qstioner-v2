@@ -1,9 +1,12 @@
-Upvote or Downvote a Question
-Vote a question on a specific meetup by the question id
-Increases or Decreases the votes on the question
+Post a Comment to a Question
+
+Allows registred users to create a comment for a particular
+meetup question.
 ---
 tags:
 - Question Comments
+consumes:
+- application/json
 parameters:
 - in: header
   name: Authorization
