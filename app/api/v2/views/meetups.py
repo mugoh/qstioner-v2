@@ -93,6 +93,9 @@ class MeetUpItem(Resource):
     @auth_required
     @swag_from('docs/meetup_delete.yml')
     def delete(this_user, self, id):
+        """
+            Clears a specified meetup from the meetups records.
+        """
         meetup = MeetUpModel.get_by_id(id, obj=True)
         if not meetup:
             return {
@@ -148,6 +151,7 @@ class MeetupImage(Resource):
         random_name_part = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=30))
         image_name = 'meetup' + str(id) + random_name_part + '.png'
+
         file_path = os.path.join(app.config.get('UPLOAD_DIR'),
                                  image_name)
 
@@ -200,14 +204,14 @@ class MeetUpTags(Resource):
 class MeetUpTag(Resource):
 
     """
-        Allows users to see records associated with certain tags
+        Allows users to see records associated with certain tags.
     """
     @auth_required
     @swag_from('docs/meetup_tags_get.yml')
     def get(this_user, self, tag):
         """
         Fetches meetups that match a given tag and returns
-        a response of these meetup records
+        a response of these meetup records.
         """
 
         data = MeetUpModel.get_all(GET_TAGGED_MEETUPS, (tag,))
