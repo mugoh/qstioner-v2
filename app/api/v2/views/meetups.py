@@ -150,12 +150,11 @@ class MeetupImage(Resource):
 
         image.save(file_path)
 
-        data = meetup.add_image(file_path, id)
+        meetup.add_image(file_path, id)
 
         return {
             "Status": 200,
             "Message": "Upload Successful",
-            "Data": data
         }, 200
 
 
