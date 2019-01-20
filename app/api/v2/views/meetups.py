@@ -160,3 +160,13 @@ class MeetupImage(Resource):
 
 keys = ["id", "topic", "images", "location", "happening_on",
         "tags"]
+
+
+class MeetUpTags(Resource):
+    """
+        This resource allows an admin user to associate
+        tags in helping in identification of meetups
+    """
+    @auth_required
+    @admin_required
+    def post(self):
