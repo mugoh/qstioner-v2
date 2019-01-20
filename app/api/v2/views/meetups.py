@@ -111,9 +111,9 @@ class MeetupImage(Resource):
     """
         Allows uploading of image files to exisiting meetups
     """
-    decorators = []
+    decorators = [auth_required]
 
-    def post(self, id):
+    def post(this_user, self, id):
         """
             Uploads an image to the meetup whose ID
             matches the ID specified in the PATH
@@ -142,6 +142,7 @@ class MeetupImage(Resource):
                 "Message": f"Meetup of ID {id} non-existent"
             }
 
+        # Set random file name
         random_name_part = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=30))
         image_name = 'meetup' + str(id) + random_name_part + '.png'
@@ -149,7 +150,6 @@ class MeetupImage(Resource):
                                  image_name)
 
         image.save(file_path)
-
         meetup.add_image(file_path, id)
 
         return {
@@ -158,13 +158,5 @@ class MeetupImage(Resource):
         }, 200
 
 
-####
-#
-#
-#
-#
-#
-#
-#
 keys = ["id", "topic", "images", "location", "happening_on",
         "tags"]
