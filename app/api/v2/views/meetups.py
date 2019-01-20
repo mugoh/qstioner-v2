@@ -11,7 +11,8 @@ import random
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required
 from ..utils.helpers import validate_date
-from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
+from ..database.queries import (
+    GET_ALL_MEETUPS, DELETE_MEETUP, GET_TAGGED_MEETUPS)
 
 
 class Meetups(Resource):
@@ -193,4 +194,27 @@ class MeetUpTags(Resource):
         return {
             "Status": 200,
             "Message": f"Tag {tag} associated with meetup of ID {meetup_id}"
+        }, 200
+
+
+class MeetUpTag(Resource):
+
+    """
+        Allows users to see records associated with certain tags
+    """
+    @auth_required
+    @swag_from('docs/meetup_tags_get.yml')
+    def get(this_user, self, tag):
+        """
+        Fetches meetups that match a given tag and returns
+        a response of these meetup records
+        """
+
+        data = MeetUpModel.get_all(GET_TAGGED_MEETUPS, tag)
+
+        if data:
+            data = MeetUpModel.zipToDict(keys, data)
+        return {
+            "Status": 200,
+            "Data": data
         }, 200
