@@ -178,8 +178,8 @@ class MeetUpTags(Resource):
         meetup = MeetUpModel.get_by_id(meetup_id, obj=True)
 
         if not meetup:
-            response = "That meetup seems missing" +
-            f'Meetup of ID {meetup_id} not in existence yet'
+            response = "That meetup seems \
+            missing" + f'Meetup of ID {meetup_id} not in existence yet'
             return {
                 "Status": 404,
                 "Message": response
