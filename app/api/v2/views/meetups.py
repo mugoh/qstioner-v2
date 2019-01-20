@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from flasgger import swag_from
+import werkzeug
 import datetime
 
 from ..models.meetups import MeetUpModel
@@ -101,5 +102,31 @@ class MeetUpItem(Resource):
         }, 200
 
 
+class MeetupImage(Resource):
+    """
+        Allows uploading of image files to exisiting meetups
+    """
+    decorators = []
+
+    def post(self, id):
+        """
+            Uploads an image to the meetup whose ID
+            matches the ID specified in the PATH
+        """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('image', type=werkzeug.datastructures.FileStorage,
+                            location='files')
+        args = parser.parse_args(strict=True)
+
+
+####
+#
+#
+#
+#
+#
+#
+#
 keys = ["id", "topic", "images", "location", "happening_on",
         "tags"]
