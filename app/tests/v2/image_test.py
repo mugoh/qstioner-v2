@@ -20,7 +20,8 @@ class ImageUploadTest(BaseTestCase):
 
         res = self.client.post('api/v1/meetups/1/images',
                                data=data,
-                               content_type='multipart/form-data')
+                               content_type='multipart/form-data',
+                               headers=self.auth_header)
 
         self.assertEqual(expected_response, res.get_json().get('Message'),
                          msg="Fails to allow user to post images to meetup")
@@ -33,7 +34,8 @@ class ImageUploadTest(BaseTestCase):
 
         res = self.client.post('api/v1/meetups/404/images',
                                data=data,
-                               content_type='multipart/form-data')
+                               content_type='multipart/form-data',
+                               headers=self.auth_header)
 
         self.assertEqual(res.get_json().get('Message'),
                          'Meetup of ID 404 non-existent',
