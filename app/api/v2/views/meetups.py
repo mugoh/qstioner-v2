@@ -9,9 +9,9 @@ import string
 import random
 
 from ..models.meetups import MeetUpModel
-from ..utils.auth import admin_required, auth_required, current_user_only
+from ..utils.auth import admin_required, auth_required
 from ..utils.helpers import validate_date
-from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
+from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP, ADD_MEETUP_IMAGE
 
 
 class Meetups(Resource):
@@ -137,13 +137,17 @@ class MeetupImage(Resource):
         random_name_part = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=30))
         image_name = 'meetup' + str(id) + random_name_part + '.png'
+        file_path = os.path.join(app.config.get('UPLOAD_DIR'),
+                                 image_name)
 
-        image.save(os.path.join(app.config.get('UPLOAD_DIR'),
-                                image_name))
+        image.save(file_path)
+
+        data = MeetUpModel.update(ADD_MEETUP_IMAGE, (file_path, id))
 
         return {
             "Status": 200,
-            "Message": "Upload Successful"
+            "Message": "Upload Successful",
+            "Data": data
         }, 200
 
 
