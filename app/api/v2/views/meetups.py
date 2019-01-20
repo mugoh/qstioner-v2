@@ -138,6 +138,11 @@ class MeetupImage(Resource):
         image.save(os.path.join(app.config.get('UPLOAD_DIR'),
                                 image_name))
 
+        return {
+            "Status": 200,
+            "Message": "Upload Successful"
+        }, 200
+
 
 ####
 #
