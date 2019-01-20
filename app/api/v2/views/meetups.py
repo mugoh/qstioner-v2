@@ -119,6 +119,17 @@ class MeetupImage(Resource):
                             location='files')
         args = parser.parse_args(strict=True)
 
+        image = args.get('image')
+        if not image:
+            return {
+                "Status": 400,
+                "Error": "Image path is Empty. Specify an image"
+            }, 400
+
+        image_name = 'meetup' + str(id)
+        + ''.join(random.choices(string.ascii_lowercase + string.digits, k=30))
+        + '.png'
+
 
 ####
 #
