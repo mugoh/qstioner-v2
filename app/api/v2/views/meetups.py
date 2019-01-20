@@ -169,6 +169,7 @@ class MeetUpTags(Resource):
     """
     @auth_required
     @admin_required
+    @swag_from('docs/meetup_tags_post.yml')
     def post(this_user, self, meetup_id, tag):
         """
             Posts a tag to a meetup record that matches
