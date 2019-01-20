@@ -211,5 +211,6 @@ GET_ALL_COMMENTS = """
 """
 
 ADD_MEETUP_IMAGE = """
-    UPDATE meetups(images)
+    UPDATE meetups SET images = images || %s
+    WHERE id = %s RETURNING *;
 """
