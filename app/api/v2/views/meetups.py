@@ -187,3 +187,8 @@ class MeetUpTags(Resource):
 
         data = meetup.add_array_tag(tag, meetup_id)
         print(data, "\n\n\n")
+
+        return {
+            "Status": 200,
+            "Message": f"Tag {tag} associated with meetup of ID {meetup_id}"
+        }, 200
