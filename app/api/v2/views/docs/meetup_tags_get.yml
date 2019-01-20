@@ -1,0 +1,27 @@
+Get all Meetups by Tag
+Returns meetups whose tag records match the specified tag
+---
+tags:
+- Meetup Tags
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: tag   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: string
+  minimum: 1
+  description: The tag assocating meetup records to retrieve
+responses:
+  200:
+    description: Success. meetup with specified id is
+      returned successfully
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token
