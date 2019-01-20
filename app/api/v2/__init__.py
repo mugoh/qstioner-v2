@@ -2,7 +2,8 @@ from flask_restful import Api
 from flask import Blueprint
 
 from ...api.v2.views.user import UsersRegistration, UserLogin, UserLogout
-from ...api.v2.views.meetups import Meetups, MeetUp, MeetUpItem, MeetupImage, MeetUpTags
+from ...api.v2.views.meetups import (
+    Meetups, MeetUp, MeetUpItem, MeetupImage, MeetUpTags)
 from ...api.v2.views.questions import Question, Questions, QuestionVote
 from ...api.v2.views.rsvp import Rsvps, Rsvp
 from .views.comments import Comments, CommentsUser
