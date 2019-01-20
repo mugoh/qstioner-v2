@@ -113,6 +113,7 @@ class MeetupImage(Resource):
     """
     decorators = [auth_required]
 
+    @swag_from('docs/meetup_image_post.yml')
     def post(this_user, self, id):
         """
             Uploads an image to the meetup whose ID
