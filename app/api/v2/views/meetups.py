@@ -1,9 +1,15 @@
 from flask_restful import Resource, reqparse
 from flasgger import swag_from
+from flask import current_app as app
+import werkzeug
+
+import os
 import datetime
+import string
+import random
 
 from ..models.meetups import MeetUpModel
-from ..utils.auth import admin_required, auth_required, current_user_only
+from ..utils.auth import admin_required, auth_required
 from ..utils.helpers import validate_date
 from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
 
@@ -98,6 +104,57 @@ class MeetUpItem(Resource):
             "Status": 200,
             "Message": "MeetUp deleted",
             "Item": repr(meetup)
+        }, 200
+
+
+class MeetupImage(Resource):
+    """
+        Allows uploading of image files to exisiting meetups
+    """
+    decorators = [auth_required]
+
+    def post(this_user, self, id):
+        """
+            Uploads an image to the meetup whose ID
+            matches the ID specified in the PATH
+        """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('image', type=werkzeug.datastructures.FileStorage,
+                            location='files')
+        args = parser.parse_args(strict=True)
+
+        image = args.get('image')
+
+        # ! err Doesn't handle missing paths
+        """if not image:
+            return {
+                "Status": 400,
+                "Error": "Image path is Empty. Specify an image"
+            }, 400
+        """
+
+        meetup = MeetUpModel.get_by_id(id, obj=True)
+
+        if not meetup:
+            return {
+                "Status": 404,
+                "Message": f"Meetup of ID {id} non-existent"
+            }
+
+        # Set random file name
+        random_name_part = ''.join(random.choices(
+            string.ascii_lowercase + string.digits, k=30))
+        image_name = 'meetup' + str(id) + random_name_part + '.png'
+        file_path = os.path.join(app.config.get('UPLOAD_DIR'),
+                                 image_name)
+
+        image.save(file_path)
+        meetup.add_image(file_path, id)
+
+        return {
+            "Status": 200,
+            "Message": "Upload Successful",
         }, 200
 
 

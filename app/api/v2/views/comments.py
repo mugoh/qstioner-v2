@@ -74,7 +74,7 @@ class Comments(Resource):
                 "Message": f"Question of ID {id} non-existent"
             }, 404
 
-        data = CommentModel.get_all(GET_ALL_COMMENTS)
+        data = CommentModel.get_all(GET_ALL_COMMENTS, (id,))
 
         if data:
             data = CommentModel.zipToDict(keys, data)

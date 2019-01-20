@@ -21,7 +21,7 @@ CREATE_TABLE_MEETUPS = """
     CREATE TABLE IF NOT EXISTS MEETUPS (
     ID SERIAL PRIMARY KEY NOT NULL,
     TOPIC VARCHAR(112) NOT NULL,
-    IMAGES VARCHAR(1024)[],
+    IMAGES TEXT [],
     LOCATION VARCHAR(50) NOT NULL,
     HAPPENING_ON TEXT NOT NULL,
     TAGS TEXT []
@@ -206,5 +206,11 @@ VERIFY_COMMENT = """
     (question, user_id, body) = (%s, %s, %s)
 """
 GET_ALL_COMMENTS = """
-    SELECT * FROM comments ORDER BY id
+    SELECT * FROM comments WHERE question = %s
+    ORDER BY id DESC
+"""
+
+ADD_MEETUP_IMAGE = """
+    UPDATE meetups SET images = images || %s
+    WHERE id = %s RETURNING *;
 """

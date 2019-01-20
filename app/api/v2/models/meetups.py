@@ -71,6 +71,9 @@ class MeetUpModel(AbstractModel):
 
         return None
 
+    def add_image(self, image_path, meetup_id):
+        return super().update(ADD_MEETUP_IMAGE, ([image_path], meetup_id))
+
     @classmethod
     def verify_unique(cls, meetup_object):
         """

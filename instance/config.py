@@ -10,6 +10,7 @@ class BaseConfig:
     SECRET_KEY = b'\xc2;F]l\x0490u&6t\xfe\x08'
     AUTH_TOKEN_EXP_DAYS = 30
     AUTH_TOKEN_EXP_SECS = 60 * 5
+    UPLOAD_DIR = '/root'
 
 
 class DevelopmentConfig(BaseConfig):
