@@ -3,7 +3,7 @@ from flask import Blueprint
 
 from ...api.v2.views.user import UsersRegistration, UserLogin, UserLogout
 from ...api.v2.views.meetups import (
-    Meetups, MeetUp, MeetUpItem, MeetupImage, MeetUpTags)
+    Meetups, MeetUp, MeetUpItem, MeetupImage, MeetUpTags, MeetUpTag)
 from ...api.v2.views.questions import Question, Questions, QuestionVote
 from ...api.v2.views.rsvp import Rsvps, Rsvp
 from .views.comments import Comments, CommentsUser
@@ -23,6 +23,7 @@ app_api.add_resource(MeetUp, 'meetups/upcoming')
 app_api.add_resource(MeetUpItem, 'meetups/<int:id>')
 app_api.add_resource(MeetupImage, 'meetups/<int:id>/images')
 app_api.add_resource(MeetUpTags, 'meetups/<int:meetup_id>/<tag>')
+app_api.add_resource(MeetUpTag, 'meetups/<tag>')
 
 app_api.add_resource(Questions, 'questions')
 app_api.add_resource(Question, 'questions/<int:id>')
