@@ -91,7 +91,7 @@ class CommentsUser(Resource):
     """
     @auth_required
     @current_user_only
-    @swag_from('docs/comments_get.yml')
+    @swag_from('docs/comments_get_user.yml')
     def get(this_user, self, id, username=None, usr_id=None):
         """
             Returns all existing comments to a question

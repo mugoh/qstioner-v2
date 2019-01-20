@@ -44,13 +44,20 @@ class MeetUpModel(AbstractModel):
             "tags": self.tags,
         }
 
+        # For data fetched from the database
         if self.id:
             data.update({"id": self.id})
 
         return data
 
-        #
-        # Searches
+    def add_array_tag(self, new_tag, meetup):
+        """
+            Updates a meetup record with a specified user tag
+        """
+        return super().update(ADD_MEETUP_TAG, ([new_tag], meetup))
+
+    #
+    # Searches
 
     @classmethod
     def get_by_id(cls, given_id, obj=False):
@@ -72,6 +79,9 @@ class MeetUpModel(AbstractModel):
         return None
 
     def add_image(self, image_path, meetup_id):
+        """
+            Updates a meetup with a path to uploaded image files
+        """
         return super().update(ADD_MEETUP_IMAGE, ([image_path], meetup_id))
 
     @classmethod

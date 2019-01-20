@@ -1,0 +1,36 @@
+Create an Image for a Meetup
+This endpoint allows the posting of a Image to a meetup.
+Only a signed in admin user can upload an Image.
+---
+tags:
+- Meetup Images
+consumes:
+- multipart/form-data
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  type: integer
+  minimum: 1
+  description: The id of the meetup to upload your image for
+- in: formData
+  name: image
+  required: true
+  type: file
+  description: The image to upload.
+responses:
+  200:
+    description: Success, Image Created to Meetup
+  400:
+    description: Bad Request, validation check failed.
+  403:
+    description: Illegal Access. Authorization failed
+  404:
+    description: Meetup ID not found.
+ 

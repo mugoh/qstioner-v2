@@ -214,3 +214,12 @@ ADD_MEETUP_IMAGE = """
     UPDATE meetups SET images = images || %s
     WHERE id = %s RETURNING *;
 """
+
+ADD_MEETUP_TAG = """
+    UPDATE meetups SET tags = tags || %s
+    WHERE id = %s;
+"""
+
+GET_TAGGED_MEETUPS = """
+    SELECT * FROM meetups WHERE %s = ANY(tags)
+"""

@@ -11,7 +11,8 @@ import random
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required
 from ..utils.helpers import validate_date
-from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
+from ..database.queries import (
+    GET_ALL_MEETUPS, DELETE_MEETUP, GET_TAGGED_MEETUPS)
 
 
 class Meetups(Resource):
@@ -92,6 +93,9 @@ class MeetUpItem(Resource):
     @auth_required
     @swag_from('docs/meetup_delete.yml')
     def delete(this_user, self, id):
+        """
+            Clears a specified meetup from the meetups records.
+        """
         meetup = MeetUpModel.get_by_id(id, obj=True)
         if not meetup:
             return {
@@ -113,6 +117,7 @@ class MeetupImage(Resource):
     """
     decorators = [auth_required]
 
+    @swag_from('docs/meetup_image_post.yml')
     def post(this_user, self, id):
         """
             Uploads an image to the meetup whose ID
@@ -140,12 +145,13 @@ class MeetupImage(Resource):
             return {
                 "Status": 404,
                 "Message": f"Meetup of ID {id} non-existent"
-            }
+            }, 404
 
         # Set random file name
         random_name_part = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=30))
         image_name = 'meetup' + str(id) + random_name_part + '.png'
+
         file_path = os.path.join(app.config.get('UPLOAD_DIR'),
                                  image_name)
 
@@ -160,3 +166,59 @@ class MeetupImage(Resource):
 
 keys = ["id", "topic", "images", "location", "happening_on",
         "tags"]
+
+
+class MeetUpTags(Resource):
+    """
+        This resource allows an admin user to associate
+        tags in helping in identification of meetups
+    """
+    @auth_required
+    @admin_required
+    @swag_from('docs/meetup_tags_post.yml')
+    def post(this_user, self, meetup_id, tag):
+        """
+            Posts a tag to a meetup record that matches
+            the given ID
+        """
+
+        meetup = MeetUpModel.get_by_id(meetup_id, obj=True)
+
+        if not meetup:
+            response = "That meetup seems \
+            missing" + f'Meetup of ID {meetup_id} not in existence yet'
+            return {
+                "Status": 404,
+                "Message": response
+            }, 404
+
+        data = meetup.add_array_tag(tag, meetup_id)
+        print(data, "\n\n\n")
+
+        return {
+            "Status": 200,
+            "Message": f"Tag {tag} associated with meetup of ID {meetup_id}"
+        }, 200
+
+
+class MeetUpTag(Resource):
+
+    """
+        Allows users to see records associated with certain tags.
+    """
+    @auth_required
+    @swag_from('docs/meetup_tags_get.yml')
+    def get(this_user, self, tag):
+        """
+        Fetches meetups that match a given tag and returns
+        a response of these meetup records.
+        """
+
+        data = MeetUpModel.get_all(GET_TAGGED_MEETUPS, (tag,))
+
+        if data:
+            data = MeetUpModel.zipToDict(keys, data)
+        return {
+            "Status": 200,
+            "Data": data
+        }, 200
