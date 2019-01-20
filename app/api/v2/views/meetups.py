@@ -11,7 +11,7 @@ import random
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required
 from ..utils.helpers import validate_date
-from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP, ADD_MEETUP_IMAGE
+from ..database.queries import GET_ALL_MEETUPS, DELETE_MEETUP
 
 
 class Meetups(Resource):
@@ -134,6 +134,14 @@ class MeetupImage(Resource):
             }, 400
         """
 
+        meetup = MeetUpModel.get_by_id(id, obj=True)
+
+        if not meetup:
+            return {
+                "Status": 404,
+                "Message": f"Meetup of ID {id} non-existent"
+            }
+
         random_name_part = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=30))
         image_name = 'meetup' + str(id) + random_name_part + '.png'
@@ -142,7 +150,7 @@ class MeetupImage(Resource):
 
         image.save(file_path)
 
-        data = MeetUpModel.update(ADD_MEETUP_IMAGE, (file_path, id))
+        data = meetup.add_image(file_path, id)
 
         return {
             "Status": 200,
