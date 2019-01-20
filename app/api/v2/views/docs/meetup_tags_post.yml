@@ -18,16 +18,15 @@ parameters:
   name: meetup_id   # Note the name is the same as in the path
   required: true
   schema:
-    type: integer
-    minimum: 1
-    description: The id of the meetup to Tag
+  type: integer
+  minimum: 1
+  description: The id of the meetup to Tag
 - in: path
   name: tag   # Note the name is the same as in the path
   required: true
-  schema:
-    type: string
-    minimum: 1
-    description: The tag to post to the specified meetup
+  type: string
+  minimum: 1
+  description: The tag to post to the specified meetup
 responses:
   200:
     description: Success. A Tag has been posted for
