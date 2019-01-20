@@ -140,7 +140,7 @@ class MeetupImage(Resource):
             return {
                 "Status": 404,
                 "Message": f"Meetup of ID {id} non-existent"
-            }
+            }, 404
 
         # Set random file name
         random_name_part = ''.join(random.choices(
@@ -169,4 +169,21 @@ class MeetUpTags(Resource):
     """
     @auth_required
     @admin_required
-    def post(self):
+    def post(this_user, self, meetup_id, tag):
+        """
+            Posts a tag to a meetup record that matches
+            the given ID
+        """
+
+        meetup = MeetUpModel.get_by_id(meetup_id, obj=True)
+
+        if not meetup:
+            response = "That meetup seems missing" +
+            f'Meetup of ID {meetup_id} not in existence yet'
+            return {
+                "Status": 404,
+                "Message": response
+            }, 404
+
+        data = meetup.add_array_tag(tag, meetup_id)
+        print(data, "\n\n\n")
