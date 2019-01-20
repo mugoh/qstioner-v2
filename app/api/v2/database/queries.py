@@ -219,3 +219,7 @@ ADD_MEETUP_TAG = """
     UPDATE meetups SET tags = tags || %s
     WHERE id = %s;
 """
+
+GET_TAGGED_MEETUPS = """
+    SELECT * FROM meetups WHERE %s = ANY(tags)
+"""
