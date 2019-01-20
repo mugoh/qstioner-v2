@@ -210,7 +210,7 @@ class MeetUpTag(Resource):
         a response of these meetup records
         """
 
-        data = MeetUpModel.get_all(GET_TAGGED_MEETUPS, tag)
+        data = MeetUpModel.get_all(GET_TAGGED_MEETUPS, (tag,))
 
         if data:
             data = MeetUpModel.zipToDict(keys, data)
