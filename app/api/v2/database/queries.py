@@ -206,5 +206,6 @@ VERIFY_COMMENT = """
     (question, user_id, body) = (%s, %s, %s)
 """
 GET_ALL_COMMENTS = """
-    SELECT * FROM comments ORDER BY id
+    SELECT * FROM comments WHERE question = %s
+    ORDER BY id DESC
 """
