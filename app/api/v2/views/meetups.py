@@ -125,15 +125,18 @@ class MeetupImage(Resource):
         args = parser.parse_args(strict=True)
 
         image = args.get('image')
-        if not image:
+
+        # ! err Doesn't handle missing paths
+        """if not image:
             return {
                 "Status": 400,
                 "Error": "Image path is Empty. Specify an image"
             }, 400
+        """
 
-        image_name = 'meetup' + str(id)
-        + ''.join(random.choices(string.ascii_lowercase + string.digits, k=30))
-        + '.png'
+        random_name_part = ''.join(random.choices(
+            string.ascii_lowercase + string.digits, k=30))
+        image_name = 'meetup' + str(id) + random_name_part + '.png'
 
         image.save(os.path.join(app.config.get('UPLOAD_DIR'),
                                 image_name))
