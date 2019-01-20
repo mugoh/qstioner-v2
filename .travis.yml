@@ -2,12 +2,13 @@ language: python
 cache: pip
 python:
 - "3.6"
+sudo: required
 
 install:
 - pip install -r requirements.txt
 
 before_script:
-  - chown -R $USER:$USER /root
+  - sudo chown -R $USER:$USER /root
   - psql -c 'create database qs_db;' -U postgres
 
 script:
