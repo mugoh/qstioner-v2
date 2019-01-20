@@ -1,0 +1,40 @@
+Post a Tag to a Meetup
+
+Allows registred users to create a Tag for a particular
+meetup meetup.
+---
+tags:
+- Meetup Tags
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: meetup_id   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: integer
+    minimum: 1
+    description: The id of the meetup to Tag
+- in: path
+  name: tag   # Note the name is the same as in the path
+  required: true
+  schema:
+    type: string
+    minimum: 1
+    description: The tag to post to the specified meetup
+responses:
+  200:
+    description: Success. A Tag has been posted for
+      the meetup with the given ID
+  404:
+    description: Not Found, no meetup id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token or invalid parameter in path
