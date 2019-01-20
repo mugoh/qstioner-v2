@@ -1,7 +1,12 @@
 from flask_restful import Resource, reqparse
 from flasgger import swag_from
+from flask import current_app as app
 import werkzeug
+
+import os
 import datetime
+import string
+import random
 
 from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required, current_user_only
@@ -129,6 +134,9 @@ class MeetupImage(Resource):
         image_name = 'meetup' + str(id)
         + ''.join(random.choices(string.ascii_lowercase + string.digits, k=30))
         + '.png'
+
+        image.save(os.path.join(app.config.get('UPLOAD_DIR'),
+                                image_name))
 
 
 ####
