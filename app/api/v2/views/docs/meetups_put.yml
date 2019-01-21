@@ -7,7 +7,12 @@ tags:
 consumes:
 - application/json
 parameters:
-
+- in: header
+  name: Authorization
+  description: The encoded token generated during user
+    login i.e (Bearer token)
+  type: string
+  required: true
 - in: path
   name: id   # Note the name is the same as in the path
   required: true
