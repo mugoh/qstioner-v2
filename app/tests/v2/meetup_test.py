@@ -145,3 +145,37 @@ class MeetUpTests(BaseTestCase):
                                )),
                                headers=self.admin_auth)
         self.assertEqual(res.status_code, 400)
+
+    #
+    # Tags
+    #
+    def test_post_tag_to_meetup(self):
+        res = self.client.post('api/v1/meetup/1/tag', headers=self.admin_auth)
+
+        self.assertTrue("tag associated with meetup"
+                        in res.get_json().get('Message'),
+                        "Fails to allow user to tag a meetup")
+
+    def test_get_meetups_by_missing_tag(self):
+        res = self.client.get('api/v1/meetup/missing_tag',
+                              headers=self.auth_header)
+
+        self.assertEqual(res.get_json().get('Data'), [],
+                         "Fails. Returns meetups for tags not created")
+
+    def test_posted_tag_associates_with_meetup(self):
+        self.client.post('api/v1/meetup/1/tag', headers=self.admin_auth)
+
+        res = self.client.get('api/v1/meetup/tag',
+                              headers=self.auth_header)
+        self.assertIsInstance(res.get_json().get('Data'), list)
+        self.assertNotEqual(res.get_json().get('Data'), [],
+                            "Fails to show meetups that have a given tag")
+
+    def test_post_tag_for_non_existent_meetup(self):
+        res = self.client.post('api/v1/meetup/404/tag',
+                               headers=self.admin_auth)
+
+        self.assertTrue('That meetup seems' in
+                        res.get_json().get('Message'),
+                        "Fails to check existence of meetup before adding tag")
