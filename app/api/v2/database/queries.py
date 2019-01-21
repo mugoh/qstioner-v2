@@ -127,8 +127,8 @@ GET_MEETUP_BY_ID = """
 
 UPDATE_MEETUP = """
     UPDATE meetups
-    SET topic=%s, location=%s,
-    happening_on=%s WHERE id = %s;
+    SET topic=%s, happening_on=%s,
+    location=%s WHERE id = %s;
 """
 
 VERIFY_MEETUP = """
