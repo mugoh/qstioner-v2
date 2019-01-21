@@ -110,8 +110,14 @@ class MeetUpItem(Resource):
             "Item": repr(meetup)
         }, 200
 
+    @auth_required
+    @admin_required
     @swag_from('docs/meetups_put.yml')
     def put(self, id):
+        """
+            Updates an existing meetup with details passed in
+            by user
+        """
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
         parser.add_argument('topic', type=str)
         parser.add_argument(
