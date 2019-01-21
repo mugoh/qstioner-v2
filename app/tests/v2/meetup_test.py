@@ -23,7 +23,7 @@ class MeetUpTests(BaseTestCase):
                                    headers=self.auth_header)
         self.assertEqual(response.status_code, 200)
 
-    def test_create_new_meetup_twice(self):
+    """def test_create_new_meetup_twice(self):
         user_data = json.dumps(dict(
             username="DomesticableAdmin",
             email="admin@mammals.milkable",
@@ -144,4 +144,14 @@ class MeetUpTests(BaseTestCase):
                                    happeningOn='2019-08-08 20'
                                )),
                                headers=self.admin_auth)
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, 400)"""
+
+    #
+    # Tags
+    #
+    def test_post_tag_to_meetup(self):
+        res = self.client.post('api/v1/meetup/1/tag', headers=self.admin_auth)
+
+        self.assertTrue("tag associated with meetup"
+                        in res.get_json().get('Message'),
+                        "Fails to allow user to tag a meetup")
