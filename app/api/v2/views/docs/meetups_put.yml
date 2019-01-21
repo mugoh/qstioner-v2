@@ -8,8 +8,15 @@ consumes:
 - application/json
 parameters:
 
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: integer
+  minimum: 1
+  description: The id of the records to edit
 - in: body
-  name: Meetup Details
+  name: Meetup Detail
   description: The Details of the Meetup to be added to Inventory
   schema:
     type: object
