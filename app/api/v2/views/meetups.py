@@ -111,12 +111,23 @@ class MeetUpItem(Resource):
             "Item": repr(meetup)
         }, 200
 
-    def put(self):
+    def put(self, id):
         put_parser = self.universal_parser.copy()
         put_parser.replace_argument('topic', type=str)
         put_parser.replace_argument('location', type=str)
 
         args = put_parser.parse_args(strict=True)
+
+        meetup = MeetUpModel.get_by_id(id, obj=True)
+        if not meetup:
+            return {
+                "Status": 404,
+                "Error": "Meetup of ID {id} non-existent"
+            }, 404
+
+        {(key, value) in meetup.dictify()}
+
+        meetup.update
 
 
 class MeetupImage(Resource):
