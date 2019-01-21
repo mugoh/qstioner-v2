@@ -34,7 +34,6 @@ class Meetups(Resource):
         parser.add_argument('images', type=str, action='append')
 
         args = parser.parse_args(strict=True)
-        self.universal_parser = parser.copy()
 
         # Ensure a meetup isn't created with same data twice
 
@@ -113,17 +112,22 @@ class MeetUpItem(Resource):
 
     @swag_from('docs/meetups_put.yml')
     def put(self, id):
-        put_parser = self.universal_parser.copy()
-        put_parser.replace_argument('topic', type=str)
-        put_parser.replace_argument('location', type=str)
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+        parser.add_argument('topic', type=str)
+        parser.add_argument(
+            'happeningOn', type=validate_date,
+            default=datetime.datetime.utcnow().isoformat())
+        parser.add_argument('tags', type=str, action='append')
+        parser.add_argument('location', type=str)
+        parser.add_argument('images', type=str, action='append')
 
-        args = put_parser.parse_args(strict=True)
+        args = parser.parse_args(strict=True)
 
         meetup = MeetUpModel.get_by_id(id, obj=True)
         if not meetup:
             return {
                 "Status": 404,
-                "Error": "Meetup of ID {id} non-existent"
+                "Error": f"Meetup of ID {id} non-existent"
             }, 404
 
         data = meetup.dictify()
