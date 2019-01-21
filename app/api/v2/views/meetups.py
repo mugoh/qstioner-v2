@@ -111,6 +111,7 @@ class MeetUpItem(Resource):
             "Item": repr(meetup)
         }, 200
 
+    @swag_from('docs/meetups_put.yml')
     def put(self, id):
         put_parser = self.universal_parser.copy()
         put_parser.replace_argument('topic', type=str)
