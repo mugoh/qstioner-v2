@@ -170,11 +170,12 @@ class MeetUpTests(BaseTestCase):
                               headers=self.auth_header)
         self.assertIsInstance(res.get_json().get('Data'), list)
         self.assertNotEqual(res.get_json().get('Data'), [],
-                            "Fails. Returns meetups for tags not created")
+                            "Fails to show meetups that have a given tag")
 
     def test_post_tag_for_non_existent_meetup(self):
         res = self.client.post('api/v1/meetup/404/tag',
                                headers=self.admin_auth)
 
-        self.assertEqual('That meetup seems missing',
-                         res.get_json().get('Message'))
+        self.assertTrue('That meetup seems' in
+                        res.get_json().get('Message'),
+                        "Fails to check existence of meetup before adding tag")
