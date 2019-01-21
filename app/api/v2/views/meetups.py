@@ -113,7 +113,7 @@ class MeetUpItem(Resource):
     @auth_required
     @admin_required
     @swag_from('docs/meetups_put.yml')
-    def put(self, id):
+    def put(this_user, self, id):
         """
             Updates an existing meetup with details passed in
             by user
