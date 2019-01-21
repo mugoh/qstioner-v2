@@ -34,6 +34,7 @@ class Meetups(Resource):
         parser.add_argument('images', type=str, action='append')
 
         args = parser.parse_args(strict=True)
+        self.universal_parser = parser.copy()
 
         # Ensure a meetup isn't created with same data twice
 
@@ -109,6 +110,13 @@ class MeetUpItem(Resource):
             "Message": "MeetUp deleted",
             "Item": repr(meetup)
         }, 200
+
+    def put(self):
+        put_parser = self.universal_parser.copy()
+        put_parser.replace_argument('topic', type=str)
+        put_parser.replace_argument('location', type=str)
+
+        args = put_parser.parse_args(strict=True)
 
 
 class MeetupImage(Resource):
