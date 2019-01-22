@@ -118,10 +118,15 @@ class Question(Resource):
                 "Status": 404,
                 "Message": f"That question [ID {id}] does not exist. Maybe create it?"
             }, 404
+
+        # Get the question dictionary data
         quesion_dict = QuestionModel.get_by_id(id)
 
+        # Get non-None Arguments from the PUT request
         quesion_dict.update({key: value for key, value
                              in args.items() if value})
+
+        # Update the old data with added new data
         details_to_post = {"title": quesion_dict.get('title'),
                            "body": quesion_dict.get("body"),
                            "id": quesion_dict.get("id")}
