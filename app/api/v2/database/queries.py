@@ -229,6 +229,10 @@ DELETE_COMMENT = """
     DELETE FROM comments
     WHERE id = %s
 """
+GET_COMMENT_BY_ID = """
+    SELECT * FROM comments WHERE
+    id = %s
+"""
 
 ADD_MEETUP_IMAGE = """
     UPDATE meetups SET images = images || %s
