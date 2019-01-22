@@ -132,7 +132,8 @@ class CommentUpdate(Resource):
     @swag_from('docs/comment_put.yml')
     def put(this_user, self, id):
         """
-            Updates a user comment
+            Updates a user comment. This chages the body
+            element of the comment.
         """
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
@@ -175,7 +176,7 @@ class CommentUpdate(Resource):
     @swag_from('docs/comment_delete.yml')
     def delete(this_user, self, id):
         """
-            Allows a user to delete a present comment
+            Allows a user to delete a present comment.
         """
 
         if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
