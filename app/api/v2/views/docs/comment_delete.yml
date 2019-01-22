@@ -3,7 +3,7 @@ Deletes a comment posted to a meetup question. This is the comment
 with the specified id.
 ---
 tags:
-- Comment Comments
+- Question Comments
 parameters:
 - in: header
   name: Authorization
