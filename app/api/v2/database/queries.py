@@ -165,6 +165,12 @@ GET_QUESTION_VOTES = """
     SELECT votes FROM questions where id = %s
 """
 
+UPDATE_QUESTION = """
+    UPDATE questions
+    SET title = %s, body = %s
+    WHERE id = %s;
+"""
+
 UPDATE_QUESTION_VOTES = """
     UPDATE questions
     SET votes = %s WHERE id = %s
