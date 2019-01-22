@@ -102,6 +102,35 @@ class Question(Resource):
             This endpoint allows a user to make changes to the
             of an existing comment.
         """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('title', type=str)
+        parser.add_argument('body', type=str)
+
+        args = parser.parse_args(strict=True)
+
+        question = QuestionModel.get_by_id(id, obj=True)
+
+        if not question:
+            return {
+                "Status": 404,
+                "Message": f"That question [ID {id}] does not exist. Maybe create it?"
+            }, 404
+        quesion_dict = QuestionModel.get_by_id(id)
+
+        quesion_dict.update({key: value for key, value
+                             in args.items() if value})
+        details_to_post = {"title": quesion_dict.get('title'),
+                           "body": quesion_dict.get("body"),
+                           "id": quesion_dict.get("id")}
+
+        question.update(UPDATE_QUESTION, tuple(details_to_post.values()))
+
+        return {
+            "Status": 200,
+            "Message": "Question Updated",
+            "Data": [QuestionModel.get_by_id(id)]
+        }, 200
 
     @swag_from('docs/question_delete.yml')
     def delete(this_user, self, id):
