@@ -83,31 +83,6 @@ class Comments(Resource):
             "Data": data
         }, 200
 
-    @auth_required
-    def put(this_user, self, id):
-        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
-
-        parser.add_argument('body',
-                            type=inputs.regex('^[A-Za-z0-9_ ?/!.,"\\\':;]+$'),
-                            help="Is that readable? Provide a valid comment")
-
-        args = parser.parse_args(strict=True)
-
-        # Get the user ID of user sending request
-        user_id = UserModel.get_by_name(this_user, key_values=True).get('id')
-
-        # Find Comments posted by this USER
-        data = CommentModel.get_for_user(user_id)
-
-        if not data:
-
-            return {
-                "Status": 404,
-                "Message": f'{this_user} has not posted any comment yet'
-            }, 404
-
-        data = CommentModel.zipToDict(keys, data)
-
 
 class CommentsUser(Resource):
     """
@@ -144,6 +119,44 @@ class CommentsUser(Resource):
             "Status": 200,
             "Data": data
         }, 200
+
+
+class CommentUpdate(Resource):
+    """
+        Thos resource allows use of a PUT request on
+        an existing comment without having to specify
+        the Question ID of the comment.
+    """
+    @auth_required
+    def put(this_user, self, id):
+        """
+            Updates a user comment
+        """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('body', required=True,
+                            type=inputs.regex(
+                                '^[A-Za-z0-9_ ?/!.,"\\\':;]+$'),
+                            help="Is that readable? Provide a valid comment")
+
+        args = parser.parse_args(strict=True)
+
+        # Get the user ID of user sending request
+        user = UserModel.get_by_name(this_user)
+        user_id = getattr(user, 'id')
+
+        # Find Comments posted by this USER
+        data = CommentModel.get_for_user(user_id)
+
+        if not data:
+
+            return {
+                "Status": 404,
+                "Message": f'{this_user} has not posted any comment yet'
+            }, 404
+        args.update({"id": id})
+
+        user.update(UPDATE_COMMENT, tuple(args.values()))
 
 
 keys = ["id", "question", "user_id",
