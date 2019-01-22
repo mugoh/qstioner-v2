@@ -163,6 +163,21 @@ class CommentUpdate(Resource):
             "Message": "Comment Updated",
         }, 200
 
+    @auth_required
+    def delete(this_user, self, id):
+        """
+            Allows a user to delete a present comment
+        """
+
+        user = UserModel.get_by_name(this_user)
+
+        user.delete(DELETE_COMMENT, (id,))
+
+        return {
+            "Status": 200,
+            "Message": f'Comment of ID {} deleted'
+        }, 200
+
 
 keys = ["id", "question", "user_id",
         "body"]
