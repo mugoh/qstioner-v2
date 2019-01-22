@@ -137,3 +137,17 @@ class CommentTest(BaseTestCase):
         self.assertEqual('Comment of ID 404 missing',
                          res.get_json().get('Message'),
                          "Fails to edit user quesiton")
+
+    def test_delete_comment(self):
+        data = json.dumps(dict(
+            body="I'll be there for the cookies"
+        ))
+        self.post('api/v1/questions/1/comment',
+                  data=data)
+        res = self.client.delete('api/v1/comments/1',
+                                 headers=self.auth_header)
+        print(res.get_json())
+
+        self.assertEqual(res.get_json().get('Message'),
+                         "Comment of ID 1 deleted",
+                         "Fails to delete a user comment")
