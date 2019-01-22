@@ -9,7 +9,8 @@ from ..models.users import UserModel
 from ..models.meetups import MeetUpModel
 from ..utils.auth import auth_required, get_auth_identity
 
-from ..database.queries import GET_ALL_QUESTIONS, DELETE_QUESTION
+from ..database.queries import (
+    GET_ALL_QUESTIONS, DELETE_QUESTION, UPDATE_QUESTION)
 
 
 class Questions(Resource):
@@ -94,6 +95,47 @@ class Question(Resource):
 
         return {
             "Status": 200,
+            "Data": [QuestionModel.get_by_id(id)]
+        }, 200
+
+    @swag_from('docs/question_put.yml')
+    def put(this_user, self, id):
+        """
+            This endpoint allows a user to make changes to the
+            of an existing comment.
+        """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('title', type=str)
+        parser.add_argument('body', type=str)
+
+        args = parser.parse_args(strict=True)
+
+        question = QuestionModel.get_by_id(id, obj=True)
+
+        if not question:
+            return {
+                "Status": 404,
+                "Message": f"That question [ID {id}] does not exist. Maybe create it?"
+            }, 404
+
+        # Get the question dictionary data
+        quesion_dict = QuestionModel.get_by_id(id)
+
+        # Get non-None Arguments from the PUT request
+        quesion_dict.update({key: value for key, value
+                             in args.items() if value})
+
+        # Update the old data with added new data
+        details_to_post = {"title": quesion_dict.get('title'),
+                           "body": quesion_dict.get("body"),
+                           "id": quesion_dict.get("id")}
+
+        question.update(UPDATE_QUESTION, tuple(details_to_post.values()))
+
+        return {
+            "Status": 200,
+            "Message": "Question Updated",
             "Data": [QuestionModel.get_by_id(id)]
         }, 200
 

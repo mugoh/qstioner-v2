@@ -1,0 +1,40 @@
+Edit Existing Question
+This endpoint allows the editing of an exisitng Question details.
+Only ogged in User can edit a Question.
+---
+tags:
+- Meetup Questions
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: integer
+  minimum: 1
+  description: The id of the records to edit
+- in: body
+  name: Question Detail
+  description: The Details of the Question to be added to Inventory
+  schema:
+    type: object
+    
+    properties:
+      body:
+        type: string
+        example: Can I opt for milk shakes instead of plain old milk?
+      
+responses:
+  200:
+    description: Success, the Question has been edited successfully
+  403:
+    description: Unauthorized. A unknown user trying to create a question
+  400:
+    description: Bad Request, handles failed validation.
