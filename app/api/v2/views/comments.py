@@ -123,11 +123,12 @@ class CommentsUser(Resource):
 
 class CommentUpdate(Resource):
     """
-        Thos resource allows use of a PUT request on
+        This resource allows use of a PUT or DELETE request on
         an existing comment without having to specify
         the Question ID of the comment.
     """
     @auth_required
+    @swag_from('docs/comment_put.yml')
     def put(this_user, self, id):
         """
             Updates a user comment
@@ -164,6 +165,7 @@ class CommentUpdate(Resource):
         }, 200
 
     @auth_required
+    @swag_from('docs/comment_delete.yml')
     def delete(this_user, self, id):
         """
             Allows a user to delete a present comment
