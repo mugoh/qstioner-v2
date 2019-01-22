@@ -5,7 +5,7 @@ from .base_test import BaseTestCase
 
 class CommentTest(BaseTestCase):
 
-    """def test_get_comments_for_empty_table(self):
+    def test_get_comments_for_empty_table(self):
         res = self.get('api/v1/questions/1/comment')
 
         self.assertEqual(res.get_json().get('Data'),
@@ -92,7 +92,7 @@ class CommentTest(BaseTestCase):
         print(res.get_json())
         self.assertEqual(res.get_json().get('Data'),
                          [],
-                         msg="Fails to retrieve comments for user")"""
+                         msg="Fails to retrieve comments for user")
 
     def test_edit_missing_user_comments(self):
         data = json.dumps(dict(
