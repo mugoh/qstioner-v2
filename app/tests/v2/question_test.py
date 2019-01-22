@@ -189,3 +189,19 @@ class TestQuestions(BaseTestCase):
                          res.get_json().get('Message'),
                          "Fails to ask for Authorization header for a\
                          protected endpoint")
+
+    def test_edit_non_existent_question(self):
+        res = self.client.put('api/v1/questions/404',
+                              data=json.dumps(dict(location="other locc")),
+                              headers=self.admin_auth)
+        self.assertTrue('not exist' in
+                        res.get_json().get('Message'),
+                        "Fails. Allows user to edit missing quesiton")
+
+    def test_edit_question(self):
+        res = self.client.put('api/v1/questions/1',
+                              data=json.dumps(dict(location="other locc")),
+                              headers=self.admin_auth)
+        self.assertEqual('Question Updated',
+                         res.get_json().get('Message'),
+                         "Fails to edit user quesiton")

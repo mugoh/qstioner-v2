@@ -93,3 +93,71 @@ class CommentTest(BaseTestCase):
         self.assertEqual(res.get_json().get('Data'),
                          [],
                          msg="Fails to retrieve comments for user")
+
+    def test_edit_missing_user_comments(self):
+        data = json.dumps(dict(
+            body="I'll be there for the cookies"
+        ))
+        res = self.client.put('api/v1/comments/1',
+                              data=data,
+                              headers=self.auth_header,
+                              content_type='application/json')
+        self.assertTrue('not posted any' in
+                        res.get_json().get('Message'),
+                        "Fails. Allows user to edit they did not post")
+
+    def test_edit_comment(self):
+        data = json.dumps(dict(
+            body="I'll be there for the cookies"
+        ))
+        res = self.post('api/v1/questions/1/comment',
+                        data=data)
+
+        res = self.client.put('api/v1/comments/1',
+                              data=data,
+                              headers=self.auth_header,
+                              content_type='application/json')
+
+        self.assertEqual('Comment Updated',
+                         res.get_json().get('Message'),
+                         "Fails to edit user quesiton")
+
+    def test_edit_comment_with_missing_id(self):
+        data = json.dumps(dict(
+            body="I'll be there for the cookies"
+        ))
+        res = self.post('api/v1/questions/1/comment',
+                        data=data)
+
+        res = self.client.put('api/v1/comments/404',
+                              data=data,
+                              headers=self.auth_header,
+                              content_type='application/json')
+
+        self.assertEqual('Comment of ID 404 missing',
+                         res.get_json().get('Message'),
+                         "Fails to edit user quesiton")
+
+    def test_delete_comment(self):
+        data = json.dumps(dict(
+            body="I'll be there for the cookies"
+        ))
+        self.post('api/v1/questions/1/comment',
+                  data=data)
+        res = self.client.delete('api/v1/comments/1',
+                                 headers=self.auth_header)
+        print(res.get_json())
+
+        self.assertEqual(res.get_json().get('Message'),
+                         "Comment of ID 1 deleted",
+                         "Fails to delete a user comment")
+
+    def test_delete_missing_comment(self):
+
+        res = self.client.delete('api/v1/comments/1',
+                                 headers=self.auth_header)
+        print(res.get_json())
+
+        self.assertEqual(res.get_json().get('Message'),
+                         "Comment of ID 1 missing",
+                         "Fails. Deletes missing user comment")
