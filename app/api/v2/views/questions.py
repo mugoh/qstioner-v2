@@ -97,6 +97,7 @@ class Question(Resource):
             "Data": [QuestionModel.get_by_id(id)]
         }, 200
 
+    @swag_from('docs/question_put.yml')
     def put(self, id):
         """
             This endpoint allows a user to make changes to the
