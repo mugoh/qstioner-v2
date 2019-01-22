@@ -181,9 +181,18 @@ class MeetUpTests(BaseTestCase):
                         "Fails to check existence of meetup before adding tag")
 
     def test_edit_non_existent_meetup(self):
-        res = self.client.put('api/v1/meetup/404',
+        res = self.client.put('api/v1/meetups/404',
+                              data=json.dumps(dict(location="other locc")),
                               headers=self.admin_auth)
-
         self.assertTrue('non-existent' in
-                        res.get_json().get('Message'),
-                        "Fails to check existence of meetup before adding tag")
+                        res.get_json().get('Error'),
+                        "Fails. Allows user to edit missing meetup")
+
+    def test_edit_meetup(self):
+        res = self.client.put('api/v1/meetups/1',
+                              data=json.dumps(dict(location="other locc")),
+                              headers=self.admin_auth)
+        print(res.get_json())
+        self.assertEqual('Meetup updated',
+                         res.get_json().get('Message'),
+                         "Fails to edit meetup details")
