@@ -151,3 +151,13 @@ class CommentTest(BaseTestCase):
         self.assertEqual(res.get_json().get('Message'),
                          "Comment of ID 1 deleted",
                          "Fails to delete a user comment")
+
+    def test_delete_missing_comment(self):
+
+        res = self.client.delete('api/v1/comments/1',
+                                 headers=self.auth_header)
+        print(res.get_json())
+
+        self.assertEqual(res.get_json().get('Message'),
+                         "Comment of ID 1 missing",
+                         "Fails. Deletes missing user comment")
