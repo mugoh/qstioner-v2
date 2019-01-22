@@ -9,7 +9,8 @@ from ..models.users import UserModel
 from ..models.meetups import MeetUpModel
 from ..utils.auth import auth_required, get_auth_identity
 
-from ..database.queries import GET_ALL_QUESTIONS, DELETE_QUESTION
+from ..database.queries import (
+    GET_ALL_QUESTIONS, DELETE_QUESTION, UPDATE_QUESTION)
 
 
 class Questions(Resource):
@@ -98,7 +99,7 @@ class Question(Resource):
         }, 200
 
     @swag_from('docs/question_put.yml')
-    def put(self, id):
+    def put(this_user, self, id):
         """
             This endpoint allows a user to make changes to the
             of an existing comment.
