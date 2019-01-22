@@ -83,7 +83,8 @@ class Comments(Resource):
             "Data": data
         }, 200
 
-    def put(self, id):
+    @auth_required
+    def put(this_user, self, id):
          parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
         parser.add_argument('body',
@@ -91,6 +92,21 @@ class Comments(Resource):
                             help="Is that readable? Provide a valid comment")
 
         args = parser.parse_args(strict=True)
+
+        # Get the user ID of user sending request
+        user_id = UserModel.get_by_name(this_user, key_values=True).get('id')
+        
+        # Find Comments posted by this USER
+        data = CommentModel.get_for_user(user_id)
+
+        if not data:
+
+            return {
+            "Status": 404
+            }
+        data = CommentModel.zipToDict(keys, data)
+
+
 
 
 class CommentsUser(Resource):
