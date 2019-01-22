@@ -10,7 +10,7 @@ from ..models.questions import QuestionModel
 from ..models.comments import CommentModel
 from ..utils.auth import auth_required, current_user_only
 from ..database.queries import (
-    GET_ALL_COMMENTS, UPDATE_COMMENT, DELETE_COMMENT)
+    GET_ALL_COMMENTS, UPDATE_COMMENT, DELETE_COMMENT, GET_COMMENT_BY_ID)
 
 
 class Comments(Resource):
@@ -158,6 +158,12 @@ class CommentUpdate(Resource):
             }, 404
         args.update({"id": id})
 
+        if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
+            return {
+                "Status": 404,
+                "Message": f"Comment of ID {id} missing"
+            }, 404
+
         user.update(UPDATE_COMMENT, tuple(args.values()))
 
         return {
@@ -171,6 +177,12 @@ class CommentUpdate(Resource):
         """
             Allows a user to delete a present comment
         """
+
+        if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
+            return {
+                "Status": 404,
+                "Message": f"Comment of ID {id} missing"
+            }, 404
 
         user = UserModel.get_by_name(this_user)
 
