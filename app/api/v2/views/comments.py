@@ -158,6 +158,11 @@ class CommentUpdate(Resource):
 
         user.update(UPDATE_COMMENT, tuple(args.values()))
 
+        return {
+            "Status": 200,
+            "Message": "Comment Updated",
+        }, 200
+
 
 keys = ["id", "question", "user_id",
         "body"]
