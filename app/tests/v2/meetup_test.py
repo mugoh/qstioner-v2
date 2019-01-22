@@ -179,3 +179,11 @@ class MeetUpTests(BaseTestCase):
         self.assertTrue('That meetup seems' in
                         res.get_json().get('Message'),
                         "Fails to check existence of meetup before adding tag")
+
+    def test_edit_non_existent_meetup(self):
+        res = self.client.put('api/v1/meetup/404',
+                              headers=self.admin_auth)
+
+        self.assertTrue('non-existent' in
+                        res.get_json().get('Message'),
+                        "Fails to check existence of meetup before adding tag")
