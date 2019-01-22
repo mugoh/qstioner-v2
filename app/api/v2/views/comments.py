@@ -85,7 +85,7 @@ class Comments(Resource):
 
     @auth_required
     def put(this_user, self, id):
-         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
         parser.add_argument('body',
                             type=inputs.regex('^[A-Za-z0-9_ ?/!.,"\\\':;]+$'),
@@ -95,18 +95,18 @@ class Comments(Resource):
 
         # Get the user ID of user sending request
         user_id = UserModel.get_by_name(this_user, key_values=True).get('id')
-        
+
         # Find Comments posted by this USER
         data = CommentModel.get_for_user(user_id)
 
         if not data:
 
             return {
-            "Status": 404
-            }
+                "Status": 404,
+                "Message": f'{this_user} has not posted any comment yet'
+            }, 404
+
         data = CommentModel.zipToDict(keys, data)
-
-
 
 
 class CommentsUser(Resource):
