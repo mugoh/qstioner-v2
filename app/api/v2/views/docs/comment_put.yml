@@ -1,0 +1,40 @@
+Edit Existing Comment
+This endpoint allows the editing of an exisitng Comment details.
+Only ogged in User can edit a Comment.
+---
+tags:
+- Question Comments
+consumes:
+- application/json
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during user login
+    i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: integer
+  minimum: 1
+  description: The id of the records to edit
+- in: body
+  name: Comment Detail
+  description: The Details of the Comment to be added to Inventory
+  schema:
+    type: object
+    
+    properties:
+      body:
+        type: string
+        example: Why would anyone take milk in such cold weather?
+      
+responses:
+  200:
+    description: Success, the Comment has been edited successfully
+  403:
+    description: Unauthorized. A unknown user trying to create a question
+  400:
+    description: Bad Request, handles failed validation.

@@ -1,0 +1,30 @@
+Delete a Comment
+Deletes a comment posted to a meetup question. This is the comment
+with the specified id.
+---
+tags:
+- Question Comments
+parameters:
+- in: header
+  name: Authorization
+  description: The encoded token generated during
+    user login i.e (Bearer token)
+  type: string
+  required: true
+- in: path
+  name: id   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: integer
+  minimum: 1
+  description: The id of the comment records to retrieve
+responses:
+  200:
+    description: Success. Comment with specified id is
+      deleted successfully
+  404:
+    description: Not Found, no comment id matches the id given
+  403:
+    description: Anauthorized request
+  400:
+    description: Bad Request. Invalid Authorization header or illegal token

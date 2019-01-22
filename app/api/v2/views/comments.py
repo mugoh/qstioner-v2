@@ -9,7 +9,8 @@ from ..models.users import UserModel
 from ..models.questions import QuestionModel
 from ..models.comments import CommentModel
 from ..utils.auth import auth_required, current_user_only
-from ..database.queries import GET_ALL_COMMENTS
+from ..database.queries import (
+    GET_ALL_COMMENTS, UPDATE_COMMENT, DELETE_COMMENT, GET_COMMENT_BY_ID)
 
 
 class Comments(Resource):
@@ -118,6 +119,79 @@ class CommentsUser(Resource):
         return {
             "Status": 200,
             "Data": data
+        }, 200
+
+
+class CommentUpdate(Resource):
+    """
+        This resource allows use of a PUT or DELETE request on
+        an existing comment without having to specify
+        the Question ID of the comment.
+    """
+    @auth_required
+    @swag_from('docs/comment_put.yml')
+    def put(this_user, self, id):
+        """
+            Updates a user comment. This chages the body
+            element of the comment.
+        """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('body', required=True,
+                            type=inputs.regex(
+                                '^[A-Za-z0-9_ ?/!.,"\\\':;]+$'),
+                            help="Is that readable? Provide a valid comment")
+
+        args = parser.parse_args(strict=True)
+
+        # Get the user ID of user sending request
+        user = UserModel.get_by_name(this_user)
+        user_id = getattr(user, 'id')
+
+        # Find Comments posted by this USER
+        data = CommentModel.get_for_user(user_id)
+
+        if not data:
+
+            return {
+                "Status": 404,
+                "Message": f'{this_user} has not posted any comment yet'
+            }, 404
+        args.update({"id": id})
+
+        if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
+            return {
+                "Status": 404,
+                "Message": f"Comment of ID {id} missing"
+            }, 404
+
+        user.update(UPDATE_COMMENT, tuple(args.values()))
+
+        return {
+            "Status": 200,
+            "Message": "Comment Updated",
+        }, 200
+
+    @auth_required
+    @swag_from('docs/comment_delete.yml')
+    def delete(this_user, self, id):
+        """
+            Allows a user to delete a present comment.
+        """
+
+        if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
+            return {
+                "Status": 404,
+                "Message": f"Comment of ID {id} missing"
+            }, 404
+
+        user = UserModel.get_by_name(this_user)
+
+        user.delete(DELETE_COMMENT, (id,))
+
+        return {
+            "Status": 200,
+            "Message": f'Comment of ID {id} deleted'
         }, 200
 
 

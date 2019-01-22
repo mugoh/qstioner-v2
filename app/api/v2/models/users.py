@@ -25,6 +25,7 @@ class UserModel(AbstractModel):
         self.veirified_pass = kwargs.get('password')
 
         self.password = kwargs.get('password')
+        self.id = kwargs.get('id')
 
     @property
     def password(self):

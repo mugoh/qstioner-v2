@@ -6,7 +6,7 @@ from ...api.v2.views.meetups import (
     Meetups, MeetUp, MeetUpItem, MeetupImage, MeetUpTags, MeetUpTag)
 from ...api.v2.views.questions import Question, Questions, QuestionVote
 from ...api.v2.views.rsvp import Rsvps, Rsvp
-from .views.comments import Comments, CommentsUser
+from .views.comments import Comments, CommentsUser, CommentUpdate
 
 auth_blueprint = Blueprint("auth", __name__, url_prefix='/api/v1/auth/')
 app_blueprint = Blueprint("app", __name__, url_prefix='/api/v1/')
@@ -36,3 +36,5 @@ app_api.add_resource(Rsvp, 'meetups/<int:id>/rsvp', 'meetups/<username>/rsvp')
 app_api.add_resource(Comments, 'questions/<int:id>/comment')
 app_api.add_resource(CommentsUser, 'questions/<int:id>/<username>/comment',
                      'questions/<int:id>/<int:usr_id>/comment')
+
+app_api.add_resource(CommentUpdate, 'comments/<int:id>')

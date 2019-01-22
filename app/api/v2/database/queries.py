@@ -221,6 +221,18 @@ GET_ALL_COMMENTS = """
     SELECT * FROM comments WHERE question = %s
     ORDER BY id DESC
 """
+UPDATE_COMMENT = """
+    UPDATE comments
+    SET body = %s WHERE id = %s;
+"""
+DELETE_COMMENT = """
+    DELETE FROM comments
+    WHERE id = %s
+"""
+GET_COMMENT_BY_ID = """
+    SELECT * FROM comments WHERE
+    id = %s
+"""
 
 ADD_MEETUP_IMAGE = """
     UPDATE meetups SET images = images || %s
