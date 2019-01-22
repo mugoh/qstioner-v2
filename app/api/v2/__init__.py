@@ -37,4 +37,4 @@ app_api.add_resource(Comments, 'questions/<int:id>/comment')
 app_api.add_resource(CommentsUser, 'questions/<int:id>/<username>/comment',
                      'questions/<int:id>/<int:usr_id>/comment')
 
-app_api.add_resource(CommentUpdate, 'questions/<int:id>')
+app_api.add_resource(CommentUpdate, 'comments/<int:id>')
