@@ -29,7 +29,7 @@ class TestQuestions(BaseTestCase):
         self.assertEqual(response.status_code, 201,
                          msg="Fails to create a new question")
 
-    def test_create_existing_question(self):
+    """def test_create_existing_question(self):
         new_question = json.dumps(dict(
             title="One Question Dup",
             body="This looks like a body"))
@@ -188,4 +188,20 @@ class TestQuestions(BaseTestCase):
         self.assertEqual('Please provide a valid Authorization Header',
                          res.get_json().get('Message'),
                          "Fails to ask for Authorization header for a\
-                         protected endpoint")
+                         protected endpoint")"""
+
+    def test_edit_non_existent_question(self):
+        res = self.client.put('api/v1/questions/404',
+                              data=json.dumps(dict(location="other locc")),
+                              headers=self.admin_auth)
+        self.assertTrue('not exist' in
+                        res.get_json().get('Message'),
+                        "Fails. Allows user to edit missing quesiton")
+
+    def test_edit_question(self):
+        res = self.client.put('api/v1/questions/1',
+                              data=json.dumps(dict(location="other locc")),
+                              headers=self.admin_auth)
+        self.assertEqual('Question Updated',
+                         res.get_json().get('Message'),
+                         "Fails to edit user quesiton")
