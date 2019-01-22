@@ -83,6 +83,15 @@ class Comments(Resource):
             "Data": data
         }, 200
 
+    def put(self, id):
+         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('body',
+                            type=inputs.regex('^[A-Za-z0-9_ ?/!.,"\\\':;]+$'),
+                            help="Is that readable? Provide a valid comment")
+
+        args = parser.parse_args(strict=True)
+
 
 class CommentsUser(Resource):
     """
