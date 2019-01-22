@@ -175,7 +175,7 @@ class CommentUpdate(Resource):
 
         return {
             "Status": 200,
-            "Message": f'Comment of ID {} deleted'
+            "Message": f'Comment of ID {id} deleted'
         }, 200
 
 
