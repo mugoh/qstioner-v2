@@ -97,6 +97,12 @@ class Question(Resource):
             "Data": [QuestionModel.get_by_id(id)]
         }, 200
 
+    def put(self, id):
+        """
+            This endpoint allows a user to make changes to the
+            of an existing comment.
+        """
+
     @swag_from('docs/question_delete.yml')
     def delete(this_user, self, id):
         question = QuestionModel.get_by_id(id, obj=True)
