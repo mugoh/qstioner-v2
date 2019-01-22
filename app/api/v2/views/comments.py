@@ -9,7 +9,8 @@ from ..models.users import UserModel
 from ..models.questions import QuestionModel
 from ..models.comments import CommentModel
 from ..utils.auth import auth_required, current_user_only
-from ..database.queries import GET_ALL_COMMENTS, UPDATE_COMMENT
+from ..database.queries import (
+    GET_ALL_COMMENTS, UPDATE_COMMENT, DELETE_COMMENT)
 
 
 class Comments(Resource):
