@@ -192,7 +192,6 @@ class MeetUpTests(BaseTestCase):
         res = self.client.put('api/v1/meetups/1',
                               data=json.dumps(dict(location="other locc")),
                               headers=self.admin_auth)
-        print(res.get_json())
         self.assertEqual('Meetup updated',
                          res.get_json().get('Message'),
                          "Fails to edit meetup details")
