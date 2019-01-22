@@ -44,10 +44,6 @@ class MeetUpModel(AbstractModel):
             "tags": self.tags,
         }
 
-        # For data fetched from the database
-        if self.id:
-            data.update({"id": self.id})
-
         return data
 
     def add_array_tag(self, new_tag, meetup):

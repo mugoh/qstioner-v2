@@ -125,6 +125,12 @@ GET_MEETUP_BY_ID = """
     SELECT * FROM meetups WHERE id = %s
 """
 
+UPDATE_MEETUP = """
+    UPDATE meetups
+    SET topic=%s, happening_on=%s,
+    location=%s WHERE id = %s;
+"""
+
 VERIFY_MEETUP = """
     SELECT * FROM meetups WHERE (topic, tags, location) = (%s, %s, %s)
 """

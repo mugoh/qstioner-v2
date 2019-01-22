@@ -12,7 +12,7 @@ from ..models.meetups import MeetUpModel
 from ..utils.auth import admin_required, auth_required
 from ..utils.helpers import validate_date
 from ..database.queries import (
-    GET_ALL_MEETUPS, DELETE_MEETUP, GET_TAGGED_MEETUPS)
+    GET_ALL_MEETUPS, DELETE_MEETUP, GET_TAGGED_MEETUPS, UPDATE_MEETUP)
 
 
 class Meetups(Resource):
@@ -108,6 +108,50 @@ class MeetUpItem(Resource):
             "Status": 200,
             "Message": "MeetUp deleted",
             "Item": repr(meetup)
+        }, 200
+
+    @auth_required
+    @admin_required
+    @swag_from('docs/meetups_put.yml')
+    def put(this_user, self, id):
+        """
+            Updates an existing meetup with details passed in
+            by user
+        """
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+        parser.add_argument('topic', type=str)
+        parser.add_argument(
+            'happeningOn', type=validate_date,
+            default=datetime.datetime.utcnow().isoformat())
+        parser.add_argument('tags', type=str, action='append')
+        parser.add_argument('location', type=str)
+        parser.add_argument('images', type=str, action='append')
+
+        args = parser.parse_args(strict=True)
+
+        meetup = MeetUpModel.get_by_id(id, obj=True)
+        if not meetup:
+            return {
+                "Status": 404,
+                "Error": f"Meetup of ID {id} non-existent"
+            }, 404
+
+        data = meetup.dictify()
+
+        data.update({key: value for key, value
+                     in args.items() if value})
+        new_data = dict(
+            topic=data.get('topic'),
+            happeningOn=data.get('happeningOn'),
+            location=data.get('location'))
+        new_data.update({'id': id})
+
+        meetup.update(UPDATE_MEETUP, tuple(new_data.values()))
+
+        return {
+            "Status": 200,
+            "Message": "Meetup updated",
+            "Data": [MeetUpModel.get_by_id(id)]
         }, 200
 
 
