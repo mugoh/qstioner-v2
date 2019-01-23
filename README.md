@@ -40,7 +40,7 @@ The following will be required:
 ``` shell
 $ DATABASE
 $ DATABASE_HOST
-$ DATABSE_USER
+$ DATABASE_USER
 $ DATABASE_PASSW
 ```
 If using windows, simply replace occurrences of `export` in the env_sample with `set`
@@ -94,7 +94,7 @@ GET | `/api/v1/meetups/<meetup_id>` | Retrieve a meetup
 PUT | `/api/v1/meetups/<meetup_id>` | Edit a meetup of a logged in user
 POST | `/api/v1/meetup/<meetup_id>/<tag>` | Post a tag to a meetup
 GET | `/api/v1/meetup/<tag>` | Get all meetups that match a tag
-DELETE | `/api/v1/meetups/<question_id>` | Delete a meetup of a logged in admin user
+DELETE | `/api/v1/meetups/<meetup_id>` | Delete a meetup of a logged in admin user
 
 
 ##### Questions Endpoints
@@ -121,7 +121,7 @@ PATCH | `/api/v1/<question_id>/downvote` | Downvote a Question
 
 Method | Endpoint | Functionality
 --- | --- | ---
-POST | `/api/v1/<meetup_id>/<rsvp>` | RSVP a meetup
+POST | `/api/v1/meetups/<meetup_id>/<rsvp>` | RSVP a meetup
 GET | `api/v1/meetups/{user_id/username}/rsvp` | Fetch Meetups RSVP-ed by user
 
 
