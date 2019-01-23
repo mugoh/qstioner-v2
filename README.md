@@ -34,7 +34,7 @@ $ pip install -r requirements.txt
 
 
 ### Running the application
-- Edit the .env_sample file to have your preferred environment settings
+Edit the env_sample file to have your preferred environment settings
 The following will be required: 
 
 ``` shell
@@ -43,7 +43,8 @@ $ DATABASE_HOST
 $ DATABSE_USER
 $ DATABASE_PASSW
 ```
-If using windows, simply replace occurrences of `export` in the .env_sample with `set`
+If using windows, simply replace occurrences of `export` in the env_sample with `set`
+
 Source the file
 
 ```shell 
@@ -87,7 +88,7 @@ DELETE | `api/v1/auth/users/user_id` | Delete a user account
 
 Method | Endpoint | Functionality
 --- | --- | ---
-POST | `/api/v1/meetups/` | Add a meetup
+POST | `/api/v1/meetups` | Add a meetup
 GET | `/api/v1/meetups/upcoming` | Lists all meetups 
 GET | `/api/v1/meetups/<meetup_id>` | Retrieve a meetup 
 PUT | `/api/v1/meetups/<meetup_id>` | Edit a meetup of a logged in user
@@ -103,7 +104,7 @@ Method | Endpoint | Functionality
 --- | --- | ---
 POST | `/api/v1/questions` | Add a question
 GET | `/api/v1/questions` | Lists all questions 
-GET | `/api/v1/meetups/<meetup_id>/questions/<question_id>` | Retrieve a question 
+GET | `/api/v1/questions/<question_id>` | Retrieve a question 
 PUT | `/api/v1/questions/<question_id>` | Edit a question of a logged in user
 DELETE | `/api/v1/questions/<question_id>` | Delete a question of a logged in user
 
@@ -126,14 +127,12 @@ GET | `api/v1/meetups/{user_id/username}/rsvp` | Fetch Meetups RSVP-ed by user
 
 ##### Comment Endpoints
 
-
 Method | Endpoint | Functionality
 --- | --- | ---
 POST | `/api/v1/questions/<question_id>/comment` | Add a Comment to a Meetup Question
 GET | `/api/v1/questions/<question_id>/comment` | Lists all comments to a Question
-GET | `/api/v1/questions/<question_id>/{username/user_id}/comment` | Get a
-User's comments to a Question
-PUT | `/api/v1/comments/commentID` | Edit a comment 
+GET | `/api/v1/questions/<question_id>/{username/user_id}/comment` | Get a User's comments to a Question
+PUT | `/api/v1/comments/commentID` | Edit a comment
 DELETE | `/api/v1/comments/commentID` | Delete a comment
 
 
