@@ -28,7 +28,7 @@ class Meetups(Resource):
         parser.add_argument('topic', type=str, required=True)
         parser.add_argument(
             'happeningOn', type=validate_date,
-            default=datetime.datetime.utcnow().isoformat())
+            default=datetime.datetime.utcnow().isoformat(), required=True)
         parser.add_argument('tags', type=str, action='append')
         parser.add_argument('location', type=str, required=True)
         parser.add_argument('images', type=str, action='append')
