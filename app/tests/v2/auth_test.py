@@ -36,7 +36,10 @@ class AuthTestCases(BaseTestCase):
         user_data = json.dumps(dict(
             username="DomesticableCow",
             email="cow@mammals",
-            password="pa55word"))
+            password="pa55word",
+            firstname="name",
+            lastname="name",
+            phonenumber=7234))
 
         response = self.client.post('/api/v1/auth/register',
                                     data=user_data,
@@ -48,15 +51,19 @@ class AuthTestCases(BaseTestCase):
     def test_register_with_existing_username(self):
         user_data = json.dumps(dict(
             username="DomesticableCow",
-            email="cow@mammals.new",
-            password="pa55word"))
+            email="cow@mammals.milk",
+            password="pa55word",
+            firstname="name",
+            lastname="name",
+            phonenumber=7234))
 
         response = self.client.post('/api/v1/auth/register',
                                     data=user_data,
                                     content_type='application/json')
 
-        self.assertTrue(response.status_code == 409,
-                        msg="Fails. Registers user with existing username")
+        print(response.get_json())
+        self.assertEqual(response.status_code, 409,
+                         msg="Fails. Registers user with existing username")
 
     def test_register_with_invalid_password(self):
         user_data = json.dumps(dict(
