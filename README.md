@@ -34,7 +34,7 @@ $ pip install -r requirements.txt
 
 
 ### Running the application
-- Edit the .env_sample file to have your preferred environment settings
+Edit the env_sample file to have your preferred environment settings
 The following will be required: 
 
 ``` shell
@@ -43,7 +43,7 @@ $ DATABASE_HOST
 $ DATABSE_USER
 $ DATABASE_PASSW
 ```
-If using windows, simply replace occurrences of `export` in the .env_sample with `set`
+If using windows, simply replace occurrences of `export` in the env_sample with `set`
 Source the file
 
 ```shell 
@@ -126,14 +126,12 @@ GET | `api/v1/meetups/{user_id/username}/rsvp` | Fetch Meetups RSVP-ed by user
 
 ##### Comment Endpoints
 
-
 Method | Endpoint | Functionality
 --- | --- | ---
 POST | `/api/v1/questions/<question_id>/comment` | Add a Comment to a Meetup Question
 GET | `/api/v1/questions/<question_id>/comment` | Lists all comments to a Question
-GET | `/api/v1/questions/<question_id>/{username/user_id}/comment` | Get a
-User's comments to a Question
-PUT | `/api/v1/comments/commentID` | Edit a comment 
+GET | `/api/v1/questions/<question_id>/{username/user_id}/comment` | Get a User's comments to a Question
+PUT | `/api/v1/comments/commentID` | Edit a comment
 DELETE | `/api/v1/comments/commentID` | Delete a comment
 
 
