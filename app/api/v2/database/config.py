@@ -11,7 +11,8 @@ def config_db():
         'user': os.environ.get('DATABASE_USER'),
         'password': os.environ.get('DATABASE_PASSW'),
         'host': os.environ.get('DATABASE_HOST'),
-        'database': os.environ.get('DATABASE')
+        'database': os.environ.get('DATABASE'),
+        'port': os.environ.get('DATABASE_PORT')
     }
 
     return db
