@@ -1,7 +1,7 @@
 """
     This module containes all Question resources.Question.
 """
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, inputs
 from flasgger import swag_from
 
 from ..models.questions import QuestionModel
@@ -25,8 +25,12 @@ class Questions(Resource):
     def post(this_user, self):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
-        parser.add_argument('title', type=str, required=True)
-        parser.add_argument('body', type=str, required=True)
+        parser.add_argument('title',
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
+                            required=True)
+        parser.add_argument('body',
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
+                            required=True)
         parser.add_argument('meetup', type=int, default=1)
 
         args = parser.parse_args(strict=True)
