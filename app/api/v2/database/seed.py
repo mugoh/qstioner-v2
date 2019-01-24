@@ -2,8 +2,7 @@
     This module contains a function that default
     columns the applicaiton database.
 """
-from .database import query_db
-from .queries import CREATE_USER
+from ..models.users import UserModel
 
 
 def seed_user():
@@ -17,8 +16,8 @@ def seed_user():
                         email="admincow@mammals.milk",
                         phonenumber=723487,
                         username="DomesticableAdminCow",
-                        isAdmin=True,
+                        isadmin=True,
                         password="pa555word")
-    seeded = query_db(CREATE_USER, tuple(user_details.values()), one=True)
+    seeded = UserModel(**user_details).save()
     if seeded:
         print("Admin created")
