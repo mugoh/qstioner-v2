@@ -104,7 +104,8 @@ class UserLogin(Resource):
             "Data": [{"Message": f"Logged in as {user.username}",
                       "token": user.encode_auth_token(
                           user.username).decode('utf-8'),
-                      "user": repr(user)}]
+                      "user": repr(user),
+                      "isadmin": user.isAdmin}]
         }, 200
 
 
