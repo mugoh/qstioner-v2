@@ -7,6 +7,10 @@ from .queries import CREATE_USER
 
 
 def seed_user():
+    """
+        Creates a default admin user on initialization
+        of the aplpication.
+    """
     user_details = dict(firstname="namecow",
                         lastname="unnamecow",
                         othername="justAdmin",
