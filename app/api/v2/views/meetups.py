@@ -32,11 +32,11 @@ class Meetups(Resource):
             'happeningOn', type=validate_date,
             default=datetime.datetime.utcnow().isoformat(), required=True)
         parser.add_argument('tags',
-                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            type=inputs.regex('^[A-Za-z0-9_ -/]+$'),
                             help="Tag is empty or has invalid characters",
                             action='append')
         parser.add_argument('location', required=True,
-                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
                             help="Location is empty or has invalid characters")
         parser.add_argument('images', type=str, action='append')
 
@@ -140,10 +140,10 @@ class MeetUpItem(Resource):
             'happeningOn', type=validate_date,
             default=datetime.datetime.utcnow().isoformat())
         parser.add_argument('tags', action='append',
-                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            type=inputs.regex('^[A-Za-z0-9_ /"\\\'-]+$'),
                             help="Tag is empty or has invalid characters")
         parser.add_argument('location',
-                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            type=inputs.regex('^[A-Za-z0-9_ ,:;?/.,"\\\'-]+$'),
                             help="Location is empty or has invalid characters")
         parser.add_argument('images', type=str, action='append')
 
