@@ -65,7 +65,7 @@ class RSVPTest(BaseTestCase):
         userH = user_res.get_json().get('Data')[0].get('token')
         admin_auth = {"Authorization": "Bearer " + userH}
 
-        response = self.get('api/v1/meetups/1/rsvp', headers=self.auth_header)
+        response = self.get('api/v1/meetups/2/rsvp', headers=self.auth_header)
 
         self.assertEqual(response.status_code, 200,
                          msg="Fails to show a user Rsvp-ed meetups")
