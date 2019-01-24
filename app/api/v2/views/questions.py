@@ -22,16 +22,19 @@ class Questions(Resource):
     decorators = [auth_required]
 
     @swag_from('docs/question_post.yml')
-    def post(this_user, self):
+    def post(this_user, self, meetup_id):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
         parser.add_argument('title',
                             type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
-                            required=True)
+                            required=True,
+                            help="Title is blank or contains" +
+                            "invalid characters")
         parser.add_argument('body',
                             type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
-                            required=True)
-        parser.add_argument('meetup', type=int, default=1)
+                            required=True,
+                            help="Comment Body is blank or" +
+                            "contains invalid characters")
 
         args = parser.parse_args(strict=True)
 
@@ -39,15 +42,17 @@ class Questions(Resource):
         user = UserModel.get_by_name(get_auth_identity())
         if user:
             args.update({
-                "user": user.username
+                "user": user.username,
+                "meetup": meetup_id
             })
 
         # Verify meetup to be added to question record
 
-        if not MeetUpModel.get_by_id(args['meetup']):
+        if not MeetUpModel.get_by_id(meetup_id):
             return {
                 "Status": 404,
-                "Message": "Meetup id non-existent. Maybe create it?"
+                "Message": f"Meetup id {meetup_id} non-existent." +
+                "Maybe create it?"
             }, 404
 
         new_questn = QuestionModel(**args)
