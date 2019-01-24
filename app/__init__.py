@@ -5,6 +5,7 @@ from flasgger import Swagger
 from app.api.v2 import auth_blueprint, app_blueprint
 from instance.config import APP_CONFIG
 from app.api.v2.database.database import db_instance
+from app.api.v2.database.seed import seed_user
 
 
 def create_app(config_setting):
@@ -19,6 +20,7 @@ def create_app(config_setting):
 
     db_instance.drop_tables()
     db_instance.create_tables()
+    seed_user()
 
     description = "Questioner is an API application allowing a user to\
                     register, login, ask questions to meetups and\
