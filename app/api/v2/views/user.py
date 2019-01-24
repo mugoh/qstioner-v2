@@ -90,14 +90,14 @@ class UserLogin(Resource):
         if not user:
             return {
                 "Status": 404,
-                "Message": "Account unknown. Maybe register?"
+                "Message": "Email or password Incorrect"
             }, 404
 
         elif not user.check_password(args.get('password')):
             return {
                 "Status": 403,
-                "Message": "Incorrect password.\
-                        Please give me the right thing, okay?"
+                "Message": "Incorrect email or password." +
+                "Try again"
             }, 403
 
         return {
