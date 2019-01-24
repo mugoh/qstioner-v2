@@ -16,6 +16,7 @@ class RsvpModel(AbstractModel):
             Saves rsvp details to the present table
             holding all rsvps.
         """
+        super().delete(DELETE_USER_RSVP, (self.meetup, self.user))
         return super().save(CREATE_RSVP,
                             (self.meetup,
                              self.user,
