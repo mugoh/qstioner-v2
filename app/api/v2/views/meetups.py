@@ -133,12 +133,18 @@ class MeetUpItem(Resource):
             by user
         """
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
-        parser.add_argument('topic', type=str)
+        parser.add_argument('topic',
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
+                            help="Topic is empty or has invalid characters")
         parser.add_argument(
             'happeningOn', type=validate_date,
             default=datetime.datetime.utcnow().isoformat())
-        parser.add_argument('tags', type=str, action='append')
-        parser.add_argument('location', type=str)
+        parser.add_argument('tags', action='append',
+                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            help="Tag is empty or has invalid characters")
+        parser.add_argument('location',
+                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            help="Location is empty or has invalid characters")
         parser.add_argument('images', type=str, action='append')
 
         args = parser.parse_args(strict=True)
@@ -251,7 +257,7 @@ class MeetUpTags(Resource):
             }, 404
 
         data = meetup.add_array_tag(tag, meetup_id)
-        print(data, "\n\n\n")
+        print(data, "\n\n\n", "tags")
 
         return {
             "Status": 200,
