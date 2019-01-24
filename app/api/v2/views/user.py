@@ -21,14 +21,14 @@ class UsersRegistration(Resource):
     @swag_from('docs/auth_register.yml')
     def post(self):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
-        parser.add_argument('firstname', type=verify_name)
-        parser.add_argument('lastname', type=verify_name)
+        parser.add_argument('firstname', type=verify_name, required=True)
+        parser.add_argument('lastname', type=verify_name, required=True)
         parser.add_argument('othername', type=verify_name)
         parser.add_argument('email', type=inputs.regex(
             r"[^@\s]+@[^@\s]+\.[a-zA-Z0-9]+$"), required=True,
             help="Oopsy! Email format not invented yet")
-        parser.add_argument('phonenumber', type=int)
-        parser.add_argument('username', type=verify_name)
+        parser.add_argument('phonenumber', type=int, required=True)
+        parser.add_argument('username', type=verify_name, required=True)
         parser.add_argument('isadmin', type=bool, default=False)
         parser.add_argument('password', required=True, type=verify_pass)
 
@@ -104,7 +104,8 @@ class UserLogin(Resource):
             "Data": [{"Message": f"Logged in as {user.username}",
                       "token": user.encode_auth_token(
                           user.username).decode('utf-8'),
-                      "user": repr(user)}]
+                      "user": repr(user),
+                      "isadmin": user.isAdmin}]
         }, 200
 
 

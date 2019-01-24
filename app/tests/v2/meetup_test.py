@@ -28,7 +28,7 @@ class MeetUpTests(BaseTestCase):
             username="DomesticableAdmin",
             email="admin@mammals.milkable",
             password="pa55word",
-            ifirstname="firstname",
+            firstname="firstname",
             lastname="last",
             phonenumber=788488,
             othername="other",
@@ -60,9 +60,11 @@ class MeetUpTests(BaseTestCase):
                                data=json.dumps(dict(
                                    topic="Meats can Happen",
                                    location="Over Here",
-                                   tags=['jump', 'eat', 'wake']
+                                   tags=['jump', 'eat', 'wake'],
+                                   happeningOn="2019-01-01T00:10:00"
                                )),
                                headers=self.admin_auth)
+        print(res.get_json())
         self.assertEqual(res.status_code, 409,
                          msg="Fails. Creates an \
                          already existing meetup record")
