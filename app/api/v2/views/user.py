@@ -52,6 +52,7 @@ class UsersRegistration(Resource):
 
         return {
             "Status": 201,
+            "Message": "Registration Success",
             "Data": UserModel.zipToDict(keys, _usr, single=True)
         }, 201
 
