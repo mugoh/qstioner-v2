@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, inputs
 from flasgger import swag_from
 from flask import current_app as app
 import werkzeug
@@ -25,12 +25,19 @@ class Meetups(Resource):
     @swag_from('docs/meetup_post.yml')
     def post(this_user, self):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
-        parser.add_argument('topic', type=str, required=True)
+        parser.add_argument('topic', required=True,
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
+                            help="Topic is empty or has invalid characters")
         parser.add_argument(
             'happeningOn', type=validate_date,
             default=datetime.datetime.utcnow().isoformat(), required=True)
-        parser.add_argument('tags', type=str, action='append')
-        parser.add_argument('location', type=str, required=True)
+        parser.add_argument('tags',
+                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            help="Tag is empty or has invalid characters",
+                            action='append')
+        parser.add_argument('location', required=True,
+                            type=inputs.regex('^[A-Za-z0-9_ ]+$'),
+                            help="Location is empty or has invalid characters")
         parser.add_argument('images', type=str, action='append')
 
         args = parser.parse_args(strict=True)
@@ -103,7 +110,14 @@ class MeetUpItem(Resource):
                 "Error": "Meetup non-existent"
             }, 404
         else:
-            meetup.delete(DELETE_MEETUP, (id,))
+            data = meetup.delete(DELETE_MEETUP, (id,))
+            print(data)
+            if not data:
+                return {
+                    "Status": 409,
+                    "Message": f"Meetup {id} has relations." +
+                    "Delete not Possible"
+                }, 409
         return {
             "Status": 200,
             "Message": "MeetUp deleted",
