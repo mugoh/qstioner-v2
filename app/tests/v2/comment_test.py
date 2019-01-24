@@ -61,13 +61,14 @@ class CommentTest(BaseTestCase):
                          "Fails. Allows a user to re-post the same comment")
 
     def test_retirieve_comments_for_user(self):
-        res = self.get('api/v1/questions/1/2/comment')
+        res = self.get('api/v1/questions/1/3/comment')
         self.assertEqual(res.get_json().get('Data'),
                          [],
                          msg="Fails to retrieve comments for user")
 
     def test_retirieve_user_comments_for_missing_question(self):
-        res = self.get('api/v1/questions/404/2/comment')
+        res = self.get('api/v1/questions/404/3/comment')
+        print(res.get_json())
         self.assertTrue('non-existent' in res.get_json().get('Message'),
                         msg="Fails. Allows user to fetch comments for questions\
                         not present")
@@ -80,11 +81,11 @@ class CommentTest(BaseTestCase):
                   headers=self.auth_header)
 
         # Get comments with this user's ID
-        res = self.get('api/v1/questions/1/1/comment',
+        res = self.get('api/v1/questions/1/2/comment',
                        headers=self.auth_header)
 
         self.assertEqual(res.get_json().get('Data')[0].get('user_id'),
-                         1,
+                         2,
                          msg="Fails to fetch comments  posted by current user")
 
     def test_retrieve_comments_by_username(self):
