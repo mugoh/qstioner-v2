@@ -151,7 +151,7 @@ CREATE_QUESTION = """
 """
 
 GET_ALL_QUESTIONS = """
-        SELECT * FROM questions ORDER BY id
+        SELECT * FROM questions WHERE meetup = %s ORDER BY id
 """
 
 GET_QUESTION_BY_ID = """
