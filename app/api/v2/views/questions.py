@@ -71,11 +71,11 @@ class Questions(Resource):
         }, 201
 
     @swag_from('docs/questions_get.yml')
-    def get(this_user, self):
+    def get(this_user, self, meetup_id):
         """
             Returns all existing questions
         """
-        data = QuestionModel.get_all(GET_ALL_QUESTIONS)
+        data = QuestionModel.get_all(GET_ALL_QUESTIONS, (meetup_id))
 
         if data:
             data = QuestionModel.zipToDict(keys, data)
