@@ -36,14 +36,14 @@ class UsersRegistration(Resource):
 
         if UserModel.get_by_email(args.get('email')):
             return {
-                "Status": 409,
-                "Message": "Account exists. Maybe log in?"
+                "status": 409,
+                "message": "Account exists. Maybe log in?"
             }, 409
 
         if UserModel.get_by_name(args.get('username')):
             return {
-                "Status": 409,
-                "Message": "Oopsy! username exists.Try " +
+                "status": 409,
+                "message": "Oopsy! username exists.Try " +
                 args.get('username') + str(random.randint(0, 40))
             }, 409
 
@@ -51,9 +51,9 @@ class UsersRegistration(Resource):
         _usr = user.save()
 
         return {
-            "Status": 201,
-            "Message": "Registration Success",
-            "Data": UserModel.zipToDict(keys, _usr, single=True)
+            "status": 201,
+            "message": "Registration Success",
+            "data": UserModel.zipToDict(keys, _usr, single=True)
         }, 201
 
     @swag_from('docs/auth_get_users.yml')
@@ -66,8 +66,8 @@ class UsersRegistration(Resource):
         if data:
             data = UserModel.zipToDict(keys, data)
         return {
-            "Status": 200,
-            "Data": data
+            "status": 200,
+            "data": data
         }, 200
 
 
@@ -89,20 +89,20 @@ class UserLogin(Resource):
 
         if not user:
             return {
-                "Status": 404,
-                "Message": "Email or password Incorrect"
+                "status": 404,
+                "message": "Email or password Incorrect"
             }, 404
 
         elif not user.check_password(args.get('password')):
             return {
-                "Status": 403,
-                "Message": "Incorrect email or password." +
+                "status": 403,
+                "message": "Incorrect email or password." +
                 "Try again"
             }, 403
 
         return {
-            "Status": 200,
-            "Data": [{"Message": f"Logged in as {user.username}",
+            "status": 200,
+            "data": [{"message": f"Logged in as {user.username}",
                       "token": user.encode_auth_token(
                           user.username).decode('utf-8'),
                       "user": repr(user),
@@ -118,8 +118,8 @@ class UserLogout(Resource):
         payload = get_raw_auth()
         Token(payload)  # Blaclist current user token
         return {
-            "Status": "Success",
-            "Message": f"Logout {get_auth_identity()}"
+            "status": "Success",
+            "message": f"Logout {get_auth_identity()}"
         }, 200
 
 
