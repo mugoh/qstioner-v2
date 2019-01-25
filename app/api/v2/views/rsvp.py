@@ -33,7 +33,7 @@ class Rsvps(Resource):
         args = parser.parse_args(strict=True)
 
         # Confirm response is valid
-        response = args.get('response')
+        response = args.get('response').lower()
 
         expected_responses = ['yes', 'no', 'maybe']
 
