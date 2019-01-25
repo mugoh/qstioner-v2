@@ -25,7 +25,7 @@ app_api.add_resource(MeetupImage, 'meetups/<int:id>/images')
 app_api.add_resource(MeetUpTags, 'meetup/<int:meetup_id>/<tag>')
 app_api.add_resource(MeetUpTag, 'meetup/<tag>')
 
-app_api.add_resource(Questions, 'questions')
+app_api.add_resource(Questions, 'meetups/<int:meetup_id>/questions')
 app_api.add_resource(Question, 'questions/<int:id>')
 app_api.add_resource(QuestionVote, 'questions/<int:id>/<vote>',
                      methods=['PATCH'])
