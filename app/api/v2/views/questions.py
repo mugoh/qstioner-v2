@@ -75,7 +75,7 @@ class Questions(Resource):
         """
             Returns all existing questions
         """
-        data = QuestionModel.get_all(GET_ALL_QUESTIONS, (meetup_id))
+        data = QuestionModel.get_all(GET_ALL_QUESTIONS, (meetup_id,))
 
         if data:
             data = QuestionModel.zipToDict(keys, data)
