@@ -7,6 +7,10 @@ from flask import current_app
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
+        """
+        Creates dummy records for use in the rest of the
+        Test Classes.
+        """
 
         self.app = create_app('testing')
         self.app.app_context().push()
@@ -103,7 +107,10 @@ class BaseTestCase(unittest.TestCase):
         ))
 
     def post(self, path, data=None, headers=None):
+        """
+        This method sends POST requests for the tests in child classes.
 
+        """
         if not headers:
             headers = self.auth_header
         res = self.client.post(path,
@@ -113,6 +120,10 @@ class BaseTestCase(unittest.TestCase):
         return res
 
     def get(self, path, headers=None):
+        """
+        This method sends GET requests for the tests in child classes.
+
+        """
         if not headers:
             headers = self.admin_auth
         res = self.client.get(path,
