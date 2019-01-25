@@ -3,7 +3,7 @@
     rsvp Resource
 """
 
-from flask_restful import Resource
+from flask_restful import Resource, reqparse, inputs
 from flasgger import swag_from
 
 from itertools import zip_longest
@@ -18,15 +18,22 @@ class Rsvps(Resource):
 
     @auth_required
     @swag_from('docs/rsvp_post.yml')
-    def post(this_user, self, id, response):
+    def post(this_user, self, id):
         """
             Creates an rsvp with refrence to a meetup and the
             existing user's
         """
 
-        args = {}
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('response', required=True,
+                            type=inputs.regex('^[A-Za-z]+$'),
+                            help="Is that readable? Provide a valid rsvp")
+
+        args = parser.parse_args(strict=True)
 
         # Confirm response is valid
+        response = args.get('response')
 
         expected_responses = ['yes', 'no', 'maybe']
 
