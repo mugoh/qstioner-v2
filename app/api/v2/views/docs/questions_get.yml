@@ -10,6 +10,14 @@ parameters:
     login i.e (Bearer token...)
   type: string
   required: true
+- in: path
+  name: meetup_id   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: integer
+  minimum: 1
+  description: The id of the meetup to get question for
+
 responses:
   200:
     description: Success. Question records returned successfully

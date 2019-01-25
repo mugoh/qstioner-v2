@@ -13,6 +13,13 @@ parameters:
     i.e (Bearer token)
   type: string
   required: true
+- in: path
+  name: meetup_id   # Note the name is the same as in the path
+  required: true
+  schema:
+  type: integer
+  minimum: 1
+  description: The id of the meetup to post the question to
 - in: body
   name: Question Record Details
   description: The Question to be Created
@@ -21,7 +28,6 @@ parameters:
     required:
     - title
     - body
-    - meetup
     properties:
       title:
         type: string
@@ -29,9 +35,6 @@ parameters:
       body:
         type: string
         example: This is the question body
-      meetup:
-        type: integer
-        example: 1
 responses:
   201:
     description: Success, Question Created to Meetup
