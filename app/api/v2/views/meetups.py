@@ -48,15 +48,15 @@ class Meetups(Resource):
 
         if MeetUpModel.verify_unique(new_meetup):
             return {
-                "Status": 409,
-                "Message": "Relax, Meetup already created"
+                "status": 409,
+                "message": "Relax, Meetup already created"
             }, 409
 
         data = new_meetup.save()
 
         return {
-            "Status": 201,
-            "Data": [MeetUpModel.zipToDict(keys, data, single=True)]
+            "status": 201,
+            "data": [MeetUpModel.zipToDict(keys, data, single=True)]
         }, 201
 
 
@@ -73,8 +73,8 @@ class MeetUp(Resource):
         if data:
             data = MeetUpModel.zipToDict(keys, data)
         return {
-            "Status": 200,
-            "Data": data
+            "status": 200,
+            "data": data
         }, 200
 
 
@@ -89,12 +89,12 @@ class MeetUpItem(Resource):
 
         if not MeetUpModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Error": "Meetup non-existent"
+                "status": 404,
+                "error": "Meetup non-existent"
             }, 404
         return {
-            "Status": 200,
-            "Data": [MeetUpModel.get_by_id(id)]
+            "status": 200,
+            "data": [MeetUpModel.get_by_id(id)]
         }, 200
 
     @auth_required
@@ -106,22 +106,22 @@ class MeetUpItem(Resource):
         meetup = MeetUpModel.get_by_id(id, obj=True)
         if not meetup:
             return {
-                "Status": 404,
-                "Error": "Meetup non-existent"
+                "status": 404,
+                "error": "Meetup non-existent"
             }, 404
         else:
             data = meetup.delete(DELETE_MEETUP, (id,))
             print(data)
             if not data:
                 return {
-                    "Status": 409,
-                    "Message": f"Meetup {id} has relations." +
+                    "status": 409,
+                    "message": f"Meetup {id} has relations." +
                     "Delete not Possible"
                 }, 409
         return {
-            "Status": 200,
-            "Message": "MeetUp deleted",
-            "Item": repr(meetup)
+            "status": 200,
+            "message": "MeetUp deleted",
+            "item": repr(meetup)
         }, 200
 
     @auth_required
@@ -152,8 +152,8 @@ class MeetUpItem(Resource):
         meetup = MeetUpModel.get_by_id(id, obj=True)
         if not meetup:
             return {
-                "Status": 404,
-                "Error": f"Meetup of ID {id} non-existent"
+                "status": 404,
+                "error": f"Meetup of ID {id} non-existent"
             }, 404
 
         data = meetup.dictify()
@@ -169,9 +169,9 @@ class MeetUpItem(Resource):
         meetup.update(UPDATE_MEETUP, tuple(new_data.values()))
 
         return {
-            "Status": 200,
-            "Message": "Meetup updated",
-            "Data": [MeetUpModel.get_by_id(id)]
+            "status": 200,
+            "message": "Meetup updated",
+            "data": [MeetUpModel.get_by_id(id)]
         }, 200
 
 
@@ -198,8 +198,8 @@ class MeetupImage(Resource):
         # ! err Doesn't handle missing paths
         """if not image:
             return {
-                "Status": 400,
-                "Error": "Image path is Empty. Specify an image"
+                "status": 400,
+                "error": "Image path is Empty. Specify an image"
             }, 400
         """
 
@@ -207,8 +207,8 @@ class MeetupImage(Resource):
 
         if not meetup:
             return {
-                "Status": 404,
-                "Message": f"Meetup of ID {id} non-existent"
+                "status": 404,
+                "message": f"Meetup of ID {id} non-existent"
             }, 404
 
         # Set random file name
@@ -223,8 +223,8 @@ class MeetupImage(Resource):
         meetup.add_image(file_path, id)
 
         return {
-            "Status": 200,
-            "Message": "Upload Successful",
+            "status": 200,
+            "message": "Upload Successful",
         }, 200
 
 
@@ -252,16 +252,16 @@ class MeetUpTags(Resource):
             response = "That meetup seems \
             missing" + f'Meetup of ID {meetup_id} not in existence yet'
             return {
-                "Status": 404,
-                "Message": response
+                "status": 404,
+                "message": response
             }, 404
 
         data = meetup.add_array_tag(tag, meetup_id)
         print(data, "\n\n\n", "tags")
 
         return {
-            "Status": 200,
-            "Message": f"Tag {tag} associated with meetup of ID {meetup_id}"
+            "status": 200,
+            "message": f"Tag {tag} associated with meetup of ID {meetup_id}"
         }, 200
 
 
@@ -283,6 +283,6 @@ class MeetUpTag(Resource):
         if data:
             data = MeetUpModel.zipToDict(keys, data)
         return {
-            "Status": 200,
-            "Data": data
+            "status": 200,
+            "data": data
         }, 200
