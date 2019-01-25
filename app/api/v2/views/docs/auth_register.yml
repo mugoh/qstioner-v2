@@ -35,7 +35,7 @@ parameters:
         example: Cow
       isadmin:
         type: boolean
-        example: true
+        example: false
       phonenumber:
         type: integer
         example: 01234567

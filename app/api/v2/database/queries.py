@@ -43,10 +43,10 @@ CREATE_TABLE_QUESTIONS = """
 CREATE_TABLE_RSVPS = """
     CREATE TABLE IF NOT EXISTS RSVPS (
     ID SERIAL NOT NULL,
-    MEETUP INTEGER NOT NULL,
-    USER_ID INTEGER NOT NULL,
+    MEETUP INTEGER NOT NULL REFERENCES MEETUPS (ID),
+    USER_ID INTEGER NOT NULL REFERENCES USERS (ID),
     RESPONSE TEXT NOT NULL,
-    PRIMARY KEY(USER_ID, MEETUP)
+    PRIMARY KEY(ID)
     );
 """
 
@@ -151,7 +151,7 @@ CREATE_QUESTION = """
 """
 
 GET_ALL_QUESTIONS = """
-        SELECT * FROM questions ORDER BY id
+        SELECT * FROM questions WHERE meetup = %s ORDER BY id
 """
 
 GET_QUESTION_BY_ID = """
@@ -204,6 +204,10 @@ CREATE_RSVP = """
 GET_USER_RSVPS = """
     SELECT DISTINCT meetup, response FROM rsvps WHERE
     user_id = %s
+"""
+DELETE_USER_RSVP = """
+    DELETE FROM rsvps
+    WHERE (meetup, user_id) = (%s, %s)
 """
 CREATE_COMMENT = """
     INSERT INTO comments (question, user_id, body)

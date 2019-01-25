@@ -34,8 +34,8 @@ class Comments(Resource):
         # Find question by given ID
         if not QuestionModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Message": f"Question of ID {id} non-existent"
+                "status": 404,
+                "message": f"Question of ID {id} non-existent"
             }, 404
 
         # Get id of current user
@@ -51,13 +51,13 @@ class Comments(Resource):
             data = new_comment.save()
         else:
             return {
-                "Status": 409,
-                "Message": "Looks like You have posted this comment before"
+                "status": 409,
+                "message": "Looks like You have posted this comment before"
             }, 409
 
         return {
-            "Status": 201,
-            "Data": [CommentModel.zipToDict(keys, data, single=True)]
+            "status": 201,
+            "data": [CommentModel.zipToDict(keys, data, single=True)]
         }, 201
 
     @auth_required
@@ -71,8 +71,8 @@ class Comments(Resource):
 
         if not QuestionModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Message": f"Question of ID {id} non-existent"
+                "status": 404,
+                "message": f"Question of ID {id} non-existent"
             }, 404
 
         data = CommentModel.get_all(GET_ALL_COMMENTS, (id,))
@@ -80,8 +80,8 @@ class Comments(Resource):
         if data:
             data = CommentModel.zipToDict(keys, data)
         return {
-            "Status": 200,
-            "Data": data
+            "status": 200,
+            "data": data
         }, 200
 
 
@@ -102,8 +102,8 @@ class CommentsUser(Resource):
 
         if not QuestionModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Message": f"Question of ID {id} non-existent"
+                "status": 404,
+                "message": f"Question of ID {id} non-existent"
             }, 404
 
         user_id = usr_id
@@ -117,8 +117,8 @@ class CommentsUser(Resource):
         if data:
             data = CommentModel.zipToDict(keys, data)
         return {
-            "Status": 200,
-            "Data": data
+            "status": 200,
+            "data": data
         }, 200
 
 
@@ -154,22 +154,22 @@ class CommentUpdate(Resource):
         if not data:
 
             return {
-                "Status": 404,
-                "Message": f'{this_user} has not posted any comment yet'
+                "status": 404,
+                "message": f'{this_user} has not posted any comment yet'
             }, 404
         args.update({"id": id})
 
         if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
             return {
-                "Status": 404,
-                "Message": f"Comment of ID {id} missing"
+                "status": 404,
+                "message": f"Comment of ID {id} missing"
             }, 404
 
         user.update(UPDATE_COMMENT, tuple(args.values()))
 
         return {
-            "Status": 200,
-            "Message": "Comment Updated",
+            "status": 200,
+            "message": "Comment Updated",
         }, 200
 
     @auth_required
@@ -181,8 +181,8 @@ class CommentUpdate(Resource):
 
         if not CommentModel.get_by_id(GET_COMMENT_BY_ID, (id,)):
             return {
-                "Status": 404,
-                "Message": f"Comment of ID {id} missing"
+                "status": 404,
+                "message": f"Comment of ID {id} missing"
             }, 404
 
         user = UserModel.get_by_name(this_user)
@@ -190,8 +190,8 @@ class CommentUpdate(Resource):
         user.delete(DELETE_COMMENT, (id,))
 
         return {
-            "Status": 200,
-            "Message": f'Comment of ID {id} deleted'
+            "status": 200,
+            "message": f'Comment of ID {id} deleted'
         }, 200
 
 

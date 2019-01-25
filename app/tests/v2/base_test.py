@@ -7,6 +7,10 @@ from flask import current_app
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
+        """
+        Creates dummy records for use in the rest of the
+        Test Classes.
+        """
 
         self.app = create_app('testing')
         self.app.app_context().push()
@@ -38,7 +42,7 @@ class BaseTestCase(unittest.TestCase):
                                               password="pa55word"
                                           )),
                                           content_type='application/json')
-        user = login_response.get_json().get('Data')[0].get('token')
+        user = login_response.get_json().get('data')[0].get('token')
         self.auth_header = {"Authorization": "Bearer " + user}
 
         # Register admin user
@@ -67,7 +71,7 @@ class BaseTestCase(unittest.TestCase):
                                     content_type='application/json')
         # Get Authorization token
 
-        userH = user_res.get_json().get('Data')[0].get('token')
+        userH = user_res.get_json().get('data')[0].get('token')
         self.admin_auth = {"Authorization": "Bearer " + userH}
 
         self.client.post('api/v1/meetups',
@@ -84,18 +88,29 @@ class BaseTestCase(unittest.TestCase):
 
         new_question = json.dumps(dict(
             title="One Other Question",
-            body="This looks lik a body",
-            meetup=1))
+            body="This looks lik a body"))
 
-        response = self.client.post('api/v1/questions',
+        response = self.client.post('api/v1/meetups/1/questions',
                                     data=new_question,
                                     content_type='application/json',
                                     headers=self.auth_header)
         self.qcomment = json.dumps(dict(
             body="The cookies should come with milk too"))
+        self.rsvp_y = json.dumps(dict(
+            response="yes"
+        ))
+        self.rsvp_n = json.dumps(dict(
+            response="no"
+        ))
+        self.rsvp_f = json.dumps(dict(
+            response="so"
+        ))
 
     def post(self, path, data=None, headers=None):
+        """
+        This method sends POST requests for the tests in child classes.
 
+        """
         if not headers:
             headers = self.auth_header
         res = self.client.post(path,
@@ -105,6 +120,10 @@ class BaseTestCase(unittest.TestCase):
         return res
 
     def get(self, path, headers=None):
+        """
+        This method sends GET requests for the tests in child classes.
+
+        """
         if not headers:
             headers = self.admin_auth
         res = self.client.get(path,

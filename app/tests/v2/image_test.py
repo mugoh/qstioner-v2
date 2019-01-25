@@ -23,7 +23,7 @@ class ImageUploadTest(BaseTestCase):
                                content_type='multipart/form-data',
                                headers=self.auth_header)
 
-        self.assertEqual(expected_response, res.get_json().get('Message'),
+        self.assertEqual(expected_response, res.get_json().get('message'),
                          msg="Fails to allow user to post images to meetup")
 
     def test_upload_image_to_missing_meetup(self):
@@ -37,6 +37,6 @@ class ImageUploadTest(BaseTestCase):
                                content_type='multipart/form-data',
                                headers=self.auth_header)
 
-        self.assertEqual(res.get_json().get('Message'),
+        self.assertEqual(res.get_json().get('message'),
                          'Meetup of ID 404 non-existent',
                          "Fails. Uploads image to missing meetup")

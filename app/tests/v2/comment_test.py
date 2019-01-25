@@ -6,19 +6,27 @@ from .base_test import BaseTestCase
 class CommentTest(BaseTestCase):
 
     def test_get_comments_for_empty_table(self):
+        """
+          The comments record shouls initially start empty.
+          Test for an empty record.
+        """
         res = self.get('api/v1/questions/1/comment')
 
-        self.assertEqual(res.get_json().get('Data'),
+        self.assertEqual(res.get_json().get('data'),
                          [],
                          msg="Fails. Initiliazes comments table with data")
 
     def test_get_comments_for_missing_question(self):
+        """
+          Verifies a non-existent question returns 'NOT FOUND'
+          error on attempts of access.
+        """
         res = self.get('api/v1/questions/404/comment')
 
         expected_response = 'Question of ID 404 non-existent'
         self.assertTrue(
             expected_response
-            in res.get_json().get('Message'),
+            in res.get_json().get('message'),
             msg="Fails. Allows user to get comments of non-existent question")
 
     def test_create_comment_for_question(self):
@@ -29,14 +37,14 @@ class CommentTest(BaseTestCase):
         res = self.post('api/v1/questions/1/comment',
                         data=data)
 
-        self.assertEqual(res.get_json().get('Data')[0].get('body'),
+        self.assertEqual(res.get_json().get('data')[0].get('body'),
                          "I'll be there for the cookies",
                          msg="Fails to create  comment")
 
     def test_create_comment_for_missing_question(self):
         res = self.post('api/v1/questions/404/comment',
                         data=self.qcomment)
-        self.assertTrue('non-existent' in res.get_json().get('Message'),
+        self.assertTrue('non-existent' in res.get_json().get('message'),
                         msg="Fails. Posts comment to missing question")
 
     def test_posted_comment_exists_in_record(self):
@@ -45,7 +53,7 @@ class CommentTest(BaseTestCase):
 
         res = self.get('api/v1/questions/1/comment')
 
-        self.assertNotEqual(res.get_json().get('Data'),
+        self.assertNotEqual(res.get_json().get('data'),
                             [],
                             msg="Fails to store posted comment\
                             in comments table")
@@ -57,18 +65,19 @@ class CommentTest(BaseTestCase):
                         data=self.qcomment)
 
         self.assertEqual('Looks like You have posted this comment before',
-                         res.get_json().get('Message'),
+                         res.get_json().get('message'),
                          "Fails. Allows a user to re-post the same comment")
 
     def test_retirieve_comments_for_user(self):
-        res = self.get('api/v1/questions/1/2/comment')
-        self.assertEqual(res.get_json().get('Data'),
+        res = self.get('api/v1/questions/1/3/comment')
+        self.assertEqual(res.get_json().get('data'),
                          [],
                          msg="Fails to retrieve comments for user")
 
     def test_retirieve_user_comments_for_missing_question(self):
-        res = self.get('api/v1/questions/404/2/comment')
-        self.assertTrue('non-existent' in res.get_json().get('Message'),
+        res = self.get('api/v1/questions/404/3/comment')
+        print(res.get_json())
+        self.assertTrue('non-existent' in res.get_json().get('message'),
                         msg="Fails. Allows user to fetch comments for questions\
                         not present")
 
@@ -80,17 +89,17 @@ class CommentTest(BaseTestCase):
                   headers=self.auth_header)
 
         # Get comments with this user's ID
-        res = self.get('api/v1/questions/1/1/comment',
+        res = self.get('api/v1/questions/1/2/comment',
                        headers=self.auth_header)
 
-        self.assertEqual(res.get_json().get('Data')[0].get('user_id'),
-                         1,
+        self.assertEqual(res.get_json().get('data')[0].get('user_id'),
+                         2,
                          msg="Fails to fetch comments  posted by current user")
 
     def test_retrieve_comments_by_username(self):
         res = self.get('api/v1/questions/1/DomesticableAdmin/comment')
         print(res.get_json())
-        self.assertEqual(res.get_json().get('Data'),
+        self.assertEqual(res.get_json().get('data'),
                          [],
                          msg="Fails to retrieve comments for user")
 
@@ -103,7 +112,7 @@ class CommentTest(BaseTestCase):
                               headers=self.auth_header,
                               content_type='application/json')
         self.assertTrue('not posted any' in
-                        res.get_json().get('Message'),
+                        res.get_json().get('message'),
                         "Fails. Allows user to edit they did not post")
 
     def test_edit_comment(self):
@@ -119,7 +128,7 @@ class CommentTest(BaseTestCase):
                               content_type='application/json')
 
         self.assertEqual('Comment Updated',
-                         res.get_json().get('Message'),
+                         res.get_json().get('message'),
                          "Fails to edit user quesiton")
 
     def test_edit_comment_with_missing_id(self):
@@ -135,7 +144,7 @@ class CommentTest(BaseTestCase):
                               content_type='application/json')
 
         self.assertEqual('Comment of ID 404 missing',
-                         res.get_json().get('Message'),
+                         res.get_json().get('message'),
                          "Fails to edit user quesiton")
 
     def test_delete_comment(self):
@@ -148,7 +157,7 @@ class CommentTest(BaseTestCase):
                                  headers=self.auth_header)
         print(res.get_json())
 
-        self.assertEqual(res.get_json().get('Message'),
+        self.assertEqual(res.get_json().get('message'),
                          "Comment of ID 1 deleted",
                          "Fails to delete a user comment")
 
@@ -158,6 +167,6 @@ class CommentTest(BaseTestCase):
                                  headers=self.auth_header)
         print(res.get_json())
 
-        self.assertEqual(res.get_json().get('Message'),
+        self.assertEqual(res.get_json().get('message'),
                          "Comment of ID 1 missing",
                          "Fails. Deletes missing user comment")

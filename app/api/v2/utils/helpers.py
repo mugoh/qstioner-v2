@@ -16,7 +16,7 @@ def verify_pass(value):
 
 
 def verify_name(value, item):
-    if ' ' in value:
+    if ' ' in value or not value:
         raise ValueError(f'{value} has spaces. {item} should not have spaces')
 
     elif not name_pattern.match(value):

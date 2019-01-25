@@ -3,7 +3,7 @@
     rsvp Resource
 """
 
-from flask_restful import Resource
+from flask_restful import Resource, reqparse, inputs
 from flasgger import swag_from
 
 from itertools import zip_longest
@@ -18,15 +18,22 @@ class Rsvps(Resource):
 
     @auth_required
     @swag_from('docs/rsvp_post.yml')
-    def post(this_user, self, id, response):
+    def post(this_user, self, id):
         """
             Creates an rsvp with refrence to a meetup and the
             existing user's
         """
 
-        args = {}
+        parser = reqparse.RequestParser(trim=True, bundle_errors=True)
+
+        parser.add_argument('response', required=True,
+                            type=inputs.regex('^[A-Za-z]+$'),
+                            help="Is that readable? Provide a valid rsvp")
+
+        args = parser.parse_args(strict=True)
 
         # Confirm response is valid
+        response = args.get('response').lower()
 
         expected_responses = ['yes', 'no', 'maybe']
 
@@ -35,16 +42,16 @@ class Rsvps(Resource):
 
         if response not in expected_responses:
             return {
-                "Status": 400,
-                "Message": err_msg
+                "status": 400,
+                "message": err_msg
             }, 400
 
         # Confirm existence of the meetup  to rsvp
 
         if not MeetUpModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Message": "That meetup does not exist"
+                "status": 404,
+                "message": "That meetup does not exist"
             }, 404
 
         # Retrieve this user details in key, value pairs
@@ -66,13 +73,13 @@ class Rsvps(Resource):
 
         else:
             return {
-                "Status": 409,
-                "Message": "You've done that same rsvp already"
+                "status": 409,
+                "message": "You've done that same rsvp already"
             }, 409
 
         return {
-            "Status": 201,
-            "Data": [RsvpModel.zipToDict(keys, data, single=True)]
+            "status": 201,
+            "data": [RsvpModel.zipToDict(keys, data, single=True)]
         }, 201
 
 
@@ -109,8 +116,8 @@ class Rsvp(Resource):
         meetups_data = list(
             map(lambda x: MeetUpModel.get_by_id(x), meetup_ids))
 
-        return {"Status": 200,
-                "Data": [(response, meetup) for response, meetup
+        return {"status": 200,
+                "data": [(response, meetup) for response, meetup
                          in zip_longest(
                              responses, meetups_data)]}, 200
 

@@ -1,7 +1,7 @@
 """
     This module containes all Question resources.Question.
 """
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, inputs
 from flasgger import swag_from
 
 from ..models.questions import QuestionModel
@@ -22,12 +22,19 @@ class Questions(Resource):
     decorators = [auth_required]
 
     @swag_from('docs/question_post.yml')
-    def post(this_user, self):
+    def post(this_user, self, meetup_id):
         parser = reqparse.RequestParser(trim=True, bundle_errors=True)
 
-        parser.add_argument('title', type=str, required=True)
-        parser.add_argument('body', type=str, required=True)
-        parser.add_argument('meetup', type=int, default=1)
+        parser.add_argument('title',
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
+                            required=True,
+                            help="Title is blank or contains" +
+                            "invalid characters")
+        parser.add_argument('body',
+                            type=inputs.regex('^[A-Za-z0-9_ ?/.,"\\\':;]+$'),
+                            required=True,
+                            help="Comment Body is blank or" +
+                            "contains invalid characters")
 
         args = parser.parse_args(strict=True)
 
@@ -35,15 +42,17 @@ class Questions(Resource):
         user = UserModel.get_by_name(get_auth_identity())
         if user:
             args.update({
-                "user": user.username
+                "user": user.username,
+                "meetup": meetup_id
             })
 
         # Verify meetup to be added to question record
 
-        if not MeetUpModel.get_by_id(args['meetup']):
+        if not MeetUpModel.get_by_id(meetup_id):
             return {
-                "Status": 404,
-                "Message": "Meetup id non-existent. Maybe create it?"
+                "status": 404,
+                "message": f"Meetup id {meetup_id} non-existent." +
+                "Maybe create it?"
             }, 404
 
         new_questn = QuestionModel(**args)
@@ -52,27 +61,27 @@ class Questions(Resource):
             values = new_questn.save()
         else:
             return {
-                "Status": 409,
-                "Message": "Chill up. That question is already created"
+                "status": 409,
+                "message": "Chill up. That question is already created"
             }, 409
 
         return {
-            "Status": 201,
-            "Data": QuestionModel.zipToDict(keys, values, single=True)
+            "status": 201,
+            "data": QuestionModel.zipToDict(keys, values, single=True)
         }, 201
 
     @swag_from('docs/questions_get.yml')
-    def get(this_user, self):
+    def get(this_user, self, meetup_id):
         """
             Returns all existing questions
         """
-        data = QuestionModel.get_all(GET_ALL_QUESTIONS)
+        data = QuestionModel.get_all(GET_ALL_QUESTIONS, (meetup_id,))
 
         if data:
             data = QuestionModel.zipToDict(keys, data)
         return {
-            "Status": 200,
-            "Data": data
+            "status": 200,
+            "data": data
         }, 200
 
 
@@ -89,13 +98,13 @@ class Question(Resource):
         """
         if not QuestionModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Message": "That question does not exist. Wanna create it?"
+                "status": 404,
+                "message": "That question does not exist. Wanna create it?"
             }, 404
 
         return {
-            "Status": 200,
-            "Data": [QuestionModel.get_by_id(id)]
+            "status": 200,
+            "data": [QuestionModel.get_by_id(id)]
         }, 200
 
     @swag_from('docs/question_put.yml')
@@ -115,8 +124,8 @@ class Question(Resource):
 
         if not question:
             return {
-                "Status": 404,
-                "Message": f"That question [ID {id}] does not exist. Maybe create it?"
+                "status": 404,
+                "message": f"That question [ID {id}] does not exist. Maybe create it?"
             }, 404
 
         # Get the question dictionary data
@@ -134,9 +143,9 @@ class Question(Resource):
         question.update(UPDATE_QUESTION, tuple(details_to_post.values()))
 
         return {
-            "Status": 200,
-            "Message": "Question Updated",
-            "Data": [QuestionModel.get_by_id(id)]
+            "status": 200,
+            "message": "Question Updated",
+            "data": [QuestionModel.get_by_id(id)]
         }, 200
 
     @swag_from('docs/question_delete.yml')
@@ -144,15 +153,15 @@ class Question(Resource):
         question = QuestionModel.get_by_id(id, obj=True)
         if not question:
             return {
-                "Status": 404,
-                "Error": "Question not existent"
+                "status": 404,
+                "error": "Question not existent"
             }, 404
         else:
             question.delete(DELETE_QUESTION, (id,))
 
             return {
-                "Status": 200,
-                "Message": f'Question of ID {id} deleted'
+                "status": 200,
+                "message": f'Question of ID {id} deleted'
             }, 200
 
 
@@ -167,8 +176,8 @@ class QuestionVote(Resource):
         # Verify existence of given question id
         if not QuestionModel.get_by_id(id):
             return {
-                "Status": 404,
-                "Message": "That question does not exist. Wanna create it?"
+                "status": 404,
+                "message": "That question does not exist. Wanna create it?"
             }, 404
         else:
             question = QuestionModel.get_by_id(id, obj=True)
@@ -183,13 +192,13 @@ class QuestionVote(Resource):
         # Handle unknown url str parameter
         else:
             return {
-                "Status": 400,
-                "Message": "Please, 'upvote' or 'downvote' only. Cool?"
+                "status": 400,
+                "message": "Please, 'upvote' or 'downvote' only. Cool?"
             }, 400
 
         return {
-            "Status": 200,
-            "Data": [voted_question]
+            "status": 200,
+            "data": [voted_question]
         }, 200
 
 
