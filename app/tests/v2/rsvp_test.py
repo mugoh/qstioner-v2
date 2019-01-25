@@ -6,7 +6,8 @@ class RSVPTest(BaseTestCase):
 
     def test_create_new_rsvp(self):
 
-        response = self.post('api/v1/meetups/1/yes')
+        response = self.post('api/v1/meetups/1/response',
+                             data=self.rsvp_y)
 
         self.assertEqual(response.status_code, 201,
                          msg="Fails to rsvp for a meetup")
@@ -14,14 +15,16 @@ class RSVPTest(BaseTestCase):
     def test_create_rsvp_with_unknown_response(self):
         # Known responses are 'yes', 'no' and 'maybe'
 
-        response = self.post('api/v1/meetups/1/so')
+        response = self.post('api/v1/meetups/1/response',
+                             data=self.rsvp_f)
         self.assertTrue("Your response is not known"
                         in response.get_json().get("Message"),
                         msg="Fails to not\
                          create an rsvp with an invalid response")
 
     def test_rsvp_for_nonexistent_meetup(self):
-        res = self.post('api/v1/meetups/500/no')
+        res = self.post('api/v1/meetups/500/response',
+                        data=self.rsvp_y)
 
         res_msg = res.get_json().get('Message')
 
@@ -30,8 +33,10 @@ class RSVPTest(BaseTestCase):
 
     def test_create_same_rsvp_more_than_once(self):
 
-        self.post('api/v1/meetups/1/yes')
-        response = self.post('api/v1/meetups/1/yes')
+        self.post('api/v1/meetups/1/response',
+                  data=self.rsvp_y)
+        response = self.post('api/v1/meetups/1/response',
+                             data=self.rsvp_y)
 
         self.assertEqual(response.status_code, 409,
                          msg="Fails. Allows user to create same rsvp twice")
