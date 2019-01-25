@@ -213,7 +213,7 @@ class MeetUpTests(BaseTestCase):
                               data=json.dumps(dict(location="other locc")),
                               headers=self.admin_auth)
         self.assertTrue('non-existent' in
-                        res.get_json().get('Error'),
+                        res.get_json().get('error'),
                         "Fails. Allows user to edit missing meetup")
 
     def test_edit_meetup(self):
