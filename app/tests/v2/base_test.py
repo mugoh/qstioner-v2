@@ -38,7 +38,7 @@ class BaseTestCase(unittest.TestCase):
                                               password="pa55word"
                                           )),
                                           content_type='application/json')
-        user = login_response.get_json().get('Data')[0].get('token')
+        user = login_response.get_json().get('data')[0].get('token')
         self.auth_header = {"Authorization": "Bearer " + user}
 
         # Register admin user
@@ -67,7 +67,7 @@ class BaseTestCase(unittest.TestCase):
                                     content_type='application/json')
         # Get Authorization token
 
-        userH = user_res.get_json().get('Data')[0].get('token')
+        userH = user_res.get_json().get('data')[0].get('token')
         self.admin_auth = {"Authorization": "Bearer " + userH}
 
         self.client.post('api/v1/meetups',
