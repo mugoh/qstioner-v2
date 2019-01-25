@@ -120,7 +120,7 @@ class TestQuestions(BaseTestCase):
                                 content_type='application/json',
                                 headers=self.auth_header)
 
-        expected_votes = res.get_json().get('Data')[0].get('votes')
+        expected_votes = res.get_json().get('data')[0].get('votes')
 
         self.assertEqual(expected_votes, -1,
                          msg="Fails to downvote a question")
@@ -129,7 +129,7 @@ class TestQuestions(BaseTestCase):
         res = self.client.patch('api/v1/questions/1/upvote',
                                 content_type='application/json',
                                 headers=self.auth_header)
-        expected_votes = res.get_json().get('Data')[0].get('votes')
+        expected_votes = res.get_json().get('data')[0].get('votes')
 
         self.assertEqual(expected_votes, 1,
                          msg="Fails to upvote a question")
@@ -165,7 +165,7 @@ class TestQuestions(BaseTestCase):
                           content_type='application/json',
                           headers=self.auth_header)
 
-        expected_votes = res.get_json().get('Data')[0].get('votes')
+        expected_votes = res.get_json().get('data')[0].get('votes')
 
         self.assertEqual(expected_votes, 0,
                          msg="Fails to downvote a question")
@@ -189,7 +189,7 @@ class TestQuestions(BaseTestCase):
                                  content_type='application/json',
                                  headers=self.admin_auth)
         self.assertTrue('Question of ID 1 deleted' in
-                        res.get_json().get('Message'),
+                        res.get_json().get('message'),
                         msg="Fails to delete a question")
 
     def test_delete_missing_question(self):
@@ -197,14 +197,14 @@ class TestQuestions(BaseTestCase):
                                  content_type='application/json',
                                  headers=self.admin_auth)
         self.assertTrue("Question not existent" in
-                        res.get_json().get('Error'),
+                        res.get_json().get('error'),
                         msg="Fails. Deletes missing question")
 
     def test_delete_question_with_missing_auth_header(self):
         res = self.client.delete('api/v1/questions/1',
                                  content_type='application/json')
         self.assertEqual('Please provide a valid Authorization Header',
-                         res.get_json().get('Message'),
+                         res.get_json().get('message'),
                          "Fails to ask for Authorization header for a\
                          protected endpoint")
 
@@ -213,7 +213,7 @@ class TestQuestions(BaseTestCase):
                               data=json.dumps(dict(location="other locc")),
                               headers=self.admin_auth)
         self.assertTrue('not exist' in
-                        res.get_json().get('Message'),
+                        res.get_json().get('message'),
                         "Fails. Allows user to edit missing quesiton")
 
     def test_edit_question(self):
@@ -221,5 +221,5 @@ class TestQuestions(BaseTestCase):
                               data=json.dumps(dict(location="other locc")),
                               headers=self.admin_auth)
         self.assertEqual('Question Updated',
-                         res.get_json().get('Message'),
+                         res.get_json().get('message'),
                          "Fails to edit user quesiton")
