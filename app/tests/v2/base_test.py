@@ -92,6 +92,15 @@ class BaseTestCase(unittest.TestCase):
                                     headers=self.auth_header)
         self.qcomment = json.dumps(dict(
             body="The cookies should come with milk too"))
+        self.rsvp_y = json.dumps(dict(
+            response="yes"
+        ))
+        self.rsvp_n = json.dumps(dict(
+            response="no"
+        ))
+        self.rsvp_f = json.dumps(dict(
+            response="so"
+        ))
 
     def post(self, path, data=None, headers=None):
 
