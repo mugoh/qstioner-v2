@@ -27,23 +27,23 @@ def admin_required(f):
         # Verify Logged in
         """if not current_user:
             return {
-                "Status": 403,
-                "Error": "Please log in, okay?"
+                "status": 403,
+                "error": "Please log in, okay?"
             }, 403
 
         user = UserModel.get_by_name(current_user)
         if not user:
             return {
-                "Status": 400,
-                "Error": "Identity unknown"
+                "status": 400,
+                "error": "Identity unknown"
             }
     """
         current_user = get_auth_identity()
 
         if not UserModel.get_by_name(current_user).isAdmin:
             return {
-                "Status": 403,
-                "Message": "Oops! Only an admin can do that"
+                "status": 403,
+                "message": "Oops! Only an admin can do that"
             }, 403
         return f(*args, **kwargs)
     return wrapper
@@ -65,8 +65,8 @@ def current_user_only(f):
 
         """if not this_user:
             return {
-                "Status": 403,
-                "Message": "You need to be logged in to do that"
+                "status": 403,
+                "message": "You need to be logged in to do that"
             }, 403
         """
         try:
@@ -76,23 +76,23 @@ def current_user_only(f):
                 user = user.username
             else:
                 return {
-                    "Status": 404,
-                    "Error": "User id does not exist. Provide a valid id"
+                    "status": 404,
+                    "error": "User id does not exist. Provide a valid id"
                 }, 404
 
         except ValueError:
             user = user
             if not UserModel.get_by_name(user):
                 return {
-                    "Status": 404,
-                    "Error": "Username not registered. \
+                    "status": 404,
+                    "error": "Username not registered. \
                     Provide a valid username"
                 }, 404
 
         if this_user != user:
             return {
-                "Status": 403,
-                "Error": "Denied. Not accessible to current user"
+                "status": 403,
+                "error": "Denied. Not accessible to current user"
             }, 403
         return f(*args, **kwars)
     return wrapper
@@ -106,8 +106,8 @@ def auth_required(f):
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
             return {
-                "Status": 400,
-                "Message": "Please provide a valid Authorization Header"
+                "status": 400,
+                "message": "Please provide a valid Authorization Header"
             }, 400
 
         auth_header = request.headers['Authorization']
@@ -117,20 +117,20 @@ def auth_required(f):
         except IndexError:
 
             return {
-                "Status": 400,
-                "Message": "Please provide a valid Authorization Header"
+                "status": 400,
+                "message": "Please provide a valid Authorization Header"
             }, 400
 
         if not payload:
             return {
-                "Status": 400,
-                "Message": "Token is empty. Please provide a valid token"
+                "status": 400,
+                "message": "Token is empty. Please provide a valid token"
             }, 400
 
         if Token.check_if_blacklisted(payload):
             return {
-                "Status": 400,
-                "Message": "Token unsuable. Try signing in again"
+                "status": 400,
+                "message": "Token unsuable. Try signing in again"
             }, 400
 
         try:
@@ -141,8 +141,8 @@ def auth_required(f):
 
         except Exception:
             return {
-                "Status": 400,
-                "Message": "Invalid Token. Please provide a valid token"
+                "status": 400,
+                "message": "Invalid Token. Please provide a valid token"
             }, 400
 
         return f(current_user, *args, **kwargs)
