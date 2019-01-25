@@ -6,12 +6,16 @@ import json
 class TestQuestions(BaseTestCase):
 
     def test_create_new_question(self):
+        """
+            Cornfirm crrect post details for teh question resource
+            allows a user to create a question to a meetup.
+        """
         self.new_question = json.dumps(dict(
             title="One Question",
-            body="This looks lika a body",
-            meetup=1))
+            body="This looks lika a body"
+        ))
 
-        response = self.client.post('api/v1/questions',
+        response = self.client.post('api/v1/meetups/1/questions',
                                     data=self.new_question,
                                     content_type='application/json',
                                     headers=self.auth_header)
@@ -30,16 +34,20 @@ class TestQuestions(BaseTestCase):
                          msg="Fails to create a new question")
 
     def test_create_existing_question(self):
+        """
+            Verifies that a user cannot re-post the same question
+            to a meetup.
+        """
         new_question = json.dumps(dict(
             title="One Question Dup",
             body="This looks like a body"))
 
-        self.client.post('api/v1/questions',
+        self.client.post('api/v1/meetups/1/questions',
                          data=new_question,
                          content_type='application/json',
                          headers=self.auth_header)
 
-        response = self.client.post('api/v1/questions',
+        response = self.client.post('api/v1/meetups/1/questions',
                                     data=new_question,
                                     content_type='application/json',
                                     headers=self.auth_header)
@@ -48,12 +56,15 @@ class TestQuestions(BaseTestCase):
                          a question with same data twice")
 
     def test_create_new_question_that_references_nonexistent_meetup(self):
+        """
+            Confirms that a user cannot create a question
+            for a meetup that doessn't exist.
+        """
         self.new_question = json.dumps(dict(
             title="One Question",
-            body="This looks lika a body",
-            meetup=400))
+            body="This looks lika a body"))
 
-        response = self.client.post('api/v1/questions',
+        response = self.client.post('api/v1/meetups/404/questions',
                                     data=self.new_question,
                                     content_type='application/json',
                                     headers=self.auth_header)
@@ -71,8 +82,12 @@ class TestQuestions(BaseTestCase):
                          for a non-existemt meetup")
 
     def test_get_all_questions(self):
+        """
+            Checks that one can fetch all questions
+            present for a parivular meetup.
+        """
 
-        response = self.client.get('api/v1/questions',
+        response = self.client.get('api/v1/meetups/1/questions',
                                    content_type='application/json',
                                    headers=self.auth_header)
 
@@ -80,11 +95,14 @@ class TestQuestions(BaseTestCase):
                          msg="Fails to get all questions")
 
     def test_get_single_question(self):
+        """
+            Confirms that a user can fetch an individual question
+            to a meetup.
+        """
 
         response = self.client.get('api/v1/questions/1',
                                    content_type='application/json',
                                    headers=self.auth_header)
-        print(response.get_json())
         self.assertEqual(response.status_code, 200,
                          msg="Fails to fetch individual question")
 
