@@ -29,7 +29,7 @@ app_api.add_resource(Questions, 'meetups/<int:meetup_id>/questions')
 app_api.add_resource(Question, 'questions/<int:id>')
 app_api.add_resource(QuestionVote, 'questions/<int:id>/<vote>',
                      methods=['PATCH'])
-app_api.add_resource(Rsvps, 'meetups/<int:id>/<response>')
+app_api.add_resource(Rsvps, 'meetups/<int:id>/response')
 app_api.add_resource(Rsvp, 'meetups/<int:id>/rsvp', 'meetups/<username>/rsvp')
 
 
