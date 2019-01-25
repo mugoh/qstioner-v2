@@ -6,6 +6,10 @@ from .base_test import BaseTestCase
 class CommentTest(BaseTestCase):
 
     def test_get_comments_for_empty_table(self):
+        """
+          The comments record shouls initially start empty.
+          Test for an empty record.
+        """
         res = self.get('api/v1/questions/1/comment')
 
         self.assertEqual(res.get_json().get('data'),
@@ -13,6 +17,10 @@ class CommentTest(BaseTestCase):
                          msg="Fails. Initiliazes comments table with data")
 
     def test_get_comments_for_missing_question(self):
+        """
+          Verifies a non-existent question returns 'NOT FOUND'
+          error on attempts of access.
+        """
         res = self.get('api/v1/questions/404/comment')
 
         expected_response = 'Question of ID 404 non-existent'
