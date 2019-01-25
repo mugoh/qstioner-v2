@@ -84,10 +84,9 @@ class BaseTestCase(unittest.TestCase):
 
         new_question = json.dumps(dict(
             title="One Other Question",
-            body="This looks lik a body",
-            meetup=1))
+            body="This looks lik a body"))
 
-        response = self.client.post('api/v1/questions',
+        response = self.client.post('api/v1/meetups/1/questions',
                                     data=new_question,
                                     content_type='application/json',
                                     headers=self.auth_header)
