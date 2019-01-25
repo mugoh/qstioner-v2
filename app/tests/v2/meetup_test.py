@@ -51,7 +51,7 @@ class MeetUpTests(BaseTestCase):
                                     content_type='application/json')
         # Get Authorization token
 
-        userH = user_res.get_json().get('Data')[0].get('token')
+        userH = user_res.get_json().get('data')[0].get('token')
         self.admin_auth = {"Authorization": "Bearer " + userH}
 
         # Having happeningOn paramenter here gets cocky.
@@ -181,14 +181,14 @@ class MeetUpTests(BaseTestCase):
         res = self.client.post('api/v1/meetup/1/tag', headers=self.admin_auth)
 
         self.assertTrue("tag associated with meetup"
-                        in res.get_json().get('Message'),
+                        in res.get_json().get('message'),
                         "Fails to allow user to tag a meetup")
 
     def test_get_meetups_by_missing_tag(self):
         res = self.client.get('api/v1/meetup/missing_tag',
                               headers=self.auth_header)
 
-        self.assertEqual(res.get_json().get('Data'), [],
+        self.assertEqual(res.get_json().get('data'), [],
                          "Fails. Returns meetups for tags not created")
 
     def test_posted_tag_associates_with_meetup(self):
@@ -196,8 +196,8 @@ class MeetUpTests(BaseTestCase):
 
         res = self.client.get('api/v1/meetup/tag',
                               headers=self.auth_header)
-        self.assertIsInstance(res.get_json().get('Data'), list)
-        self.assertNotEqual(res.get_json().get('Data'), [],
+        self.assertIsInstance(res.get_json().get('data'), list)
+        self.assertNotEqual(res.get_json().get('data'), [],
                             "Fails to show meetups that have a given tag")
 
     def test_post_tag_for_non_existent_meetup(self):
@@ -205,7 +205,7 @@ class MeetUpTests(BaseTestCase):
                                headers=self.admin_auth)
 
         self.assertTrue('That meetup seems' in
-                        res.get_json().get('Message'),
+                        res.get_json().get('message'),
                         "Fails to check existence of meetup before adding tag")
 
     def test_edit_non_existent_meetup(self):
@@ -221,5 +221,5 @@ class MeetUpTests(BaseTestCase):
                               data=json.dumps(dict(location="other locc")),
                               headers=self.admin_auth)
         self.assertEqual('Meetup updated',
-                         res.get_json().get('Message'),
+                         res.get_json().get('message'),
                          "Fails to edit meetup details")
