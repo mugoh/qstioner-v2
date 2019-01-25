@@ -18,7 +18,7 @@ class RSVPTest(BaseTestCase):
         response = self.post('api/v1/meetups/1/response',
                              data=self.rsvp_f)
         self.assertTrue("Your response is not known"
-                        in response.get_json().get("Message"),
+                        in response.get_json().get("message"),
                         msg="Fails to not\
                          create an rsvp with an invalid response")
 
@@ -26,7 +26,7 @@ class RSVPTest(BaseTestCase):
         res = self.post('api/v1/meetups/500/response',
                         data=self.rsvp_y)
 
-        res_msg = res.get_json().get('Message')
+        res_msg = res.get_json().get('message')
 
         self.assertEqual(res_msg, "That meetup does not exist",
                          msg="Fails to not rsvp a missing meetup")
@@ -67,7 +67,7 @@ class RSVPTest(BaseTestCase):
                                     content_type='application/json')
         # Get Authorization token
 
-        userH = user_res.get_json().get('Data')[0].get('token')
+        userH = user_res.get_json().get('data')[0].get('token')
         admin_auth = {"Authorization": "Bearer " + userH}
 
         response = self.get('api/v1/meetups/2/rsvp', headers=self.auth_header)
