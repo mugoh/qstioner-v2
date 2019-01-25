@@ -1,6 +1,5 @@
 from .base_test import BaseTestCase
 import json
-from flask import jsonify
 
 
 class AuthTestCases(BaseTestCase):
@@ -17,7 +16,7 @@ class AuthTestCases(BaseTestCase):
         response = self.client.get('/api/v1/auth/register',
                                    data=self.user_data,
                                    content_type='application/json')
-        res = json.loads(response.data.decode()).get("Data")
+        res = json.loads(response.data.decode()).get("data")
 
         self.assertTrue(isinstance(res, list),
                         msg="Fails to return user records as list")
@@ -33,7 +32,7 @@ class AuthTestCases(BaseTestCase):
         response = self.client.post('/api/v1/auth/register',
                                     data=self.user_data,
                                     content_type='application/json')
-        res = json.loads(response.data.decode()).get('Message')
+        res = json.loads(response.data.decode()).get('message')
 
         res_msg = "Account exists. Maybe log in?"
         self.assertEqual(res,
